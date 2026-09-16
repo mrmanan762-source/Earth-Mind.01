@@ -21,6 +21,12 @@ class ModelConfig(BaseModel):
             raise ValueError(f"Invalid revision '{self.revision}'. Must be a valid pinned commit SHA.")
         return True
 
+class ModelRuntimeConfig(BaseModel):
+    execution_timeout: float = Field(30.0, description="Maximum allowed execution time in seconds for model requests")
+    concurrency_limit: int = Field(5, description="Maximum concurrent execution requests allowed by runtime")
+    runtime_mode: str = Field("mock", description="Runtime execution mode (e.g., 'mock', 'development', 'production')")
+    resource_policy: str = Field("mock", description="Resource allocation policy (e.g., 'mock', 'strict')")
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -39,5 +45,6 @@ class Settings(BaseModel):
             is_main_model=True
         )
     )
+    runtime: ModelRuntimeConfig = Field(default_factory=ModelRuntimeConfig)
 
 settings = Settings()

@@ -49,6 +49,52 @@ class ModelNotLoadedError(EarthMindException):
             operation="generate"
         )
 
+class InvalidRuntimeStateError(EarthMindException):
+    def __init__(self, current_state: str, action: str):
+        super().__init__(
+            message=f"Cannot perform action '{action}' in runtime state '{current_state}'.",
+            error_code="INVALID_RUNTIME_STATE",
+            module="ai_runtime",
+            operation=action
+        )
+
+class RuntimeUnavailableError(EarthMindException):
+    def __init__(self, reason: str):
+        super().__init__(
+            message=f"Model runtime unavailable: {reason}",
+            error_code="RUNTIME_UNAVAILABLE",
+            module="ai_runtime",
+            operation="execute"
+        )
+
+class ResourceUnavailableError(EarthMindException):
+    def __init__(self, resource_name: str, details: str):
+        super().__init__(
+            message=f"Required resource '{resource_name}' unavailable: {details}",
+            error_code="RESOURCE_UNAVAILABLE",
+            module="ai_runtime",
+            operation="resource_allocation"
+        )
+
+class ModelTimeoutError(EarthMindException):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Execution of request '{request_id}' timed out after {timeout} seconds.",
+            error_code="MODEL_TIMEOUT",
+            module="ai_runtime",
+            operation="execute",
+            retryable=True
+        )
+
+class ModelCancelledError(EarthMindException):
+    def __init__(self, request_id: str):
+        super().__init__(
+            message=f"Execution of request '{request_id}' was cancelled.",
+            error_code="MODEL_CANCELLED",
+            module="ai_runtime",
+            operation="execute"
+        )
+
 class ModelExecutionError(EarthMindException):
     def __init__(self, model_identifier: str, details: str):
         super().__init__(
