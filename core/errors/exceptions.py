@@ -39,3 +39,21 @@ class ModuleExecutionError(EarthMindException):
             module=module_name,
             operation="handle"
         )
+
+class ModelNotLoadedError(EarthMindException):
+    def __init__(self, model_identifier: str):
+        super().__init__(
+            message=f"Model '{model_identifier}' is not loaded.",
+            error_code="MODEL_NOT_LOADED",
+            module="ai",
+            operation="generate"
+        )
+
+class ModelExecutionError(EarthMindException):
+    def __init__(self, model_identifier: str, details: str):
+        super().__init__(
+            message=f"Error executing model '{model_identifier}': {details}",
+            error_code="MODEL_EXECUTION_ERROR",
+            module="ai",
+            operation="generate"
+        )
