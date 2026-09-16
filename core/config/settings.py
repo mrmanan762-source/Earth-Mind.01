@@ -27,6 +27,13 @@ class ModelRuntimeConfig(BaseModel):
     runtime_mode: str = Field("mock", description="Runtime execution mode (e.g., 'mock', 'development', 'production')")
     resource_policy: str = Field("mock", description="Resource allocation policy (e.g., 'mock', 'strict')")
 
+class ModelLoadingConfig(BaseModel):
+    loading_strategy: str = Field("remote", description="Loading strategy ('remote', 'local', 'hybrid')")
+    local_cache_dir: Optional[str] = Field(".cache/earthmind/models", description="Local directory for cached model artifacts")
+    initialization_timeout: float = Field(60.0, description="Initialization timeout in seconds")
+    resource_policy: str = Field("mock", description="Resource allocation policy for model loading")
+    compatibility_policy: str = Field("strict", description="Compatibility verification policy ('strict', 'permissive')")
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -46,5 +53,6 @@ class Settings(BaseModel):
         )
     )
     runtime: ModelRuntimeConfig = Field(default_factory=ModelRuntimeConfig)
+    loading: ModelLoadingConfig = Field(default_factory=ModelLoadingConfig)
 
 settings = Settings()

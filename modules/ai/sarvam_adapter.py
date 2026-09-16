@@ -2,18 +2,21 @@
 
 from typing import Dict, Any, Optional
 from core.interfaces.model import IModel
-from core.interfaces.runtime import IRuntime, RuntimeState
+from core.interfaces.runtime import IRuntime
+from core.interfaces.initializer import IModelInitializer
 from core.schemas.model import ModelGenerationRequest, ModelGenerationResponse
 from core.config.settings import ModelConfig
 from core.errors.exceptions import ModelNotLoadedError, ModelExecutionError, EarthMindException
 from modules.ai.model_registry import ModelRegistry
 from modules.ai.runtime import MockModelRuntime
+from modules.ai.artifact_initializer import ModelInitializer
 
 class Sarvam105BAdapter(IModel):
     """Adapter for Sarvam-105B main model implementing IModel contract.
 
-    Resolves configuration via ModelRegistry and executes via IRuntime,
-    without exposing model-specific internal details or loading large weights (~424 GB).
+    Resolves configuration via ModelRegistry, initializes via IModelInitializer,
+    and executes via IRuntime, without exposing model-specific internal details
+    or loading large weights (~424 GB).
     """
 
     def __init__(
@@ -21,7 +24,8 @@ class Sarvam105BAdapter(IModel):
         registry: Optional[ModelRegistry] = None,
         model_identifier: str = "sarvam-105b",
         config: Optional[ModelConfig] = None,
-        runtime: Optional[IRuntime] = None
+        runtime: Optional[IRuntime] = None,
+        initializer: Optional[IModelInitializer] = None
     ):
         self._registry = registry or ModelRegistry()
         if config:
@@ -30,6 +34,7 @@ class Sarvam105BAdapter(IModel):
             self._config = self._registry.get_model(model_identifier)
 
         self._runtime: IRuntime = runtime or MockModelRuntime()
+        self._initializer: IModelInitializer = initializer or ModelInitializer(registry=self._registry)
         self._is_loaded: bool = False
 
     @property
@@ -40,8 +45,13 @@ class Sarvam105BAdapter(IModel):
     def runtime(self) -> IRuntime:
         return self._runtime
 
+    @property
+    def initializer(self) -> IModelInitializer:
+        return self._initializer
+
     def load(self) -> None:
-        """Initialize adapter and runtime state without downloading heavy weights (~424 GB)."""
+        """Initialize artifact lifecycle and runtime state without downloading heavy weights (~424 GB)."""
+        self._initializer.initialize(self._config.identifier)
         self._runtime.initialize()
         self._runtime.start()
         self._is_loaded = True
@@ -54,7 +64,7 @@ class Sarvam105BAdapter(IModel):
 
     def generate(self, request: ModelGenerationRequest) -> ModelGenerationResponse:
         """Generate model response using generic ModelGenerationRequest schema via runtime execution."""
-        if not self._is_loaded:
+        if not self._is_loaded or not self._initializer.check_readiness():
             raise ModelNotLoadedError(self._config.identifier)
 
         if not isinstance(request, ModelGenerationRequest):
@@ -92,8 +102,9 @@ class Sarvam105BAdapter(IModel):
             raise ModelExecutionError(self._config.identifier, str(e)) from e
 
     def status(self) -> Dict[str, Any]:
-        """Return operational status and configuration metadata combined with runtime status."""
+        """Return operational status and configuration metadata combined with initializer and runtime status."""
         runtime_st = self._runtime.status()
+        initializer_st = self._initializer.status()
         return {
             "identifier": self._config.identifier,
             "provider": self._config.provider,
@@ -101,6 +112,7 @@ class Sarvam105BAdapter(IModel):
             "revision": self._config.revision,
             "is_main_model": self._config.is_main_model,
             "loaded": self._is_loaded,
-            "health": "healthy" if self._is_loaded and runtime_st.get("health") == "healthy" else "unloaded",
-            "runtime": runtime_st
+            "health": "healthy" if self._is_loaded and runtime_st.get("health") == "healthy" and initializer_st.get("readiness") else "unloaded",
+            "runtime": runtime_st,
+            "initializer": initializer_st
         }

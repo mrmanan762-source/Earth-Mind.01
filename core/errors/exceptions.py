@@ -49,6 +49,42 @@ class ModelNotLoadedError(EarthMindException):
             operation="generate"
         )
 
+class ArtifactNotFoundError(EarthMindException):
+    def __init__(self, identifier: str, details: str):
+        super().__init__(
+            message=f"Model artifact '{identifier}' not found: {details}",
+            error_code="ARTIFACT_NOT_FOUND",
+            module="ai_initializer",
+            operation="resolve_artifact"
+        )
+
+class EnvironmentIncompatibleError(EarthMindException):
+    def __init__(self, reason: str):
+        super().__init__(
+            message=f"Environment incompatible for model loading: {reason}",
+            error_code="ENVIRONMENT_INCOMPATIBLE",
+            module="ai_initializer",
+            operation="detect_environment"
+        )
+
+class InitializationError(EarthMindException):
+    def __init__(self, identifier: str, details: str):
+        super().__init__(
+            message=f"Failed to initialize model '{identifier}': {details}",
+            error_code="INITIALIZATION_FAILED",
+            module="ai_initializer",
+            operation="initialize"
+        )
+
+class ReadinessError(EarthMindException):
+    def __init__(self, identifier: str, reason: str):
+        super().__init__(
+            message=f"Model '{identifier}' failed readiness check: {reason}",
+            error_code="READINESS_FAILED",
+            module="ai_initializer",
+            operation="check_readiness"
+        )
+
 class InvalidRuntimeStateError(EarthMindException):
     def __init__(self, current_state: str, action: str):
         super().__init__(
