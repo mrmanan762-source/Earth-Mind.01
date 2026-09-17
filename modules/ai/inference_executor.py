@@ -158,6 +158,8 @@ class InferenceExecutor:
             response_metadata = {
                 "execution_state": InferenceExecutionState.COMPLETED.value,
                 "model_identifier": self._config.identifier,
+                "version": getattr(self._config, "version", "1.0.0"),
+                "lifecycle_state": getattr(self._config, "lifecycle_state", "ACTIVE"),
                 "repo_id": self._config.repo_id,
                 "revision": self._config.revision,
                 "duration_seconds": duration,

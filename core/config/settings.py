@@ -1,9 +1,11 @@
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from pydantic import BaseModel, Field
 
 class ModelConfig(BaseModel):
     identifier: str = Field(..., description="Unique model identifier within EarthMind")
+    version: str = Field("1.0.0", description="Model version string")
+    family: str = Field("sarvam", description="Model family name")
     provider: str = Field("huggingface", description="Model provider or host platform")
     repo_id: str = Field(..., description="Hugging Face repository ID")
     revision: str = Field(..., description="Exact pinned commit SHA or revision")
@@ -11,6 +13,8 @@ class ModelConfig(BaseModel):
     license: str = Field("Apache-2.0", description="Model license terms")
     provenance: str = Field("upstream: sarvamai/sarvam-105b", description="Model provenance information")
     is_main_model: bool = Field(False, description="Whether this is the primary EarthMind model")
+    lifecycle_state: str = Field("ACTIVE", description="Current lifecycle state string")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata dictionary")
 
     def validate_config(self) -> bool:
         if not self.identifier or not self.identifier.strip():

@@ -97,6 +97,99 @@ class InferenceCancelledError(EarthMindException):
             metadata={"request_id": request_id}
         )
 
+
+class UnknownModelVersionError(EarthMindException):
+    def __init__(self, identifier: str, version: str):
+        super().__init__(
+            message=f"Model '{identifier}' version '{version}' is not registered.",
+            error_code="UNKNOWN_MODEL_VERSION",
+            module="ai",
+            operation="version_lookup"
+        )
+
+
+class InvalidLifecycleTransitionError(EarthMindException):
+    def __init__(self, identifier: str, version: str, current_state: str, target_state: str, reason: str = ""):
+        msg = f"Invalid lifecycle transition for model '{identifier}' (v{version}): {current_state} -> {target_state}."
+        if reason:
+            msg += f" Reason: {reason}"
+        super().__init__(
+            message=msg,
+            error_code="INVALID_LIFECYCLE_TRANSITION",
+            module="ai",
+            operation="transition_lifecycle"
+        )
+
+
+class ModelCompatibilityError(EarthMindException):
+    def __init__(self, identifier: str, version: str, details: str):
+        super().__init__(
+            message=f"Model '{identifier}' (v{version}) failed compatibility check: {details}",
+            error_code="MODEL_COMPATIBILITY_ERROR",
+            module="ai",
+            operation="check_compatibility"
+        )
+
+
+class ValidationGateError(EarthMindException):
+    def __init__(self, identifier: str, version: str, details: str):
+        super().__init__(
+            message=f"Validation gate failed for model '{identifier}' (v{version}): {details}",
+            error_code="VALIDATION_GATE_ERROR",
+            module="ai",
+            operation="validate_gate"
+        )
+
+
+class ModelActivationError(EarthMindException):
+    def __init__(self, identifier: str, version: str, details: str):
+        super().__init__(
+            message=f"Failed to activate model '{identifier}' (v{version}): {details}",
+            error_code="MODEL_ACTIVATION_ERROR",
+            module="ai",
+            operation="activate_version"
+        )
+
+
+class ModelRollbackError(EarthMindException):
+    def __init__(self, identifier: str, details: str):
+        super().__init__(
+            message=f"Rollback failed for model '{identifier}': {details}",
+            error_code="MODEL_ROLLBACK_ERROR",
+            module="ai",
+            operation="rollback_version"
+        )
+
+
+class RetiredModelSelectedError(EarthMindException):
+    def __init__(self, identifier: str, version: str):
+        super().__init__(
+            message=f"Cannot select or activate retired model '{identifier}' (v{version}).",
+            error_code="RETIRED_MODEL_SELECTED",
+            module="ai",
+            operation="select_version"
+        )
+
+
+class ConflictingActiveVersionError(EarthMindException):
+    def __init__(self, identifier: str, existing_version: str, new_version: str):
+        super().__init__(
+            message=f"Cannot set active version to '{new_version}' because '{existing_version}' is already active for model '{identifier}'.",
+            error_code="CONFLICTING_ACTIVE_VERSION",
+            module="ai",
+            operation="activate_version"
+        )
+
+
+class InvalidRevisionError(EarthMindException):
+    def __init__(self, identifier: str, revision: str, details: str):
+        super().__init__(
+            message=f"Invalid revision '{revision}' for model '{identifier}': {details}",
+            error_code="INVALID_REVISION",
+            module="ai",
+            operation="validate_revision"
+        )
+
 class DuplicateRequestError(EarthMindException):
     def __init__(self, request_id: str):
         super().__init__(
