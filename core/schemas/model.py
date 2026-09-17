@@ -1,5 +1,19 @@
+from enum import Enum
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
+
+
+class InferenceExecutionState(str, Enum):
+    REQUESTED = "REQUESTED"
+    VALIDATING = "VALIDATING"
+    QUEUED = "QUEUED"
+    EXECUTING = "EXECUTING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    TIMEOUT = "TIMEOUT"
+    CANCELLED = "CANCELLED"
+    UNAVAILABLE = "UNAVAILABLE"
+
 
 class ModelGenerationRequest(BaseModel):
     request_id: str = Field(..., description="Unique identifier for the generation request")
@@ -11,6 +25,7 @@ class ModelGenerationRequest(BaseModel):
     tools_available: Optional[List[Dict[str, Any]]] = Field(default_factory=list, description="Available tools specification")
     constraints: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Execution or output constraints")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata")
+
 
 class ModelGenerationResponse(BaseModel):
     request_id: str = Field(..., description="Identifier matching the generation request")
