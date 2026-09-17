@@ -98,6 +98,95 @@ class InferenceCancelledError(EarthMindException):
         )
 
 
+class ContextError(EarthMindException):
+    """Base exception for B2 Context Manager errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "CONTEXT_ERROR",
+        operation: str = "context_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="context",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidContextRequestError(ContextError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid context request: {details}",
+            error_code="INVALID_CONTEXT_REQUEST",
+            operation="validate_request"
+        )
+
+
+class InvalidContextItemError(ContextError):
+    def __init__(self, item_id: str, details: str):
+        super().__init__(
+            message=f"Invalid context item '{item_id}': {details}",
+            error_code="INVALID_CONTEXT_ITEM",
+            operation="validate_item",
+            metadata={"item_id": item_id}
+        )
+
+
+class ContextScopeViolationError(ContextError):
+    def __init__(self, item_id: str, details: str):
+        super().__init__(
+            message=f"Scope violation in context item '{item_id}': {details}",
+            error_code="CONTEXT_SCOPE_VIOLATION",
+            operation="filter_scope",
+            metadata={"item_id": item_id}
+        )
+
+
+class ContextPrivacyViolationError(ContextError):
+    def __init__(self, item_id: str, details: str):
+        super().__init__(
+            message=f"Privacy violation in context item '{item_id}': {details}",
+            error_code="CONTEXT_PRIVACY_VIOLATION",
+            operation="filter_privacy",
+            metadata={"item_id": item_id}
+        )
+
+
+class InsufficientContextError(ContextError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Insufficient context for request '{request_id}': {details}",
+            error_code="INSUFFICIENT_CONTEXT",
+            operation="prepare_context",
+            metadata={"request_id": request_id}
+        )
+
+
+class ContextOutputValidationError(ContextError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Output validation failed for context request '{request_id}': {details}",
+            error_code="CONTEXT_OUTPUT_VALIDATION_ERROR",
+            operation="validate_output",
+            metadata={"request_id": request_id}
+        )
+
+
+class ContextProviderError(ContextError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Context provider '{provider_name}' error: {details}",
+            error_code="CONTEXT_PROVIDER_ERROR",
+            operation="collect_context",
+            metadata={"provider_name": provider_name}
+        )
+
+
 class UnknownModelVersionError(EarthMindException):
     def __init__(self, identifier: str, version: str):
         super().__init__(
