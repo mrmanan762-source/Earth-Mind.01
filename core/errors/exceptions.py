@@ -190,6 +190,69 @@ class InvalidRevisionError(EarthMindException):
             operation="validate_revision"
         )
 
+
+class DeploymentConfigError(EarthMindException):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Deployment configuration error: {details}",
+            error_code="DEPLOYMENT_CONFIG_ERROR",
+            module="ai",
+            operation="validate_deployment_config"
+        )
+
+
+class UnsupportedDeploymentModeError(EarthMindException):
+    def __init__(self, mode: str):
+        super().__init__(
+            message=f"Unsupported deployment mode '{mode}'. Expected REMOTE, LOCAL, or HYBRID.",
+            error_code="UNSUPPORTED_DEPLOYMENT_MODE",
+            module="ai",
+            operation="parse_deployment_mode"
+        )
+
+
+class ResourceUnavailableError(EarthMindException):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Resource policy evaluation failed: {details}",
+            error_code="RESOURCE_UNAVAILABLE",
+            module="ai",
+            operation="evaluate_resources"
+        )
+
+
+class RemoteEndpointUnavailableError(EarthMindException):
+    def __init__(self, endpoint: str, details: str = ""):
+        msg = f"Remote endpoint '{endpoint}' is unavailable."
+        if details:
+            msg += f" Details: {details}"
+        super().__init__(
+            message=msg,
+            error_code="REMOTE_ENDPOINT_UNAVAILABLE",
+            module="ai",
+            operation="check_remote_endpoint"
+        )
+
+
+class LocalEnvironmentUnavailableError(EarthMindException):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Local execution environment is unavailable: {details}",
+            error_code="LOCAL_ENVIRONMENT_UNAVAILABLE",
+            module="ai",
+            operation="check_local_environment"
+        )
+
+
+class DeploymentReadinessError(EarthMindException):
+    def __init__(self, state: str, details: str):
+        super().__init__(
+            message=f"Deployment readiness check failed ({state}): {details}",
+            error_code="DEPLOYMENT_READINESS_ERROR",
+            module="ai",
+            operation="evaluate_readiness"
+        )
+
 class DuplicateRequestError(EarthMindException):
     def __init__(self, request_id: str):
         super().__init__(

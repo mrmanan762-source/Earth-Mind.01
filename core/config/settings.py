@@ -31,6 +31,9 @@ class Settings(BaseModel):
     version: str = "0.1.0"
     db_path: str = os.getenv("EARTHMIND_DB_PATH", "earthmind.db")
     log_level: str = os.getenv("EARTHMIND_LOG_LEVEL", "INFO")
+    deployment_mode: str = os.getenv("EARTHMIND_DEPLOYMENT_MODE", "REMOTE")
+    remote_endpoint: Optional[str] = os.getenv("EARTHMIND_REMOTE_ENDPOINT", "https://api.earthmind.ai/v1/inference")
+    local_artifact_path: Optional[str] = os.getenv("EARTHMIND_LOCAL_ARTIFACT_PATH", "./models/cache")
     main_model: ModelConfig = Field(
         default_factory=lambda: ModelConfig(
             identifier="sarvam-105b",

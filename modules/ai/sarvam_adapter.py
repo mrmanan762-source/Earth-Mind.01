@@ -4,13 +4,25 @@ from typing import Dict, Any, Optional
 from core.interfaces.model import IModel
 from core.interfaces.runtime import IRuntime
 from core.interfaces.initializer import IModelInitializer
-from core.schemas.model import ModelGenerationRequest, ModelGenerationResponse
+from core.schemas.model import (
+    ModelGenerationRequest,
+    ModelGenerationResponse,
+    DeploymentConfig,
+    DeploymentMode
+)
 from core.config.settings import ModelConfig
 from core.errors.exceptions import ModelNotLoadedError, ModelExecutionError
 from modules.ai.model_registry import ModelRegistry
 from modules.ai.model_initializer import ModelInitializer
 from modules.ai.model_runtime import ModelRuntime, MockInferenceBackend
 from modules.ai.inference_executor import InferenceExecutor
+from modules.ai.deployment_strategy import (
+    DeploymentStrategy,
+    RemoteDeploymentStrategy,
+    LocalDeploymentStrategy,
+    HybridDeploymentStrategy,
+    load_deployment_config
+)
 
 
 class Sarvam105BAdapter(IModel):
@@ -29,7 +41,9 @@ class Sarvam105BAdapter(IModel):
         config: Optional[ModelConfig] = None,
         runtime: Optional[IRuntime] = None,
         initializer: Optional[IModelInitializer] = None,
-        backend: Optional[MockInferenceBackend] = None
+        backend: Optional[MockInferenceBackend] = None,
+        deployment_config: Optional[DeploymentConfig] = None,
+        deployment_strategy: Optional[DeploymentStrategy] = None
     ):
         self._registry = registry or ModelRegistry()
         if config:
@@ -55,6 +69,24 @@ class Sarvam105BAdapter(IModel):
 
         self._initializer = initializer or ModelInitializer(self._config)
         self._runtime = runtime or ModelRuntime(backend=backend)
+
+        # Setup Deployment Strategy
+        self._deployment_config = deployment_config or load_deployment_config({
+            "model_identifier": self._config.identifier,
+            "repo_id": self._config.repo_id,
+            "revision": self._config.revision
+        })
+
+        if deployment_strategy:
+            self._deployment_strategy = deployment_strategy
+        else:
+            if self._deployment_config.deployment_mode == DeploymentMode.LOCAL:
+                self._deployment_strategy = LocalDeploymentStrategy(self._deployment_config)
+            elif self._deployment_config.deployment_mode == DeploymentMode.HYBRID:
+                self._deployment_strategy = HybridDeploymentStrategy(self._deployment_config)
+            else:
+                self._deployment_strategy = RemoteDeploymentStrategy(self._deployment_config)
+
         self._executor = InferenceExecutor(
             initializer=self._initializer,
             runtime=self._runtime,
@@ -108,8 +140,17 @@ class Sarvam105BAdapter(IModel):
                 raise e
             raise ModelExecutionError(self._config.identifier, str(e)) from e
 
+    @property
+    def deployment_config(self) -> DeploymentConfig:
+        return self._deployment_config
+
+    @property
+    def deployment_strategy(self) -> DeploymentStrategy:
+        return self._deployment_strategy
+
     def status(self) -> Dict[str, Any]:
         """Return operational status and configuration metadata."""
+        readiness = self._deployment_strategy.check_readiness()
         return {
             "identifier": self._config.identifier,
             "version": getattr(self._config, "version", "1.0.0"),
@@ -117,6 +158,9 @@ class Sarvam105BAdapter(IModel):
             "repo_id": self._config.repo_id,
             "revision": self._config.revision,
             "lifecycle_state": getattr(self._config, "lifecycle_state", "ACTIVE"),
+            "deployment_mode": self._deployment_config.deployment_mode.value,
+            "environment_profile": self._deployment_config.environment_profile.value,
+            "deployment_readiness": readiness.state.value,
             "is_main_model": self._config.is_main_model,
             "loaded": self._is_loaded,
             "health": "healthy" if self._is_loaded else "unloaded",

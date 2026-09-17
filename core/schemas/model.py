@@ -24,6 +24,58 @@ class ModelLifecycleState(str, Enum):
     RETIRED = "RETIRED"
 
 
+class DeploymentMode(str, Enum):
+    REMOTE = "REMOTE"
+    LOCAL = "LOCAL"
+    HYBRID = "HYBRID"
+
+
+class EnvironmentProfile(str, Enum):
+    DEVELOPMENT = "DEVELOPMENT"
+    TEST = "TEST"
+    PRODUCTION = "PRODUCTION"
+
+
+class DeploymentReadinessState(str, Enum):
+    READY = "READY"
+    NOT_READY = "NOT_READY"
+    MISCONFIGURED = "MISCONFIGURED"
+    RESOURCE_UNAVAILABLE = "RESOURCE_UNAVAILABLE"
+    ENDPOINT_UNAVAILABLE = "ENDPOINT_UNAVAILABLE"
+
+
+class ResourcePolicy(BaseModel):
+    min_memory_gb: float = Field(0.0, description="Minimum RAM required in GB")
+    gpu_required: bool = Field(False, description="Whether GPU hardware is required")
+    cpu_cores: int = Field(1, description="Minimum CPU cores required")
+    max_concurrency: int = Field(4, description="Maximum concurrent inference requests")
+    timeout_seconds: float = Field(30.0, description="Inference execution timeout in seconds")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary resource policy metadata")
+
+
+class DeploymentConfig(BaseModel):
+    model_identifier: str = Field("sarvam-105b", description="Model identifier")
+    repo_id: str = Field("mrmanan762/EarthMind", description="Hugging Face repo ID")
+    revision: str = Field("fb187764dbad56ed8b26742a802909e858e9bb72", description="Pinned revision commit SHA")
+    deployment_mode: DeploymentMode = Field(DeploymentMode.REMOTE, description="Deployment mode (REMOTE, LOCAL, HYBRID)")
+    environment_profile: EnvironmentProfile = Field(EnvironmentProfile.DEVELOPMENT, description="Environment profile")
+    remote_endpoint: Optional[str] = Field(None, description="Remote service endpoint reference or URL")
+    local_artifact_path: Optional[str] = Field(None, description="Local model artifact or cache directory")
+    resource_policy: ResourcePolicy = Field(default_factory=ResourcePolicy, description="Resource policy constraints")
+    secret_keys: List[str] = Field(default_factory=list, description="Names of required environment secrets")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary deployment metadata")
+
+
+class DeploymentReadinessResult(BaseModel):
+    state: DeploymentReadinessState = Field(..., description="Readiness status state")
+    is_ready: bool = Field(..., description="Whether deployment strategy is ready and usable")
+    deployment_mode: DeploymentMode = Field(..., description="Active deployment mode")
+    environment_profile: EnvironmentProfile = Field(..., description="Active environment profile")
+    details: List[Dict[str, Any]] = Field(default_factory=list, description="Detailed readiness check details")
+    errors: List[str] = Field(default_factory=list, description="Readiness evaluation errors if any")
+    timestamp: str = Field(..., description="ISO timestamp string")
+
+
 class ValidationResult(BaseModel):
     is_valid: bool = Field(..., description="Whether validation checks passed")
     checks: List[Dict[str, Any]] = Field(default_factory=list, description="List of performed validation check details")
