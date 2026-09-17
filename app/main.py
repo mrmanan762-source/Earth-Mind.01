@@ -14,6 +14,7 @@ from modules.vision.vision_module import VisionModule
 from modules.drone.drone_module import DroneModule
 from modules.data_training.data_training_module import DataTrainingModule
 from modules.external_services.external_services_module import ExternalServicesModule
+from modules.context.context_module import ContextModule
 
 logger = get_logger("app.main")
 
@@ -30,6 +31,7 @@ def create_app():
     drone_module = DroneModule()
     data_training_module = DataTrainingModule()
     external_services_module = ExternalServicesModule()
+    context_module = ContextModule()
 
     # Attach modules to lifecycle
     lifecycle.register_module("database", db_module)
@@ -41,6 +43,7 @@ def create_app():
     lifecycle.register_module("drone", drone_module)
     lifecycle.register_module("data_training", data_training_module)
     lifecycle.register_module("external_services", external_services_module)
+    lifecycle.register_module("context", context_module)
 
     workflow = WorkflowEngine(lifecycle)
     return lifecycle, workflow
