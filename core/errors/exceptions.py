@@ -57,3 +57,52 @@ class ModelExecutionError(EarthMindException):
             module="ai",
             operation="generate"
         )
+
+class InferenceValidationError(EarthMindException):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Inference request validation failed: {details}",
+            error_code="INFERENCE_VALIDATION_ERROR",
+            module="ai",
+            operation="validate_request"
+        )
+
+class RuntimeUnavailableError(EarthMindException):
+    def __init__(self, details: str = "Runtime or model backend is unavailable."):
+        super().__init__(
+            message=details,
+            error_code="RUNTIME_UNAVAILABLE",
+            module="ai",
+            operation="execute"
+        )
+
+class InferenceTimeoutError(EarthMindException):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Inference request '{request_id}' timed out after {timeout} seconds.",
+            error_code="INFERENCE_TIMEOUT",
+            module="ai",
+            operation="execute",
+            retryable=True,
+            metadata={"request_id": request_id, "timeout": timeout}
+        )
+
+class InferenceCancelledError(EarthMindException):
+    def __init__(self, request_id: str):
+        super().__init__(
+            message=f"Inference request '{request_id}' was cancelled.",
+            error_code="INFERENCE_CANCELLED",
+            module="ai",
+            operation="execute",
+            metadata={"request_id": request_id}
+        )
+
+class DuplicateRequestError(EarthMindException):
+    def __init__(self, request_id: str):
+        super().__init__(
+            message=f"Duplicate inference request with ID '{request_id}'.",
+            error_code="DUPLICATE_REQUEST",
+            module="ai",
+            operation="execute",
+            metadata={"request_id": request_id}
+        )
