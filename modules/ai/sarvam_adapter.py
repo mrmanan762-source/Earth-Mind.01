@@ -25,6 +25,7 @@ class Sarvam105BAdapter(IModel):
         self,
         registry: Optional[ModelRegistry] = None,
         model_identifier: str = "sarvam-105b",
+        version: Optional[str] = None,
         config: Optional[ModelConfig] = None,
         runtime: Optional[IRuntime] = None,
         initializer: Optional[IModelInitializer] = None,
@@ -33,6 +34,22 @@ class Sarvam105BAdapter(IModel):
         self._registry = registry or ModelRegistry()
         if config:
             self._config = config
+        elif version:
+            version_rec = self._registry.select_version(model_identifier, version)
+            self._config = ModelConfig(
+                identifier=version_rec.identifier,
+                version=version_rec.version,
+                family=version_rec.family,
+                provider=version_rec.provider,
+                repo_id=version_rec.repo_id,
+                revision=version_rec.revision,
+                model_type=version_rec.model_type,
+                license=version_rec.license,
+                provenance=version_rec.provenance,
+                is_main_model=version_rec.is_main_model,
+                lifecycle_state=version_rec.state.value,
+                metadata=version_rec.metadata
+            )
         else:
             self._config = self._registry.get_model(model_identifier)
 
@@ -95,9 +112,11 @@ class Sarvam105BAdapter(IModel):
         """Return operational status and configuration metadata."""
         return {
             "identifier": self._config.identifier,
+            "version": getattr(self._config, "version", "1.0.0"),
             "provider": self._config.provider,
             "repo_id": self._config.repo_id,
             "revision": self._config.revision,
+            "lifecycle_state": getattr(self._config, "lifecycle_state", "ACTIVE"),
             "is_main_model": self._config.is_main_model,
             "loaded": self._is_loaded,
             "health": "healthy" if self._is_loaded else "unloaded",
