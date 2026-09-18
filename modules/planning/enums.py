@@ -82,3 +82,12 @@ class DecisionState(str, Enum):
     CONDITIONAL = "CONDITIONAL"
     REQUIRES_CONFIRMATION = "REQUIRES_CONFIRMATION"
     REJECTED = "REJECTED"
+
+
+class DecisionStatus(str, Enum):
+    """Explicit decision status classification for final PlanningDecision result."""
+    RECOMMENDED = "RECOMMENDED"
+    CONDITIONAL = "CONDITIONAL"
+    INSUFFICIENT_INFORMATION = "INSUFFICIENT_INFORMATION"
+    NO_FEASIBLE_OPTION = "NO_FEASIBLE_OPTION"
+    REQUIRES_CONFIRMATION = "REQUIRES_CONFIRMATION"

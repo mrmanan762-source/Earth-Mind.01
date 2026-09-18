@@ -5,6 +5,7 @@ from modules.planning.enums import (
     ConstraintSeverity,
     ConstraintType,
     DecisionState,
+    DecisionStatus,
     FeasibilityState,
     HardSoftType,
     PlanningState,
@@ -30,7 +31,7 @@ class Constraint(BaseModel):
     constraint_id: str = Field(..., description="Unique constraint identifier")
     type: ConstraintType = Field(ConstraintType.OPERATIONAL, description="Constraint classification")
     severity: ConstraintSeverity = Field(ConstraintSeverity.MEDIUM, description="Constraint severity")
-    source: str = Field(..., description="Origin of constraint (e.g. 'user_input', 'policy', 'safety_rule')")
+    source: str = Field("policy", description="Origin of constraint (e.g. 'user_input', 'policy', 'safety_rule')")
     description: str = Field(..., description="Detailed description or reference statement of constraint")
     scope: str = Field("GLOBAL", description="Scope of applicability (e.g. 'GLOBAL', 'FIELD', 'EQUIPMENT')")
     value_reference: Any = Field(None, description="Quantitative or qualitative threshold/boundary value")
@@ -172,11 +173,43 @@ class PlanningInput(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary input metadata")
 
 
+class RequiredConfirmation(BaseModel):
+    """Structured details for decisions that require explicit confirmation."""
+    what: str = Field(..., description="Description of action or decision requiring confirmation")
+    why: str = Field(..., description="Reason confirmation is required")
+    plan_reference: Optional[str] = Field(None, description="Associated plan or decision ID reference")
+    details: Dict[str, Any] = Field(default_factory=dict, description="Additional confirmation details")
+
+
+class PlanningDecision(BaseModel):
+    """Structured decision output contract produced by B4 Planning & Decision Engine."""
+    request_id: str = Field(..., description="Unique request identifier matching PlanningInput")
+    objective: Optional[Goal] = Field(None, description="Preserved goal / objective contract")
+    decision_status: DecisionStatus = Field(..., description="Explicit decision status outcome")
+    selected_plan: Optional[PlanReference] = Field(None, description="Selected plan or option")
+    alternatives: List[PlanReference] = Field(default_factory=list, description="Alternative candidate plans")
+    reasoning_references: List[str] = Field(default_factory=list, description="References to B3 reasoning findings/results")
+    context_references: List[str] = Field(default_factory=list, description="References to relevant context items")
+    constraints: List[Constraint] = Field(default_factory=list, description="Applied constraints")
+    feasibility: List[FeasibilityAnalysisResult] = Field(default_factory=list, description="Feasibility evaluations")
+    risks: List[RiskItem] = Field(default_factory=list, description="Identified risks")
+    uncertainty: Dict[str, Any] = Field(default_factory=dict, description="Preserved visible uncertainty parameters")
+    missing_information: List[str] = Field(default_factory=list, description="Explicit missing information gaps")
+    required_confirmation: Optional[RequiredConfirmation] = Field(None, description="Details if confirmation is required")
+    action_sequence: List[CandidateAction] = Field(default_factory=list, description="Ordered candidate action sequence")
+    decision_basis: List[str] = Field(default_factory=list, description="Structured rationale/findings supporting decision")
+    confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="Estimated confidence score [0.0, 1.0]")
+    warnings: List[str] = Field(default_factory=list, description="Non-fatal warnings or Inspector flags")
+    trace_id: Optional[str] = Field(None, description="Traceability ID")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary decision metadata")
+
+
 class PlanningResult(BaseModel):
     """Structured output contract for B4 Planning & Decision Engine."""
     request_id: str = Field(..., description="Identifier matching PlanningInput request_id")
     status: PlanningState = Field(..., description="Final planning lifecycle state")
     goal: Optional[Goal] = Field(None, description="Preserved target goal")
+    decision: Optional[PlanningDecision] = Field(None, description="Structured PlanningDecision result")
     recommended_plan: Optional[PlanReference] = Field(None, description="Selected recommended plan option")
     alternative_plans: List[PlanReference] = Field(default_factory=list, description="Explicit alternative candidate plans")
     candidate_actions: List[CandidateAction] = Field(default_factory=list, description="Generated candidate actions")
