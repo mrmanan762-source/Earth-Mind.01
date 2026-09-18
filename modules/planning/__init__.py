@@ -6,6 +6,7 @@ from modules.planning.enums import (
     ConstraintSeverity,
     RiskLevel,
     DecisionState,
+    DecisionStatus,
 )
 from modules.planning.errors import (
     PlanningError,
@@ -33,6 +34,8 @@ from modules.planning.schemas import (
     PlanReference,
     PlanningContextReference,
     PlanningInput,
+    PlanningDecision,
+    RequiredConfirmation,
     PlanningResult,
     PlanningValidationHandoff,
 )
@@ -40,6 +43,10 @@ from modules.planning.interfaces import (
     IPlanningStrategy,
     IDecisionStrategy,
     IPlanningCapability,
+)
+from modules.planning.strategies import (
+    DefaultPlanningStrategy,
+    DefaultDecisionStrategy,
 )
 from modules.planning.planning_module import PlanningModule
 
@@ -52,6 +59,7 @@ __all__ = [
     "ConstraintSeverity",
     "RiskLevel",
     "DecisionState",
+    "DecisionStatus",
     # Errors
     "PlanningError",
     "InvalidPlanningInputError",
@@ -77,12 +85,16 @@ __all__ = [
     "PlanReference",
     "PlanningContextReference",
     "PlanningInput",
+    "PlanningDecision",
+    "RequiredConfirmation",
     "PlanningResult",
     "PlanningValidationHandoff",
-    # Interfaces
+    # Interfaces & Strategies
     "IPlanningStrategy",
     "IDecisionStrategy",
     "IPlanningCapability",
+    "DefaultPlanningStrategy",
+    "DefaultDecisionStrategy",
     # Module
     "PlanningModule",
 ]
