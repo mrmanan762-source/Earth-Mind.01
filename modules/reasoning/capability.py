@@ -24,21 +24,39 @@ class ModelLayerReasoningCapability(IReasoningCapability):
     def __init__(
         self,
         model: Optional[IModel] = None,
-        capability_name: str = "model_layer_reasoning_capability"
+        capability_name: str = "model_layer_reasoning_capability",
+        auto_attach: bool = True
     ):
         self._model = model
         self.capability_name = capability_name
+        self._auto_attach = auto_attach and (model is None)
 
-    def set_model(self, model: IModel) -> None:
+    def set_model(self, model: Optional[IModel]) -> None:
         """Set or update the underlying IModel provider."""
         self._model = model
+        self._auto_attach = False
+
+    def _ensure_model_attached(self) -> None:
+        if self._model is None:
+            if self._auto_attach:
+                try:
+                    from modules.ai.sarvam_adapter import Sarvam105BAdapter
+                    adapter = Sarvam105BAdapter()
+                    adapter.load()
+                    self._model = adapter
+                except Exception as e:
+                    logger.error(f"Failed to auto-attach Sarvam105BAdapter: {str(e)}")
+                    raise ReasoningCapabilityUnavailableError(
+                        self.capability_name, f"No underlying IModel adapter attached: {str(e)}"
+                    ) from e
+            else:
+                raise ReasoningCapabilityUnavailableError(
+                    self.capability_name, "No underlying IModel adapter attached."
+                )
 
     def reason(self, input_data: ReasoningInput) -> ReasoningResult:
         """Execute reasoning request by formulating ModelGenerationRequest to generic IModel."""
-        if self._model is None:
-            raise ReasoningCapabilityUnavailableError(
-                self.capability_name, "No underlying IModel adapter attached."
-            )
+        self._ensure_model_attached()
 
         # Build generic model generation request
         model_req = ModelGenerationRequest(
@@ -97,7 +115,16 @@ class ModelLayerReasoningCapability(IReasoningCapability):
 
     def status(self) -> Dict[str, Any]:
         """Return capability health and underlying model status."""
-        model_status = self._model.status() if (self._model and hasattr(self._model, "status")) else {"status": "unattached"}
+        model_status = {}
+        if self._model and hasattr(self._model, "status"):
+            try:
+                raw_st = self._model.status()
+                model_status = raw_st if isinstance(raw_st, dict) else {"status": str(raw_st)}
+            except Exception as e:
+                model_status = {"status_error": str(e)}
+        else:
+            model_status = {"status": "unattached"}
+
         return {
             "capability_name": self.capability_name,
             "attached_model": model_status.get("identifier", "none") if isinstance(model_status, dict) else "attached",

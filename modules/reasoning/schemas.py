@@ -141,7 +141,7 @@ class ReasoningPolicyConfig(BaseModel):
     min_evidence_threshold: float = Field(0.3, ge=0.0, le=1.0, description="Minimum required evidence score")
     allow_assumptions: bool = Field(True, description="Whether explicit assumptions are permitted when evidence is missing")
     enforce_inspector: bool = Field(True, description="Whether Inspector validation handoff is strictly enforced")
-    strategy_timeout_seconds: float = Field(10.0, ge=0.1, description="Timeout limit for reasoning execution")
+    strategy_timeout_seconds: float = Field(10.0, ge=1e-9, description="Timeout limit for reasoning execution")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary policy metadata")
 
 

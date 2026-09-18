@@ -224,7 +224,7 @@ def test_model_layer_reasoning_capability_adapter():
 
 def test_capability_unattached_raises_error():
     """Verify ReasoningCapabilityUnavailableError when no model adapter attached."""
-    cap = ModelLayerReasoningCapability(model=None)
+    cap = ModelLayerReasoningCapability(model=None, auto_attach=False)
     inp = ReasoningInput(request_id="req_fail", task="Test unattached capability")
 
     with pytest.raises(ReasoningCapabilityUnavailableError):

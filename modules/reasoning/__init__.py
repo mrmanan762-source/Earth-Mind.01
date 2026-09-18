@@ -44,7 +44,21 @@ from modules.reasoning.evidence import EvidenceManager
 from modules.reasoning.strategy import ReasoningStrategyController
 from modules.reasoning.traceability import ReasoningTraceManager
 from modules.reasoning.validation import InspectorHandoffManager
+from modules.reasoning.engine import ReasoningEngine
 from modules.reasoning.reasoning_module import ReasoningModule
+from modules.reasoning.components import (
+    ReasoningStateManager,
+    InputValidator,
+    ReasoningContextProcessor,
+    EvidenceComparisonAnalyzer,
+    ConflictAnalyzer,
+    UncertaintyAnalyzer,
+    MissingInformationAnalyzer,
+    HypothesisAnalyzer,
+    IterationController,
+    ReasoningResultBuilder,
+    ResultValidator,
+)
 
 __all__ = [
     "ReasoningState",
@@ -85,5 +99,17 @@ __all__ = [
     "ReasoningStrategyController",
     "ReasoningTraceManager",
     "InspectorHandoffManager",
+    "ReasoningEngine",
     "ReasoningModule",
+    "ReasoningStateManager",
+    "InputValidator",
+    "ReasoningContextProcessor",
+    "EvidenceComparisonAnalyzer",
+    "ConflictAnalyzer",
+    "UncertaintyAnalyzer",
+    "MissingInformationAnalyzer",
+    "HypothesisAnalyzer",
+    "IterationController",
+    "ReasoningResultBuilder",
+    "ResultValidator",
 ]
