@@ -98,6 +98,137 @@ class InferenceCancelledError(EarthMindException):
         )
 
 
+class PlanningError(EarthMindException):
+    """Base exception for B4 Planning & Decision Engine errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "PLANNING_ERROR",
+        operation: str = "planning_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="planning",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidPlanningInputError(PlanningError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid planning input: {details}",
+            error_code="INVALID_PLANNING_INPUT",
+            operation="validate_input"
+        )
+
+
+class InvalidPlanningReasoningInputError(PlanningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Invalid reasoning input for planning request '{request_id}': {details}",
+            error_code="INVALID_REASONING_INPUT",
+            operation="interpret_reasoning",
+            metadata={"request_id": request_id}
+        )
+
+
+class MissingGoalError(PlanningError):
+    def __init__(self, request_id: str, details: str = "Planning objective/goal is missing or unspecified."):
+        super().__init__(
+            message=f"Missing goal for planning request '{request_id}': {details}",
+            error_code="MISSING_GOAL",
+            operation="analyze_goal",
+            metadata={"request_id": request_id}
+        )
+
+
+class InvalidConstraintError(PlanningError):
+    def __init__(self, constraint_id: str, details: str):
+        super().__init__(
+            message=f"Invalid constraint '{constraint_id}': {details}",
+            error_code="INVALID_CONSTRAINT",
+            operation="validate_constraint",
+            metadata={"constraint_id": constraint_id}
+        )
+
+
+class ImpossibleConstraintError(PlanningError):
+    def __init__(self, constraint_id: str, details: str):
+        super().__init__(
+            message=f"Impossible or contradictory constraint '{constraint_id}': {details}",
+            error_code="IMPOSSIBLE_CONSTRAINT",
+            operation="analyze_constraints",
+            metadata={"constraint_id": constraint_id}
+        )
+
+
+class UnavailableCapabilityError(PlanningError):
+    def __init__(self, capability_name: str, details: str):
+        super().__init__(
+            message=f"Required capability '{capability_name}' is unavailable: {details}",
+            error_code="UNAVAILABLE_CAPABILITY",
+            operation="check_capabilities",
+            retryable=True,
+            metadata={"capability_name": capability_name}
+        )
+
+
+class PlanningTimeoutError(PlanningError):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Planning request '{request_id}' timed out after {timeout} seconds.",
+            error_code="PLANNING_TIMEOUT",
+            operation="execute_planning",
+            retryable=True,
+            metadata={"request_id": request_id, "timeout": timeout}
+        )
+
+
+class PlanningIterationLimitError(PlanningError):
+    def __init__(self, request_id: str, max_iterations: int):
+        super().__init__(
+            message=f"Planning request '{request_id}' reached iteration limit of {max_iterations}.",
+            error_code="ITERATION_LIMIT_REACHED",
+            operation="iterate_planning",
+            metadata={"request_id": request_id, "max_iterations": max_iterations}
+        )
+
+
+class NoFeasibleOptionError(PlanningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"No feasible option found for planning request '{request_id}': {details}",
+            error_code="NO_FEASIBLE_OPTION",
+            operation="analyze_feasibility",
+            metadata={"request_id": request_id}
+        )
+
+
+class InvalidDecisionError(PlanningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Invalid decision for request '{request_id}': {details}",
+            error_code="INVALID_DECISION",
+            operation="form_decision",
+            metadata={"request_id": request_id}
+        )
+
+
+class InternalPlanningFailureError(PlanningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Internal planning failure for request '{request_id}': {details}",
+            error_code="INTERNAL_PLANNING_FAILURE",
+            operation="execute_planning",
+            metadata={"request_id": request_id}
+        )
+
+
 class ReasoningError(EarthMindException):
     """Base exception for B3 Reasoning Engine errors."""
     def __init__(
