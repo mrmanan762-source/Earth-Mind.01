@@ -98,6 +98,117 @@ class InferenceCancelledError(EarthMindException):
         )
 
 
+class ReasoningError(EarthMindException):
+    """Base exception for B3 Reasoning Engine errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "REASONING_ERROR",
+        operation: str = "reasoning_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="reasoning",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidReasoningInputError(ReasoningError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid reasoning input: {details}",
+            error_code="INVALID_REASONING_INPUT",
+            operation="validate_input"
+        )
+
+
+class InvalidEvidenceError(ReasoningError):
+    def __init__(self, evidence_id: str, details: str):
+        super().__init__(
+            message=f"Invalid evidence item '{evidence_id}': {details}",
+            error_code="INVALID_EVIDENCE",
+            operation="validate_evidence",
+            metadata={"evidence_id": evidence_id}
+        )
+
+
+class InsufficientEvidenceError(ReasoningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Insufficient evidence for reasoning request '{request_id}': {details}",
+            error_code="INSUFFICIENT_EVIDENCE",
+            operation="analyze_evidence",
+            metadata={"request_id": request_id}
+        )
+
+
+class ReasoningCapabilityUnavailableError(ReasoningError):
+    def __init__(self, capability_name: str, details: str):
+        super().__init__(
+            message=f"Reasoning capability '{capability_name}' unavailable: {details}",
+            error_code="REASONING_CAPABILITY_UNAVAILABLE",
+            operation="invoke_capability",
+            retryable=True,
+            metadata={"capability_name": capability_name}
+        )
+
+
+class ReasoningTimeoutError(ReasoningError):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Reasoning request '{request_id}' timed out after {timeout} seconds.",
+            error_code="REASONING_TIMEOUT",
+            operation="execute_strategy",
+            retryable=True,
+            metadata={"request_id": request_id, "timeout": timeout}
+        )
+
+
+class IterationLimitReachedError(ReasoningError):
+    def __init__(self, request_id: str, max_iterations: int):
+        super().__init__(
+            message=f"Reasoning request '{request_id}' reached iteration limit of {max_iterations}.",
+            error_code="ITERATION_LIMIT_REACHED",
+            operation="iterate_strategy",
+            metadata={"request_id": request_id, "max_iterations": max_iterations}
+        )
+
+
+class InvalidReasoningResultError(ReasoningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Invalid reasoning result for request '{request_id}': {details}",
+            error_code="INVALID_REASONING_RESULT",
+            operation="validate_result",
+            metadata={"request_id": request_id}
+        )
+
+
+class ReasoningValidationHandoffError(ReasoningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Validation handoff failed for reasoning request '{request_id}': {details}",
+            error_code="REASONING_VALIDATION_HANDOFF_ERROR",
+            operation="handoff_validation",
+            metadata={"request_id": request_id}
+        )
+
+
+class InternalReasoningFailureError(ReasoningError):
+    def __init__(self, request_id: str, details: str):
+        super().__init__(
+            message=f"Internal reasoning failure for request '{request_id}': {details}",
+            error_code="INTERNAL_REASONING_FAILURE",
+            operation="execute_reasoning",
+            metadata={"request_id": request_id}
+        )
+
+
 class ContextError(EarthMindException):
     """Base exception for B2 Context Manager errors."""
     def __init__(
