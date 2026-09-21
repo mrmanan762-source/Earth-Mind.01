@@ -25,6 +25,12 @@ class ModelConfig(BaseModel):
             raise ValueError(f"Invalid revision '{self.revision}'. Must be a valid pinned commit SHA.")
         return True
 
+class KnowledgeBaseStorageSettings(BaseModel):
+    kb_raw_artifact_dir: str = os.getenv("EARTHMIND_KB_RAW_ARTIFACT_DIR", "data/artifacts/raw")
+    kb_storage_backend: str = os.getenv("EARTHMIND_KB_STORAGE_BACKEND", "local_filesystem")
+    kb_index_backend: str = os.getenv("EARTHMIND_KB_INDEX_BACKEND", "placeholder")
+    kb_db_path: str = os.getenv("EARTHMIND_KB_DB_PATH", os.getenv("EARTHMIND_DB_PATH", "earthmind.db"))
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -43,5 +49,6 @@ class Settings(BaseModel):
             is_main_model=True
         )
     )
+    kb_storage: KnowledgeBaseStorageSettings = Field(default_factory=KnowledgeBaseStorageSettings)
 
 settings = Settings()
