@@ -71,3 +71,53 @@ class ChangeType(str, Enum):
     CORRECTION = "CORRECTION"
     RESTRUCTURED = "RESTRUCTURED"
     SUPERSEDED = "SUPERSEDED"
+
+
+class QualityStatus(str, Enum):
+    """Status indicating knowledge quality assessment state."""
+    UNVERIFIED = "UNVERIFIED"
+    VERIFIED = "VERIFIED"
+    LOW_QUALITY = "LOW_QUALITY"
+    HIGH_QUALITY = "HIGH_QUALITY"
+    DEPRECATED = "DEPRECATED"
+
+
+class ProcessingStatus(str, Enum):
+    """Status representing processing pipeline operational state."""
+    PENDING = "PENDING"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
+
+class ReviewStatus(str, Enum):
+    """Status representing expert or system review state."""
+    UNREVIEWED = "UNREVIEWED"
+    PENDING_REVIEW = "PENDING_REVIEW"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+
+
+class AccessPolicy(str, Enum):
+    """Access policy levels for knowledge artifacts."""
+    PUBLIC = "PUBLIC"
+    RESTRICTED = "RESTRICTED"
+    CONFIDENTIAL = "CONFIDENTIAL"
+    INTERNAL = "INTERNAL"
+
+
+class Visibility(str, Enum):
+    """Visibility scope for retrieval and organization."""
+    PUBLIC = "PUBLIC"
+    PRIVATE = "PRIVATE"
+    ORGANIZATIONAL = "ORGANIZATIONAL"
+
+
+class EvidenceType(str, Enum):
+    """Classification of knowledge evidence source type."""
+    EXPERIMENTAL_DATA = "EXPERIMENTAL_DATA"
+    EXTENSION_GUIDE = "EXTENSION_GUIDE"
+    ACADEMIC_PAPER = "ACADEMIC_PAPER"
+    OBSERVATIONAL = "OBSERVATIONAL"
+    SATELLITE_OBSERVATION = "SATELLITE_OBSERVATION"
+    EXPERT_OPINION = "EXPERT_OPINION"
