@@ -2,6 +2,7 @@ import os
 from typing import Dict, Optional, Any
 from pydantic import BaseModel, Field
 
+
 class ModelConfig(BaseModel):
     identifier: str = Field(..., description="Unique model identifier within EarthMind")
     version: str = Field("1.0.0", description="Model version string")
@@ -25,6 +26,21 @@ class ModelConfig(BaseModel):
             raise ValueError(f"Invalid revision '{self.revision}'. Must be a valid pinned commit SHA.")
         return True
 
+
+class EmbeddingConfig(BaseModel):
+    """Configuration for C.2 Knowledge Base embedding providers."""
+    provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_PROVIDER", "fake"), description="Embedding provider name")
+    model: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_MODEL", "earthmind-embed-v1"), description="Embedding model name")
+    model_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_MODEL_VERSION", "1.0.0"), description="Embedding model version")
+    dimension: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_EMBEDDING_DIMENSION", "384")), description="Embedding dimension")
+    endpoint: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_ENDPOINT"), description="Provider API endpoint if applicable")
+    credential_reference: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_CREDENTIAL_REFERENCE"), description="Credential key reference string")
+    batch_size: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_EMBEDDING_BATCH_SIZE", "32")), description="Default batch size")
+    timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_EMBEDDING_TIMEOUT", "30.0")), description="Request timeout in seconds")
+    license: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_LICENSE", "Apache-2.0"), description="Embedding model license")
+    provenance: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_PROVENANCE", "EarthMind Prototype Vector Standard"), description="Model provenance information")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -43,5 +59,7 @@ class Settings(BaseModel):
             is_main_model=True
         )
     )
+    embedding: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
+
 
 settings = Settings()
