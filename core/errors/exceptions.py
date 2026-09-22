@@ -644,6 +644,7 @@ class InvalidRevisionError(EarthMindException):
             operation="validate_revision"
         )
 
+
 class DuplicateRequestError(EarthMindException):
     def __init__(self, request_id: str):
         super().__init__(
@@ -652,4 +653,110 @@ class DuplicateRequestError(EarthMindException):
             module="ai",
             operation="execute",
             metadata={"request_id": request_id}
+        )
+
+
+class EmbeddingError(EarthMindException):
+    """Base exception for C.2 Knowledge Base embedding provider errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "EMBEDDING_ERROR",
+        operation: str = "embedding_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidEmbeddingInputError(EmbeddingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid embedding input: {details}",
+            error_code="INVALID_EMBEDDING_INPUT",
+            operation="validate_input",
+            metadata={"details": details}
+        )
+
+
+class EmbeddingProviderUnavailableError(EmbeddingError):
+    def __init__(self, provider_name: str, details: str = "Provider unavailable or offline."):
+        super().__init__(
+            message=f"Embedding provider '{provider_name}' unavailable: {details}",
+            error_code="EMBEDDING_PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class EmbeddingConfigurationError(EmbeddingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Embedding configuration error: {details}",
+            error_code="EMBEDDING_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class EmbeddingRateLimitError(EmbeddingError):
+    def __init__(self, provider_name: str, details: str = "Rate limit exceeded."):
+        super().__init__(
+            message=f"Embedding provider '{provider_name}' rate limit exceeded: {details}",
+            error_code="EMBEDDING_RATE_LIMIT",
+            operation="execute_embedding",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class EmbeddingTimeoutError(EmbeddingError):
+    def __init__(self, provider_name: str, timeout: float):
+        super().__init__(
+            message=f"Embedding generation timed out after {timeout} seconds on provider '{provider_name}'.",
+            error_code="EMBEDDING_TIMEOUT",
+            operation="execute_embedding",
+            retryable=True,
+            metadata={"provider_name": provider_name, "timeout": timeout}
+        )
+
+
+class EmbeddingExecutionError(EmbeddingError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Embedding execution error on provider '{provider_name}': {details}",
+            error_code="EMBEDDING_EXECUTION_ERROR",
+            operation="execute_embedding",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class InvalidEmbeddingResponseError(EmbeddingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid embedding response: {details}",
+            error_code="INVALID_EMBEDDING_RESPONSE",
+            operation="validate_response",
+            metadata={"details": details}
+        )
+
+
+class EmbeddingDimensionMismatchError(EmbeddingError):
+    def __init__(self, expected_dim: int, actual_dim: int, details: str = ""):
+        msg = f"Dimension mismatch: expected {expected_dim}, got {actual_dim}."
+        if details:
+            msg += f" {details}"
+        super().__init__(
+            message=msg,
+            error_code="EMBEDDING_DIMENSION_MISMATCH",
+            operation="validate_dimension",
+            metadata={"expected_dim": expected_dim, "actual_dim": actual_dim, "details": details}
         )
