@@ -24,6 +24,7 @@ from modules.knowledge_base.enums import (
     DocumentStatus,
     DocumentVersionStatus,
     KnowledgeContentType,
+    KnowledgeLifecycleState,
     KnowledgeUnitStatus,
     SourceStatus,
 )
@@ -115,6 +116,7 @@ class DocumentVersion(BaseModel):
     change_type: ChangeType = Field(ChangeType.INITIAL_CREATION, description="Type of change")
     change_summary: Optional[str] = Field(None, description="Description of changes introduced")
     status: DocumentVersionStatus = Field(DocumentVersionStatus.ACTIVE, description="Version lifecycle status")
+    lifecycle_state: KnowledgeLifecycleState = Field(KnowledgeLifecycleState.RECEIVED, description="Pipeline processing and publication lifecycle state")
     metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
     provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
 

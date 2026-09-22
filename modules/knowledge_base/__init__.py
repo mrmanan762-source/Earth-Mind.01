@@ -9,6 +9,7 @@ from modules.knowledge_base.enums import (
     DocumentVersionStatus,
     EvidenceType,
     KnowledgeContentType,
+    KnowledgeLifecycleState,
     KnowledgeUnitStatus,
     ProcessingStatus,
     QualityStatus,
@@ -19,6 +20,11 @@ from modules.knowledge_base.enums import (
 from modules.knowledge_base.metadata import CanonicalMetadata
 from modules.knowledge_base.provenance import ProcessingStep, Provenance
 from modules.knowledge_base.assessment import SourceAssessment
+from modules.knowledge_base.lifecycle import (
+    InvalidLifecycleTransitionError,
+    KnowledgeLifecycleEngine,
+    LifecycleTransitionRecord,
+)
 from modules.knowledge_base.canonical_models import (
     Artifact,
     Chunk,
@@ -51,6 +57,7 @@ __all__ = [
     "AccessPolicy",
     "Visibility",
     "EvidenceType",
+    "KnowledgeLifecycleState",
     # Step 5 Canonical Models
     "Source",
     "Artifact",
@@ -70,4 +77,8 @@ __all__ = [
     "validate_metadata_structure",
     "validate_provenance_chain",
     "validate_source_assessment",
+    # Step 7 Models & Lifecycle Engine
+    "InvalidLifecycleTransitionError",
+    "KnowledgeLifecycleEngine",
+    "LifecycleTransitionRecord",
 ]

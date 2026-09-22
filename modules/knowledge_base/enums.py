@@ -121,3 +121,19 @@ class EvidenceType(str, Enum):
     OBSERVATIONAL = "OBSERVATIONAL"
     SATELLITE_OBSERVATION = "SATELLITE_OBSERVATION"
     EXPERT_OPINION = "EXPERT_OPINION"
+
+
+class KnowledgeLifecycleState(str, Enum):
+    """Explicit processing and publication lifecycle state for Knowledge Base objects."""
+    RECEIVED = "RECEIVED"
+    PROCESSING = "PROCESSING"
+    PROCESSED = "PROCESSED"
+    EMBEDDED = "EMBEDDED"
+    INDEXED = "INDEXED"
+    PENDING_REVIEW = "PENDING_REVIEW"
+    PUBLISHED = "PUBLISHED"
+    SUPERSEDED = "SUPERSEDED"
+    RETIRED = "RETIRED"
+    FAILED = "FAILED"
+    REJECTED = "REJECTED"
+    INVALID = "INVALID"
