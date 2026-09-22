@@ -14,7 +14,7 @@ provenance, embeddings, indexes, and retrieval representations are derived.
 """
 
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional, List
+from typing import Any, Dict, Optional, List, Union
 from pydantic import BaseModel, Field, model_validator, field_validator
 
 from modules.knowledge_base.enums import (
@@ -27,6 +27,9 @@ from modules.knowledge_base.enums import (
     KnowledgeUnitStatus,
     SourceStatus,
 )
+from modules.knowledge_base.metadata import CanonicalMetadata
+from modules.knowledge_base.provenance import Provenance
+from modules.knowledge_base.assessment import SourceAssessment
 
 
 def _validate_non_empty_str(field_name: str, value: str) -> str:
@@ -48,7 +51,9 @@ class Source(BaseModel):
     status: SourceStatus = Field(SourceStatus.ACTIVE, description="Source status")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Creation timestamp")
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Last update timestamp")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary source metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
+    assessment: Optional[SourceAssessment] = Field(None, description="Source assessment signals")
 
     @field_validator("source_id", "source_name", "source_type")
     @classmethod
@@ -67,7 +72,8 @@ class Artifact(BaseModel):
     ingestion_time: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Ingestion timestamp")
     version_info: Optional[str] = Field(None, description="Version or revision string from origin")
     status: ArtifactStatus = Field(ArtifactStatus.RAW, description="Artifact ingestion/processing status")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary artifact metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
 
     @field_validator("artifact_id", "source_id", "location_reference", "content_type")
     @classmethod
@@ -87,7 +93,9 @@ class Document(BaseModel):
     status: DocumentStatus = Field(DocumentStatus.ACTIVE, description="Logical document status")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Creation timestamp")
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Last update timestamp")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary document metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
+    assessment: Optional[SourceAssessment] = Field(None, description="Source assessment signals")
 
     @field_validator("document_id", "source_id", "title", "document_type")
     @classmethod
@@ -107,7 +115,8 @@ class DocumentVersion(BaseModel):
     change_type: ChangeType = Field(ChangeType.INITIAL_CREATION, description="Type of change")
     change_summary: Optional[str] = Field(None, description="Description of changes introduced")
     status: DocumentVersionStatus = Field(DocumentVersionStatus.ACTIVE, description="Version lifecycle status")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary version metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
 
     @field_validator("version_id", "document_id", "version_number")
     @classmethod
@@ -135,7 +144,8 @@ class Section(BaseModel):
     sequence: int = Field(0, ge=0, description="Sequential position within section level")
     level: int = Field(1, ge=1, description="Structural depth level (1=top, 2=subsection, ...)")
     content_reference: Optional[str] = Field(None, description="Reference pointer to raw section content")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary section metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
 
     @field_validator("section_id", "document_id", "version_id", "title")
     @classmethod
@@ -161,7 +171,9 @@ class KnowledgeUnit(BaseModel):
     sequence: int = Field(0, ge=0, description="Sequential order within document/section")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), description="Creation timestamp")
     status: KnowledgeUnitStatus = Field(KnowledgeUnitStatus.ACTIVE, description="Unit status")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary unit metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
+    assessment: Optional[SourceAssessment] = Field(None, description="Source assessment signals")
 
     @field_validator("knowledge_unit_id", "document_id", "version_id")
     @classmethod
@@ -189,7 +201,8 @@ class Chunk(BaseModel):
     size_bytes: Optional[int] = Field(None, ge=0, description="Size in bytes")
     token_count: Optional[int] = Field(None, ge=0, description="Token count if calculated")
     status: ChunkStatus = Field(ChunkStatus.ACTIVE, description="Chunk status")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary chunk metadata")
+    metadata: Union[CanonicalMetadata, Dict[str, Any]] = Field(default_factory=dict, description="Extensible metadata or dict")
+    provenance: Optional[Provenance] = Field(None, description="Processing provenance chain")
 
     @field_validator("chunk_id", "knowledge_unit_id", "document_id", "version_id")
     @classmethod
@@ -206,6 +219,70 @@ class Chunk(BaseModel):
 class LineageValidationError(Exception):
     """Raised when canonical object lineage or cross-entity relationship verification fails."""
     pass
+
+
+class Step6ValidationError(Exception):
+    """Raised when Step 6 metadata, provenance, or source assessment validation fails."""
+    pass
+
+
+def validate_metadata_structure(metadata: Any) -> bool:
+    """Validates metadata object structure and non-emptiness.
+
+    Returns True if valid; raises Step6ValidationError if invalid.
+    """
+    if metadata is None:
+        raise Step6ValidationError("Metadata must not be None.")
+    if isinstance(metadata, CanonicalMetadata):
+        return True
+    if isinstance(metadata, dict):
+        return True
+    raise Step6ValidationError(f"Invalid metadata object type: {type(metadata)}. Expected CanonicalMetadata or dict.")
+
+
+def validate_provenance_chain(provenance: Optional[Provenance], entity_id: Optional[str] = None) -> bool:
+    """Validates explicit provenance structure and optional entity ID reference match.
+
+    Returns True if valid; raises Step6ValidationError if invalid.
+    """
+    if provenance is None:
+        return True
+    if not isinstance(provenance, Provenance):
+        raise Step6ValidationError(f"Invalid provenance object type: {type(provenance)}. Expected Provenance model.")
+    if entity_id is not None:
+        matched_id = (
+            provenance.chunk_id
+            or provenance.knowledge_unit_id
+            or provenance.section_id
+            or provenance.version_id
+            or provenance.document_id
+            or provenance.artifact_id
+            or provenance.source_id
+        )
+        if matched_id is not None and matched_id != entity_id:
+            raise Step6ValidationError(
+                f"Provenance entity reference mismatch: provenance references '{matched_id}' but canonical entity is '{entity_id}'."
+            )
+    return True
+
+
+def validate_source_assessment(assessment: Optional[SourceAssessment]) -> bool:
+    """Validates SourceAssessment scores and structure.
+
+    Returns True if valid; raises Step6ValidationError if invalid.
+    """
+    if assessment is None:
+        return True
+    if not isinstance(assessment, SourceAssessment):
+        raise Step6ValidationError(f"Invalid assessment object type: {type(assessment)}. Expected SourceAssessment model.")
+
+    for score_field in ["authority", "reliability", "recency", "domain_relevance", "geographic_relevance"]:
+        score_val = getattr(assessment, score_field, None)
+        if score_val is not None:
+            if not isinstance(score_val, (int, float)) or score_val < 0.0 or score_val > 1.0:
+                raise Step6ValidationError(f"SourceAssessment field '{score_field}' score {score_val} must be between 0.0 and 1.0.")
+
+    return True
 
 
 def validate_canonical_lineage(
@@ -278,5 +355,13 @@ def validate_canonical_lineage(
                     raise LineageValidationError(
                         f"Chunk '{chunk.chunk_id}' references unknown knowledge_unit_id '{chunk.knowledge_unit_id}'."
                     )
+
+    # Validate Step 6 attachments if present
+    for obj in [source, document, version] + (sections or []) + (units or []) + (chunks or []):
+        validate_metadata_structure(obj.metadata)
+        if hasattr(obj, "provenance") and obj.provenance is not None:
+            validate_provenance_chain(obj.provenance)
+        if hasattr(obj, "assessment") and obj.assessment is not None:
+            validate_source_assessment(obj.assessment)
 
     return True
