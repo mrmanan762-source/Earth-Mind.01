@@ -935,3 +935,117 @@ class QdrantAdapterError(IndexError):
             retryable=retryable,
             metadata={"details": details}
         )
+
+
+class CollectionError(EarthMindException):
+    """Base exception for C.2 Knowledge Base Collection errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "COLLECTION_ERROR",
+        operation: str = "collection_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidCollectionError(CollectionError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid collection definition: {details}",
+            error_code="INVALID_COLLECTION",
+            operation="validate_collection",
+            metadata={"details": details}
+        )
+
+
+class CollectionNotFoundError(CollectionError):
+    def __init__(self, collection_identifier: str):
+        super().__init__(
+            message=f"Knowledge Collection '{collection_identifier}' was not found.",
+            error_code="COLLECTION_NOT_FOUND",
+            operation="lookup_collection",
+            metadata={"collection_identifier": collection_identifier}
+        )
+
+
+class DuplicateCollectionError(CollectionError):
+    def __init__(self, collection_identifier: str):
+        super().__init__(
+            message=f"Knowledge Collection '{collection_identifier}' already exists.",
+            error_code="DUPLICATE_COLLECTION",
+            operation="create_collection",
+            metadata={"collection_identifier": collection_identifier}
+        )
+
+
+class PublicationError(EarthMindException):
+    """Base exception for C.2 Knowledge Base Publication errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "PUBLICATION_ERROR",
+        operation: str = "publication_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class PublicationEligibilityError(PublicationError):
+    def __init__(self, object_id: str, reasons: Any):
+        super().__init__(
+            message=f"Knowledge object '{object_id}' is not eligible for publication: {reasons}",
+            error_code="PUBLICATION_ELIGIBILITY_ERROR",
+            operation="evaluate_eligibility",
+            metadata={"object_id": object_id, "reasons": str(reasons)}
+        )
+
+
+class PublicationValidationError(PublicationError):
+    def __init__(self, object_id: str, details: str):
+        super().__init__(
+            message=f"Publication validation failed for object '{object_id}': {details}",
+            error_code="PUBLICATION_VALIDATION_ERROR",
+            operation="validate_publication",
+            metadata={"object_id": object_id, "details": details}
+        )
+
+
+class InvalidPublicationStateError(PublicationError):
+    def __init__(self, object_id: str, current_state: str, target_state: str, details: str = ""):
+        msg = f"Invalid publication state transition for object '{object_id}': {current_state} -> {target_state}."
+        if details:
+            msg += f" Details: {details}"
+        super().__init__(
+            message=msg,
+            error_code="INVALID_PUBLICATION_STATE",
+            operation="transition_state",
+            metadata={"object_id": object_id, "current_state": current_state, "target_state": target_state}
+        )
+
+
+class PublicationIndexUnavailableError(PublicationError):
+    def __init__(self, object_id: str, details: str = "Index adapter or representation is unavailable."):
+        super().__init__(
+            message=f"Index unavailable for published object '{object_id}': {details}",
+            error_code="PUBLICATION_INDEX_UNAVAILABLE",
+            operation="sync_index",
+            retryable=True,
+            metadata={"object_id": object_id, "details": details}
+        )
