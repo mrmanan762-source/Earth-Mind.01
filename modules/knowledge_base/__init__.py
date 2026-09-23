@@ -70,6 +70,14 @@ from modules.knowledge_base.sparse import (
     KnowledgeSparseEngine,
     SparseBatchResult,
 )
+from modules.knowledge_base.index import (
+    IndexRecord,
+    IndexBatchResult,
+    KnowledgeCollectionMapper,
+    KnowledgeIndexEngine,
+    FakeIndexAdapter,
+    QdrantIndexAdapter,
+)
 
 __all__ = [
     # Enums
@@ -135,4 +143,11 @@ __all__ = [
     "SparseRepresentationAdapter",
     "KnowledgeSparseEngine",
     "SparseBatchResult",
+    # Step 11 Index Layer
+    "IndexRecord",
+    "IndexBatchResult",
+    "KnowledgeCollectionMapper",
+    "KnowledgeIndexEngine",
+    "FakeIndexAdapter",
+    "QdrantIndexAdapter",
 ]

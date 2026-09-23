@@ -840,3 +840,98 @@ class SparseVectorValidationError(SparseRepresentationError):
             operation="validate_sparse_vector",
             metadata={"details": details}
         )
+
+
+class IndexError(EarthMindException):
+    """Base exception for C.2 Knowledge Base Index Layer errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "INDEX_ERROR",
+        operation: str = "index_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidIndexRecordError(IndexError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid index record: {details}",
+            error_code="INVALID_INDEX_RECORD",
+            operation="validate_record",
+            metadata={"details": details}
+        )
+
+
+class IndexProviderUnavailableError(IndexError):
+    def __init__(self, provider_name: str, details: str = "Index provider unavailable or offline."):
+        super().__init__(
+            message=f"Index provider '{provider_name}' unavailable: {details}",
+            error_code="INDEX_PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class IndexConfigurationError(IndexError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Index configuration error: {details}",
+            error_code="INDEX_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class IndexExecutionError(IndexError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Index execution error on provider '{provider_name}': {details}",
+            error_code="INDEX_EXECUTION_ERROR",
+            operation="execute_index",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class CollectionOperationError(IndexError):
+    def __init__(self, collection_name: str, operation: str, details: str):
+        super().__init__(
+            message=f"Collection operation '{operation}' failed on '{collection_name}': {details}",
+            error_code="COLLECTION_OPERATION_ERROR",
+            operation=operation,
+            metadata={"collection_name": collection_name, "details": details}
+        )
+
+
+class IndexDimensionMismatchError(IndexError):
+    def __init__(self, expected_dim: int, actual_dim: int, details: str = ""):
+        msg = f"Index vector dimension mismatch: expected {expected_dim}, got {actual_dim}."
+        if details:
+            msg += f" {details}"
+        super().__init__(
+            message=msg,
+            error_code="INDEX_DIMENSION_MISMATCH",
+            operation="validate_dimension",
+            metadata={"expected_dim": expected_dim, "actual_dim": actual_dim, "details": details}
+        )
+
+
+class QdrantAdapterError(IndexError):
+    def __init__(self, details: str, operation: str = "qdrant_operation", retryable: bool = False):
+        super().__init__(
+            message=f"Qdrant adapter error: {details}",
+            error_code="QDRANT_ADAPTER_ERROR",
+            operation=operation,
+            retryable=retryable,
+            metadata={"details": details}
+        )
