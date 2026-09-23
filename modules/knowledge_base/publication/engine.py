@@ -176,7 +176,7 @@ class KnowledgePublicationEngine:
                 if index_records:
                     batch_res = self.index_engine.index_batch(index_records, logical_collection=collection_id)
                     index_sync_details["index_batch_result"] = batch_res.model_dump()
-                    if batch_res.failed_records > 0 and batch_res.successful_records == 0:
+                    if len(batch_res.failed_records) > 0 and len(batch_res.successful_records) == 0:
                         pub_status = PublicationStatus.PUBLISHED_INDEX_UNAVAILABLE
                     else:
                         index_sync_details["indexed"] = True
