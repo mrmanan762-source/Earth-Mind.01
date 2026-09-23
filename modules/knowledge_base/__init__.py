@@ -9,6 +9,7 @@ from modules.knowledge_base.enums import (
     DocumentVersionStatus,
     EvidenceType,
     KnowledgeContentType,
+    KnowledgeLifecycleState,
     KnowledgeUnitStatus,
     ProcessingStatus,
     QualityStatus,
@@ -34,6 +35,27 @@ from modules.knowledge_base.canonical_models import (
     validate_provenance_chain,
     validate_source_assessment,
 )
+from modules.knowledge_base.processor import (
+    DocumentProcessingError,
+    IDocumentProcessor,
+    MalformedDocumentError,
+    NormalizedBlock,
+    NormalizedDocument,
+    NormalizedSection,
+    PlainTextProcessor,
+    ProcessorConfig,
+    StructuredDocumentProcessor,
+    UnsupportedFormatError,
+)
+from modules.knowledge_base.chunker import (
+    ChunkingConfig,
+    IChunker,
+    SemanticStructuralChunker,
+)
+from modules.knowledge_base.pipeline import (
+    DocumentProcessingPipeline,
+    DocumentProcessingResult,
+)
 
 __all__ = [
     # Enums
@@ -44,6 +66,7 @@ __all__ = [
     "KnowledgeUnitStatus",
     "ChunkStatus",
     "KnowledgeContentType",
+    "KnowledgeLifecycleState",
     "ChangeType",
     "QualityStatus",
     "ProcessingStatus",
@@ -70,4 +93,20 @@ __all__ = [
     "validate_metadata_structure",
     "validate_provenance_chain",
     "validate_source_assessment",
+    # Step 8 Processing & Chunking
+    "ProcessorConfig",
+    "NormalizedBlock",
+    "NormalizedSection",
+    "NormalizedDocument",
+    "DocumentProcessingError",
+    "UnsupportedFormatError",
+    "MalformedDocumentError",
+    "IDocumentProcessor",
+    "PlainTextProcessor",
+    "StructuredDocumentProcessor",
+    "ChunkingConfig",
+    "IChunker",
+    "SemanticStructuralChunker",
+    "DocumentProcessingPipeline",
+    "DocumentProcessingResult",
 ]
