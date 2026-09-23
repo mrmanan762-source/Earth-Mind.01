@@ -78,6 +78,22 @@ from modules.knowledge_base.index import (
     FakeIndexAdapter,
     QdrantIndexAdapter,
 )
+from modules.knowledge_base.collections import (
+    CollectionMembership,
+    CollectionStatus,
+    CollectionType,
+    KnowledgeCollection,
+    KnowledgeCollectionEngine,
+    KnowledgeObjectType,
+    MembershipStatus,
+)
+from modules.knowledge_base.publication import (
+    KnowledgePublicationEngine,
+    PublicationEligibilityResult,
+    PublicationEligibilityValidator,
+    PublicationRecord,
+    PublicationStatus,
+)
 
 __all__ = [
     # Enums
@@ -150,4 +166,17 @@ __all__ = [
     "KnowledgeIndexEngine",
     "FakeIndexAdapter",
     "QdrantIndexAdapter",
+    # Step 12 Collections & Publication
+    "CollectionType",
+    "CollectionStatus",
+    "MembershipStatus",
+    "KnowledgeObjectType",
+    "KnowledgeCollection",
+    "CollectionMembership",
+    "KnowledgeCollectionEngine",
+    "PublicationStatus",
+    "PublicationEligibilityResult",
+    "PublicationRecord",
+    "PublicationEligibilityValidator",
+    "KnowledgePublicationEngine",
 ]
