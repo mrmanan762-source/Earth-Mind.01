@@ -56,6 +56,13 @@ from modules.knowledge_base.pipeline import (
     DocumentProcessingPipeline,
     DocumentProcessingResult,
 )
+from modules.knowledge_base.embedding import (
+    EmbeddingRecord,
+    EmbeddingAdapter,
+    FakeEmbeddingProvider,
+    KnowledgeEmbeddingEngine,
+    EmbeddingBatchResult,
+)
 
 __all__ = [
     # Enums
@@ -71,7 +78,7 @@ __all__ = [
     "QualityStatus",
     "ProcessingStatus",
     "ReviewStatus",
-    "AccessPolicy",
+    "SourceStatus",
     "Visibility",
     "EvidenceType",
     # Step 5 Canonical Models
@@ -109,4 +116,10 @@ __all__ = [
     "SemanticStructuralChunker",
     "DocumentProcessingPipeline",
     "DocumentProcessingResult",
+    # Step 9 Embedding Layer
+    "EmbeddingRecord",
+    "EmbeddingAdapter",
+    "FakeEmbeddingProvider",
+    "KnowledgeEmbeddingEngine",
+    "EmbeddingBatchResult",
 ]
