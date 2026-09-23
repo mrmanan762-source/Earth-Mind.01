@@ -137,3 +137,13 @@ class EvidenceType(str, Enum):
     OBSERVATIONAL = "OBSERVATIONAL"
     SATELLITE_OBSERVATION = "SATELLITE_OBSERVATION"
     EXPERT_OPINION = "EXPERT_OPINION"
+
+
+class IndexStatus(str, Enum):
+    """Status representing index record or indexing pipeline operational state."""
+    PENDING = "PENDING"
+    INDEXING = "INDEXING"
+    INDEXED = "INDEXED"
+    FAILED = "FAILED"
+    PARTIAL = "PARTIAL"
+    STALE = "STALE"
