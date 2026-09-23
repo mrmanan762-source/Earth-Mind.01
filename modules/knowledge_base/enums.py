@@ -90,6 +90,22 @@ class ProcessingStatus(str, Enum):
     FAILED = "FAILED"
 
 
+class KnowledgeLifecycleState(str, Enum):
+    """Lifecycle states for C.2 Knowledge Base documents and processing pipeline."""
+    RECEIVED = "RECEIVED"
+    PROCESSING = "PROCESSING"
+    PROCESSED = "PROCESSED"
+    EMBEDDED = "EMBEDDED"
+    INDEXED = "INDEXED"
+    PENDING_REVIEW = "PENDING_REVIEW"
+    PUBLISHED = "PUBLISHED"
+    FAILED = "FAILED"
+    REJECTED = "REJECTED"
+    INVALID = "INVALID"
+    RETIRED = "RETIRED"
+    SUPERSEDED = "SUPERSEDED"
+
+
 class ReviewStatus(str, Enum):
     """Status representing expert or system review state."""
     UNREVIEWED = "UNREVIEWED"
