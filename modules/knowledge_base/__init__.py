@@ -63,6 +63,13 @@ from modules.knowledge_base.embedding import (
     KnowledgeEmbeddingEngine,
     EmbeddingBatchResult,
 )
+from modules.knowledge_base.sparse import (
+    SparseRepresentationRecord,
+    FakeSparseProvider,
+    SparseRepresentationAdapter,
+    KnowledgeSparseEngine,
+    SparseBatchResult,
+)
 
 __all__ = [
     # Enums
@@ -122,4 +129,10 @@ __all__ = [
     "FakeEmbeddingProvider",
     "KnowledgeEmbeddingEngine",
     "EmbeddingBatchResult",
+    # Step 10 Sparse Representation
+    "SparseRepresentationRecord",
+    "FakeSparseProvider",
+    "SparseRepresentationAdapter",
+    "KnowledgeSparseEngine",
+    "SparseBatchResult",
 ]

@@ -760,3 +760,83 @@ class EmbeddingDimensionMismatchError(EmbeddingError):
             operation="validate_dimension",
             metadata={"expected_dim": expected_dim, "actual_dim": actual_dim, "details": details}
         )
+
+
+class SparseRepresentationError(EmbeddingError):
+    """Base exception for C.2 Knowledge Base sparse representation errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "SPARSE_REPRESENTATION_ERROR",
+        operation: str = "sparse_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidSparseInputError(SparseRepresentationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid sparse representation input: {details}",
+            error_code="INVALID_SPARSE_INPUT",
+            operation="validate_input",
+            metadata={"details": details}
+        )
+
+
+class SparseProviderUnavailableError(SparseRepresentationError):
+    def __init__(self, provider_name: str, details: str = "Sparse provider unavailable or offline."):
+        super().__init__(
+            message=f"Sparse provider '{provider_name}' unavailable: {details}",
+            error_code="SPARSE_PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class SparseConfigurationError(SparseRepresentationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Sparse provider configuration error: {details}",
+            error_code="SPARSE_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class SparseExecutionError(SparseRepresentationError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Sparse execution error on provider '{provider_name}': {details}",
+            error_code="SPARSE_EXECUTION_ERROR",
+            operation="execute_sparse",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class InvalidSparseResponseError(SparseRepresentationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid sparse response: {details}",
+            error_code="INVALID_SPARSE_RESPONSE",
+            operation="validate_response",
+            metadata={"details": details}
+        )
+
+
+class SparseVectorValidationError(SparseRepresentationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"SparseVector validation failed: {details}",
+            error_code="SPARSE_VECTOR_VALIDATION_ERROR",
+            operation="validate_sparse_vector",
+            metadata={"details": details}
+        )
