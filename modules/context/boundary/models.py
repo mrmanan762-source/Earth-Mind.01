@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 from modules.context.schemas import PrivacyLevel
 from modules.context.boundary.enums import (
@@ -136,3 +136,52 @@ class MemoryContextContract(BaseModel):
             source_id=self.memory_id,
             metadata=self.metadata,
         )
+
+
+class RAGContextRequest(BaseModel):
+    """Provider-independent executable request contract for RAG knowledge retrieval."""
+    request_id: str = Field(..., description="Unique context request identifier")
+    request_origin: Optional[str] = Field("B2_CONTEXT_MANAGER", description="Origin of request")
+    session_id: Optional[str] = Field(None, description="Session identifier")
+    query_text: Optional[str] = Field(None, description="Agronomic or general knowledge query prompt/task")
+    classification: KnowledgeClassification = Field(
+        KnowledgeClassification.GENERAL_KNOWLEDGE, description="Target knowledge classification"
+    )
+    scope: ContextScope = Field(ContextScope.GLOBAL, description="Knowledge scope (GLOBAL or REGIONAL)")
+    collection_ids: List[str] = Field(default_factory=list, description="Target knowledge collection IDs")
+    content_types: List[str] = Field(default_factory=list, description="Target content types (e.g., crop, soil, disease)")
+    language: Optional[str] = Field("en", description="Target language code")
+    region: Optional[str] = Field(None, description="Target regional constraint")
+    time_range: Optional[Dict[str, Any]] = Field(None, description="Temporal constraints")
+    relevance_threshold: float = Field(0.5, ge=0.0, le=1.0, description="Minimum relevance threshold")
+    maximum_result_count: int = Field(10, ge=1, description="Maximum number of items to return")
+    publication_required: bool = Field(True, description="Enforce publication requirement (state == PUBLISHED)")
+    trace_id: Optional[str] = Field(None, description="System traceability identifier")
+    timestamp: Optional[str] = Field(None, description="ISO timestamp of request creation")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata")
+
+
+class MemoryContextRequest(BaseModel):
+    """Provider-independent executable request contract for Memory context retrieval."""
+    request_id: str = Field(..., description="Unique context request identifier")
+    request_origin: Optional[str] = Field("B2_CONTEXT_MANAGER", description="Origin of request")
+    farmer_id: Optional[str] = Field(None, description="Farmer entity identifier")
+    farm_id: Optional[str] = Field(None, description="Farm entity identifier")
+    field_id: Optional[str] = Field(None, description="Field entity identifier")
+    crop_cycle_id: Optional[str] = Field(None, description="Crop cycle entity identifier")
+    session_id: Optional[str] = Field(None, description="Session identifier")
+    query_text: Optional[str] = Field(None, description="Query prompt/task description")
+    classification: KnowledgeClassification = Field(
+        KnowledgeClassification.FARMER_KNOWLEDGE, description="Target memory classification"
+    )
+    scope: ContextScope = Field(ContextScope.FARMER, description="Memory scope (FARMER, FARM, FIELD, CROP_CYCLE, SESSION)")
+    requested_memory_types: List[str] = Field(
+        default_factory=list, description="Memory types (history, preferences, observations, constraints)"
+    )
+    time_range: Optional[Dict[str, Any]] = Field(None, description="Temporal constraints")
+    relevance_threshold: float = Field(0.5, ge=0.0, le=1.0, description="Minimum relevance threshold")
+    maximum_result_count: int = Field(10, ge=1, description="Maximum number of items to return")
+    allow_pii: bool = Field(False, description="Whether PII memory records are permitted")
+    trace_id: Optional[str] = Field(None, description="System traceability identifier")
+    timestamp: Optional[str] = Field(None, description="ISO timestamp of request creation")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary metadata")

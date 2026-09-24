@@ -36,30 +36,38 @@ class ContextCollector:
 
         timeout = request.policy.timeout_seconds if request.policy else 5.0
 
+        self.last_provider_statuses: Dict[str, str] = {}
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(self._providers)) as executor:
             future_to_provider = {
                 executor.submit(p.get_context, request): name
                 for name, p in self._providers.items()
             }
 
-            for future in concurrent.futures.as_completed(future_to_provider):
-                provider_name = future_to_provider[future]
-                try:
-                    provider_items = future.result(timeout=timeout)
-                    if provider_items:
-                        items.extend(provider_items)
-                        logger.debug(f"Collected {len(provider_items)} items from '{provider_name}'")
-                except concurrent.futures.TimeoutError:
-                    msg = f"Provider '{provider_name}' timed out after {timeout} seconds."
-                    logger.error(msg)
-                    errors.append(msg)
-                    if request.policy and provider_name in request.policy.required_providers:
-                        logger.error(f"Required provider '{provider_name}' timed out.")
-                except Exception as e:
-                    msg = f"Provider '{provider_name}' failed: {str(e)}"
-                    logger.error(msg)
-                    errors.append(msg)
-                    if request.policy and provider_name in request.policy.required_providers:
-                        logger.error(f"Required provider '{provider_name}' failed.")
+            try:
+                for future in concurrent.futures.as_completed(future_to_provider, timeout=timeout):
+                    provider_name = future_to_provider[future]
+                    try:
+                        provider_items = future.result()
+                        self.last_provider_statuses[provider_name] = "SUCCESS"
+                        if provider_items:
+                            items.extend(provider_items)
+                            logger.debug(f"Collected {len(provider_items)} items from '{provider_name}'")
+                    except Exception as e:
+                        self.last_provider_statuses[provider_name] = "FAILED"
+                        msg = f"Provider '{provider_name}' failed: {str(e)}"
+                        logger.error(msg)
+                        errors.append(msg)
+                        if request.policy and provider_name in request.policy.required_providers:
+                            logger.error(f"Required provider '{provider_name}' failed.")
+            except concurrent.futures.TimeoutError:
+                for future, provider_name in future_to_provider.items():
+                    if not future.done():
+                        self.last_provider_statuses[provider_name] = "TIMEOUT"
+                        msg = f"Provider '{provider_name}' timed out after {timeout} seconds."
+                        logger.error(msg)
+                        errors.append(msg)
+                        if request.policy and provider_name in request.policy.required_providers:
+                            logger.error(f"Required provider '{provider_name}' timed out.")
 
         return items, warnings, errors

@@ -64,6 +64,12 @@ class ContextBuilder:
                     "transformations": [t.model_dump() for t in item.transformation_history],
                 },
                 "trace_id": item.trace_id or request.trace_id,
+                "source_type": item.source_type.value if item.source_type else None,
+                "ownership": item.ownership.value if item.ownership else None,
+                "classification": item.classification.value if item.classification else None,
+                "scope": item.scope.value if item.scope else None,
+                "persistence_intent": item.persistence_intent.value if item.persistence_intent else None,
+                "boundary_metadata": item.boundary_metadata,
             }
             structured_context["items"].append(item_dict)
 
