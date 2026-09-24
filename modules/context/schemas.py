@@ -48,6 +48,15 @@ class TransformationRecord(BaseModel):
     details: Dict[str, Any] = Field(default_factory=dict, description="Additional transformation details")
 
 
+from modules.context.boundary.enums import (
+    KnowledgeClassification,
+    ContextSourceType,
+    ContextOwnership,
+    ContextScope,
+    PersistenceIntent,
+)
+
+
 class ContextItem(BaseModel):
     context_id: str = Field(..., description="Unique context item identifier")
     entity_type: str = Field(..., description="Entity type (e.g. 'field', 'crop', 'soil', 'weather')")
@@ -89,6 +98,115 @@ class ContextItem(BaseModel):
     version: str = Field("1.0", description="Item version string")
     trace_id: Optional[str] = Field(None, description="Traceability identifier")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary item metadata")
+
+    # C.3 Boundary & Data Classification Fields
+    source_type: Optional[ContextSourceType] = Field(None, description="C.3 Source type")
+    ownership: Optional[ContextOwnership] = Field(None, description="C.3 Subsystem ownership")
+    classification: Optional[KnowledgeClassification] = Field(None, description="C.3 Data classification")
+    scope: Optional[ContextScope] = Field(None, description="C.3 Context scope")
+    persistence_intent: Optional[PersistenceIntent] = Field(None, description="C.3 Persistence intent")
+    boundary_metadata: Optional[Dict[str, Any]] = Field(None, description="C.3 ContextSourceRecord metadata")
+
+    @classmethod
+    def from_rag_contract(cls, rag_contract: Any, context_id: Optional[str] = None) -> "ContextItem":
+        from modules.context.boundary.models import RAGContextContract
+        if not isinstance(rag_contract, RAGContextContract):
+            raise ValueError("rag_contract must be a RAGContextContract")
+
+        record = rag_contract.to_source_record()
+        cid = context_id or f"rag_{rag_contract.chunk_id or rag_contract.knowledge_unit_id or rag_contract.source_id or id(rag_contract)}"
+
+        return cls(
+            context_id=cid,
+            entity_type="general_knowledge",
+            entity_id=rag_contract.document_id or rag_contract.collection_id or "global",
+            data_type="rag_evidence",
+            content=rag_contract.content,
+            source=rag_contract.source_type.value,
+            source_id=rag_contract.source_id or rag_contract.chunk_id,
+            privacy_level=PrivacyLevel.PUBLIC,
+            is_pii=False,
+            source_type=rag_contract.source_type,
+            ownership=rag_contract.ownership,
+            classification=rag_contract.classification,
+            scope=rag_contract.scope,
+            persistence_intent=rag_contract.persistence_intent,
+            boundary_metadata=record.model_dump(),
+            trace_id=rag_contract.trace_id,
+            metadata=rag_contract.metadata,
+        )
+
+    @classmethod
+    def from_memory_contract(cls, memory_contract: Any, context_id: Optional[str] = None) -> "ContextItem":
+        from modules.context.boundary.models import MemoryContextContract
+        if not isinstance(memory_contract, MemoryContextContract):
+            raise ValueError("memory_contract must be a MemoryContextContract")
+
+        record = memory_contract.to_source_record()
+        cid = context_id or f"mem_{memory_contract.memory_id}"
+
+        return cls(
+            context_id=cid,
+            entity_type="farmer_context",
+            entity_id=memory_contract.farmer_id or memory_contract.farm_id or memory_contract.field_id or "farmer",
+            data_type="memory_record",
+            content=memory_contract.content,
+            farmer_id=memory_contract.farmer_id,
+            farm_id=memory_contract.farm_id,
+            field_id=memory_contract.field_id,
+            crop_cycle_id=memory_contract.crop_cycle_id,
+            session_id=memory_contract.session_id,
+            source=memory_contract.source_type.value,
+            source_id=memory_contract.memory_id,
+            privacy_level=memory_contract.privacy_level,
+            is_pii=memory_contract.is_pii,
+            relevance_score=memory_contract.relevance_score if memory_contract.relevance_score is not None else 1.0,
+            source_type=memory_contract.source_type,
+            ownership=memory_contract.ownership,
+            classification=memory_contract.classification,
+            scope=memory_contract.scope,
+            persistence_intent=memory_contract.persistence_intent,
+            boundary_metadata=record.model_dump(),
+            trace_id=memory_contract.trace_id,
+            metadata=memory_contract.metadata,
+        )
+
+    def to_boundary_record(self) -> Any:
+        from modules.context.boundary.models import ContextSourceRecord
+        if self.boundary_metadata:
+            return ContextSourceRecord(**self.boundary_metadata)
+
+        st = self.source_type or (ContextSourceType.RAG if self.source.upper() == "RAG" else ContextSourceType.MEMORY)
+        ow = self.ownership or (ContextOwnership.RAG_OWNED if st == ContextSourceType.RAG else ContextOwnership.MEMORY_OWNED)
+        cl = self.classification or (KnowledgeClassification.GENERAL_KNOWLEDGE if ow == ContextOwnership.RAG_OWNED else KnowledgeClassification.FARMER_KNOWLEDGE)
+        sc = self.scope or (ContextScope.GLOBAL if cl == KnowledgeClassification.GENERAL_KNOWLEDGE else ContextScope.FARMER)
+        pi = self.persistence_intent or PersistenceIntent.PERSISTENT
+
+        prov = {
+            "source": self.source,
+            "source_id": self.source_id,
+            "transformations": [t.model_dump() for t in self.transformation_history],
+        }
+
+        return ContextSourceRecord(
+            source_type=st,
+            ownership=ow,
+            classification=cl,
+            scope=sc,
+            persistence_intent=pi,
+            provenance=prov,
+            timestamp=self.event_time or self.recorded_at,
+            farmer_id=self.farmer_id,
+            farm_id=self.farm_id,
+            field_id=self.field_id,
+            crop_cycle_id=self.crop_cycle_id,
+            session_id=self.session_id,
+            privacy_level=self.privacy_level,
+            is_pii=self.is_pii,
+            trace_id=self.trace_id,
+            source_id=self.source_id,
+            metadata=self.metadata,
+        )
 
 
 class PolicyConfig(BaseModel):

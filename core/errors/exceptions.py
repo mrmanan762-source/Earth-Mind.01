@@ -1049,3 +1049,62 @@ class PublicationIndexUnavailableError(PublicationError):
             retryable=True,
             metadata={"object_id": object_id, "details": details}
         )
+
+
+class BoundaryError(EarthMindException):
+    """Base exception for C.3 RAG-Memory boundary errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "BOUNDARY_ERROR",
+        operation: str = "boundary_validation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="context",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class BoundaryValidationError(BoundaryError):
+    def __init__(self, details: str, metadata: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            message=f"Boundary validation failed: {details}",
+            error_code="BOUNDARY_VALIDATION_ERROR",
+            operation="validate_boundary",
+            metadata=metadata or {}
+        )
+
+
+class PromotionNotAllowedError(BoundaryError):
+    def __init__(self, source_ownership: str, target_ownership: str, reason: str = ""):
+        msg = f"Cross-domain promotion not allowed from '{source_ownership}' to '{target_ownership}'."
+        if reason:
+            msg += f" {reason}"
+        super().__init__(
+            message=msg,
+            error_code="PROMOTION_NOT_ALLOWED",
+            operation="promote_domain",
+            metadata={"source_ownership": source_ownership, "target_ownership": target_ownership}
+        )
+
+
+class ScopeViolationBoundaryError(BoundaryValidationError):
+    def __init__(self, scope: str, details: str):
+        super().__init__(
+            details=f"Scope '{scope}' violation: {details}",
+            metadata={"scope": scope, "details": details}
+        )
+
+
+class PrivacyBoundaryError(BoundaryValidationError):
+    def __init__(self, details: str):
+        super().__init__(
+            details=f"Privacy boundary violation: {details}",
+            metadata={"details": details}
+        )
