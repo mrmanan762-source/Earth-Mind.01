@@ -4,6 +4,10 @@ from modules.context.boundary.enums import (
     ContextOwnership,
     ContextScope,
     PersistenceIntent,
+    TransitionType,
+    GovernanceOutcome,
+    GovernanceState,
+    GovernanceFailureReason,
 )
 from modules.context.boundary.models import (
     ContextSourceRecord,
@@ -11,8 +15,12 @@ from modules.context.boundary.models import (
     MemoryContextContract,
     RAGContextRequest,
     MemoryContextRequest,
+    PromotionCandidate,
+    GovernanceDecision,
+    PromotionRecord,
 )
 from modules.context.boundary.validator import BoundaryValidator
+from modules.context.boundary.governance import ContextGovernanceEngine
 from core.errors.exceptions import (
     BoundaryError,
     BoundaryValidationError,
@@ -22,7 +30,7 @@ from core.errors.exceptions import (
 )
 
 def __getattr__(name: str):
-    if name in {"IRAGContextProvider", "IMemoryContextProvider", "IBoundaryValidator"}:
+    if name in {"IRAGContextProvider", "IMemoryContextProvider", "IBoundaryValidator", "IPromotionGovernanceEngine"}:
         import core.interfaces.boundary as _cib
         return getattr(_cib, name)
     elif name in {"RAGContextProviderAdapter", "MemoryContextProviderAdapter"}:
@@ -36,16 +44,25 @@ __all__ = [
     "ContextOwnership",
     "ContextScope",
     "PersistenceIntent",
+    "TransitionType",
+    "GovernanceOutcome",
+    "GovernanceState",
+    "GovernanceFailureReason",
     "ContextSourceRecord",
     "RAGContextContract",
     "MemoryContextContract",
     "RAGContextRequest",
     "MemoryContextRequest",
+    "PromotionCandidate",
+    "GovernanceDecision",
+    "PromotionRecord",
+    "ContextGovernanceEngine",
     "RAGContextProviderAdapter",
     "MemoryContextProviderAdapter",
     "IRAGContextProvider",
     "IMemoryContextProvider",
     "IBoundaryValidator",
+    "IPromotionGovernanceEngine",
     "BoundaryValidator",
     "BoundaryError",
     "BoundaryValidationError",

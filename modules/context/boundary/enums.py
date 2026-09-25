@@ -45,3 +45,45 @@ class PersistenceIntent(str, Enum):
     TEMPORARY = "TEMPORARY"
     SESSION_SCOPED = "SESSION_SCOPED"
     PERSISTENT = "PERSISTENT"
+
+
+class TransitionType(str, Enum):
+    """Supported cross-domain promotion transition types for C.3.3 governance."""
+    RAG_TO_MEMORY = "RAG_TO_MEMORY"
+    MEMORY_TO_RAG = "MEMORY_TO_RAG"
+
+
+class GovernanceOutcome(str, Enum):
+    """Possible outcomes for C.3.3 cross-domain promotion governance evaluation."""
+    AUTO_ALLOWED = "AUTO_ALLOWED"
+    REQUIRES_REVIEW = "REQUIRES_REVIEW"
+    BLOCKED = "BLOCKED"
+    INVALID = "INVALID"
+
+
+class GovernanceState(str, Enum):
+    """Lifecycle states for C.3.3 cross-domain governance evaluation and promotion execution."""
+    CANDIDATE = "CANDIDATE"
+    VALIDATING = "VALIDATING"
+    EVALUATING_POLICY = "EVALUATING_POLICY"
+    AUTO_ALLOWED = "AUTO_ALLOWED"
+    REQUIRES_REVIEW = "REQUIRES_REVIEW"
+    APPROVED = "APPROVED"
+    BLOCKED = "BLOCKED"
+    REJECTED = "REJECTED"
+    EXECUTION_PENDING = "EXECUTION_PENDING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
+
+class GovernanceFailureReason(str, Enum):
+    """Explicit reasons for governance rejection, blocking, or invalid candidate determination."""
+    INVALID_CANDIDATE = "INVALID_CANDIDATE"
+    MISSING_PROVENANCE = "MISSING_PROVENANCE"
+    INVALID_SCOPE_TRANSITION = "INVALID_SCOPE_TRANSITION"
+    PRIVACY_POLICY_VIOLATION = "PRIVACY_POLICY_VIOLATION"
+    OWNERSHIP_TRANSITION_BLOCKED = "OWNERSHIP_TRANSITION_BLOCKED"
+    PERSISTENCE_TRANSITION_BLOCKED = "PERSISTENCE_TRANSITION_BLOCKED"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
+    TARGET_POLICY_REJECTED = "TARGET_POLICY_REJECTED"
+    GOVERNANCE_ERROR = "GOVERNANCE_ERROR"
