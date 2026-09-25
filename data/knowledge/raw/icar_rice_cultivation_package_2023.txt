@@ -1,0 +1,29 @@
+================================================================================
+TITLE: Package of Practices for Rice Cultivation in Northern and Central India
+ORGANIZATION: ICAR-National Rice Research Institute (NRRI) & ICAR-IARRI
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-NRRI Extension Bulletin No. RICE-2023-04, Cuttack
+PUBLICATION DATE: 2023-06-10
+================================================================================
+
+1. CLIMATIC REQUIREMENTS & CROP SELECTION
+Rice (Oryza sativa L.) requires a hot and humid climate with average temperatures between 21°C and 37°C during the growth cycle. It flourishes in areas receiving an annual rainfall of 1000–1500 mm or under assured irrigation.
+- High Yielding Varieties (HYVs): Swarna (MTU 7029), Samba Mahsuri (BPT 5204), IR 64, Pusa Basmati 1121, Pusa Basmati 1509.
+- Short Duration Varieties: Sahbhagi Dhan (drought tolerant, 105-110 days), DRR Dhan 42.
+
+2. NURSERY MANAGEMENT & SEED RATE
+- Wet Bed Nursery: Prepare nursery beds of 1 meter width and convenient length with 30 cm drainage channels. Apply 10 kg FYM, 50 g nitrogen, 50 g phosphorus, and 20 g potash per 10 square meters of nursery.
+- Seed Rate: 35-40 kg/ha for inbred transplanted rice; 15-20 kg/ha for hybrid rice; 10-12 kg/ha for System of Rice Intensification (SRI); 60-80 kg/ha for direct seeded rice (DSR).
+- Nursery Duration: Transplant seedlings at 20-25 days old (4-leaf stage) for short/medium duration varieties.
+
+3. FIELD PREPARATION & TRANSPLANTING
+- Puddling: Plough field twice in dry condition followed by flooding with 5 cm water and puddling twice with a cage wheel. Level the field thoroughly using a laser land leveler to ensure uniform water distribution.
+- Spacing & Planting Depth: Plant 2-3 seedlings per hill at a shallow depth of 2-3 cm. Maintain spacing of 20 cm x 15 cm for medium duration cultivars and 20 cm x 20 cm for Basmati varieties.
+
+4. WEED MANAGEMENT IN RICE
+- Cultural Control: Maintain 2-5 cm continuous water submergence during early growth stages (15-45 days after transplanting) to suppress weed germination.
+- Chemical Control: Apply Pyrazosulfuron-ethyl 10% WP @ 200 g/ha at 3-5 days after transplanting (pre-emergence), or Bispyribac-sodium 10% SC @ 250 ml/ha at 15-20 days after transplanting (post-emergence) in 500 liters of water per hectare.

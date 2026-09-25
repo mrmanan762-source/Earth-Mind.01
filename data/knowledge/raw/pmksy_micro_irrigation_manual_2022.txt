@@ -1,0 +1,33 @@
+================================================================================
+TITLE: Operational Manual for Micro-Irrigation under Pradhan Mantri Krishi Sinchayee Yojana (PMKSY)
+ORGANIZATION: National Mission on Sustainable Agriculture (NMSA) & Ministry of Agriculture & Farmers Welfare
+SOURCE TYPE: GOVERNMENT_DIRECTIVE
+DOMAIN: Irrigation / Water Management
+REGION: India
+LANGUAGE: en
+LICENSE: Government Open Data License - India (GODL-India)
+ORIGIN: PMKSY-Per Drop More Crop Technical Guidelines 2022-23, New Delhi
+PUBLICATION DATE: 2022-08-15
+================================================================================
+
+1. INTRODUCTION & WATER USE EFFICIENCY
+Micro-irrigation techniques (Drip and Sprinkler Irrigation) increase water use efficiency (WUE) up to 80-90% compared to traditional surface/flood irrigation (30-40%). Micro-irrigation reduces weed growth, minimizes energy costs, enables fertigation, and lowers labor requirements.
+
+2. DRIP IRRIGATION SYSTEMS
+- Components: Control head (pump, sand/screen filters, pressure regulator, fertigation tank/venturi injector), main pipe (HDPE/PVC), sub-mains, and lateral lines (LLDPE) fitted with drippers/emitters.
+- Design Parameters:
+  * Emitter Discharge Rates: 2 LPH, 4 LPH, or 8 LPH based on soil texture (clay soils require lower LPH to prevent ponding).
+  * Operating Pressure: Maintain operating pressure between 1.0 kg/cm² and 1.5 kg/cm².
+  * Crop Suitability: Sugarcane, banana, cotton, citrus, papaya, tomato, brinjal, chili, polyhouse crops.
+- Maintenance: Flush laterals bi-weekly. Clean gravel and screen filters regularly. Acid treatment with dilute hydrochloric acid (0.5% HCl) to dissolve carbonate emitter clogging.
+
+3. SPRINKLER IRRIGATION SYSTEMS
+- Types: Portable sprinkler systems, semi-permanent systems, and micro-sprinklers/foggers.
+- Operating Parameters:
+  * Nozzle Size: 3.2 mm to 4.8 mm operating at 2.5 kg/cm² to 3.5 kg/cm² pressure.
+  * Overlap: Ensure 65% overlap of spray diameter under windy conditions to maintain uniform distribution coefficient (> 85%).
+  * Crop Suitability: Wheat, mustard, pulses, groundnut, soybean, tea/coffee plantations.
+
+4. SCHEME INCENTIVES & SUBSIDY STRUCTURE
+- Small and Marginal Farmers: Eligible for 55% financial assistance/subsidy on benchmark cost of drip/sprinkler installation.
+- Other Farmers: Eligible for 45% financial assistance/subsidy.
