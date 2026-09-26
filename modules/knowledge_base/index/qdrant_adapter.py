@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 from core.config.settings import QdrantConfig, settings
 from core.errors.exceptions import (
     CollectionOperationError,
+    IndexDimensionMismatchError,
     IndexExecutionError,
     IndexProviderUnavailableError,
     InvalidIndexRecordError,
@@ -137,10 +138,37 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
         except Exception as e:
             raise CollectionOperationError(name, "create_collection", str(e))
 
+    def validate_collection_config(self, collection_name: str, required_dense_dim: int) -> bool:
+        """Validate an existing collection's vector configuration against required parameters."""
+        name = collection_name.strip()
+        try:
+            info = self.client.get_collection(collection_name=name)
+            vectors_cfg = getattr(info.config.params, "vectors", None)
+            existing_dim = None
+
+            if isinstance(vectors_cfg, dict):
+                dense_params = vectors_cfg.get("dense")
+                if dense_params and hasattr(dense_params, "size"):
+                    existing_dim = dense_params.size
+            elif hasattr(vectors_cfg, "size"):
+                existing_dim = vectors_cfg.size
+
+            if existing_dim is not None and existing_dim != required_dense_dim:
+                raise IndexDimensionMismatchError(
+                    expected_dim=required_dense_dim,
+                    actual_dim=existing_dim,
+                    details=f"Collection '{name}' vector dimension configuration mismatch.",
+                )
+            return True
+        except IndexDimensionMismatchError:
+            raise
+        except Exception as e:
+            raise CollectionOperationError(name, "validate_collection_config", str(e))
+
     def ensure_collection_exists(
         self, collection_name: str, dense_dim: int, config: Optional[Dict[str, Any]] = None
     ) -> bool:
-        """Ensure collection exists with required dense vector parameters."""
+        """Ensure collection exists with required dense vector parameters and validates dimension."""
         if not collection_name or not collection_name.strip():
             raise CollectionOperationError(collection_name or "", "ensure_collection_exists", "Collection name cannot be empty.")
 
@@ -150,8 +178,10 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
                 cfg = dict(config or {})
                 cfg["dense_dimension"] = dense_dim
                 return self.create_collection(name, cfg)
+            else:
+                self.validate_collection_config(name, required_dense_dim=dense_dim)
             return True
-        except CollectionOperationError:
+        except (CollectionOperationError, IndexDimensionMismatchError):
             raise
         except Exception as e:
             raise CollectionOperationError(name, "ensure_collection_exists", str(e))
