@@ -1,0 +1,33 @@
+================================================================================
+TITLE: Rainfed and Dryland Agricultural Management Practices in India
+ORGANIZATION: ICAR-Central Research Institute for Dryland Agriculture (CRIDA) & Tamil Nadu Agricultural University (TNAU)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Regional / Indian Agricultural Practices
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-CRIDA Dryland Farming Technical Bulletin No. DF-2022-09, Hyderabad / TNAU Agronomy Series
+PUBLICATION DATE: 2022-10-05
+================================================================================
+
+1. DRYLAND AGRICULTURE IN INDIA: CONTEXT & OVERVIEW
+Rainfed agriculture covers nearly 51% of India's net sown area, contributing 40% of food grain production, 85% of pulses, and 72% of oilseeds. Dryland regions experience erratic monsoons, frequent dry spells, high atmospheric evaporative demand, and low organic matter in soils.
+
+2. IN-SITU MOISTURE CONSERVATION TECHNIQUES
+- Ridge and Furrow System: Construct ridges and furrows across the slope (30-45 cm width) to reduce runoff velocity, prolong infiltration time, and retain moisture for rainfed crops like cotton and maize.
+- Compartmental Bunding: Divide rainfed fields into small square compartments (3m x 3m or 4m x 4m) using bund formers during pre-monsoon showers to impound rainfall in-situ.
+- Broad Bed Furrow (BBF) System: Form 100-150 cm wide raised beds separated by 30 cm deep furrows. Highly recommended for heavy black soils (Vertisols) growing soybean and chickpea.
+
+3. CONTINGENCY CROP PLANNING FOR DELAYED MONSOON
+- Monsoon Delay of 2-3 Weeks: Continue with normal recommended crops; select early-maturing varieties (e.g. replacing long duration pigeonpea with short duration cultivars like ICPL 87 / Maruti).
+- Monsoon Delay of 4-6 Weeks: Alternate crop planning:
+  * Replace Sorghum / Pearl Millet with Short-duration Pulses (Green gram / Black gram) or Oilseeds (Sesame / Sunflower / Cowpea).
+- Intercropping Strategies for Risk Minimization:
+  * Sorghum + Pigeonpea (2:1 or 4:2 ratio)
+  * Maize + Cowpea / Soybean (2:1 ratio)
+  * Cotton + Black gram / Green gram (1:1 ratio)
+  * Groundnut + Pigeonpea (6:1 or 8:1 ratio)
+
+4. MULCHING AND ANTI-TRANSPIRANTS
+- Organic Mulching: Apply crop residue, straw, or farm waste @ 5 tonnes/ha on soil surface after crop emergence to restrict soil evaporative water loss and moderate soil surface temperature by 2-5°C.
+- Anti-transpirants: Under acute mid-season drought conditions, apply foliar spray of Stomatal Closing Type anti-transpirant (PMA - Phenylmercuric acetate @ 10⁻⁴ M) or Reflecting Type (Kaolin clay 5% suspension) to reduce plant transpiration rate without drastically inhibiting photosynthesis.

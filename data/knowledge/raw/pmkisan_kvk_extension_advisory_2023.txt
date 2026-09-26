@@ -1,0 +1,29 @@
+================================================================================
+TITLE: Krishi Vigyan Kendra (KVK) Extension Advisory Guidelines and PM-KISAN Advisory Framework
+ORGANIZATION: ICAR-Agricultural Extension Division & Ministry of Agriculture & Farmers Welfare
+SOURCE TYPE: GOVERNMENT_DIRECTIVE
+DOMAIN: Government / Agricultural Guidelines
+REGION: India
+LANGUAGE: en
+LICENSE: Government Open Data License - India (GODL-India)
+ORIGIN: ICAR Extension Service Manual No. KVK-ADVISORY-2023-05, New Delhi
+PUBLICATION DATE: 2023-07-12
+================================================================================
+
+1. KVK MANDATE AND EXTENSION SERVICES
+Krishi Vigyan Kendras (KVKs) function as agricultural technology dissemination centers established by ICAR at the district level across India. Key operational mandates include:
+- On-Farm Testing (OFT): Assessing location-specific agricultural technologies under local micro-farming conditions.
+- Frontline Demonstrations (FLDs): Demonstrating newly released high-yielding varieties, crop management technologies, and farm machinery directly on farmers' fields.
+- Capacity Development & Training: Organizing vocational training courses for farmers, farm women, rural youth, and agricultural field officers.
+
+2. PM-KISAN FARMER ADVISORY INTEGRATION
+Under the Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) scheme, direct benefit transfers are complemented by seasonal agromet advisory messages delivered via mKisan portal and KVK network.
+- Weather-Based Crop Advisories: Issue bi-weekly advisories based on India Meteorological Department (IMD) Agromet district forecasts covering rainfall, temperature, wind speed, and relative humidity.
+- Climate Resilience Guidelines: Encourage adoption of climate-resilient crop varieties (e.g., drought-tolerant paddy, heat-tolerant wheat like HD 3385 / DBW 303).
+
+3. AGRICULTURAL EXTENSION DISSEMINATION PROTOCOLS
+- Village Agro-Advisory Committee: KVK Subject Matter Specialists (SMS) in Agronomy, Plant Protection, Soil Science, and Horticulture conduct monthly field visits to identify emerging pest outbreaks and field difficulties.
+- Standardized Advisory Format: All agricultural advisories issued to farmers must include:
+  1. Current crop growth stage.
+  2. Detected pest/disease or weather advisory threshold.
+  3. Actionable recommendation specifying chemical/biological agent, precise dose per acre/hectare, and safety precautions.

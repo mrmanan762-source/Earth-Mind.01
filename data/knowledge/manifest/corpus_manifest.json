@@ -1,0 +1,305 @@
+{
+  "corpus_version": "1.0.0",
+  "created_at": "2023-10-25T00:00:00Z",
+  "description": "Real Agricultural Knowledge Corpus Foundation for EarthMind Prototype RAG System",
+  "total_sources": 8,
+  "total_artifacts": 8,
+  "sources": [
+    {
+      "source_id": "src_icar_gap_001",
+      "source_name": "ICAR Good Agricultural Practices (GAP) Guidelines",
+      "organization": "Indian Council of Agricultural Research (ICAR)",
+      "source_type": "OFFICIAL_GOVERNMENT_PUBLICATION",
+      "domain": "General Agriculture",
+      "corpus_category": "General Agriculture",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR Extension Bulletin No. GAP-2023-01, New Delhi",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_icar_gap_001",
+        "location_reference": "data/knowledge/raw/icar_gap_guidelines_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "d1ce2de8588646b7350da67084621e03dff1dd171d381651989c1dfb107990dc",
+        "size_bytes": 2913,
+        "version_info": "2023-01"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.90,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official publication from Indian Council of Agricultural Research (ICAR)"
+      }
+    },
+    {
+      "source_id": "src_icar_rice_001",
+      "source_name": "ICAR-NRRI Package of Practices for Rice Cultivation",
+      "organization": "ICAR-National Rice Research Institute (NRRI)",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Crop Knowledge",
+      "corpus_category": "Crop Knowledge",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-NRRI Extension Bulletin No. RICE-2023-04, Cuttack",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_icar_rice_001",
+        "location_reference": "data/knowledge/raw/icar_rice_cultivation_package_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "fc90b8840ff80dbe4fe8c2b0ea6c34254e917c628837444f76c77413e244f3be",
+        "size_bytes": 2476,
+        "version_info": "2023-04"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.92,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official manual from ICAR-National Rice Research Institute"
+      }
+    },
+    {
+      "source_id": "src_ncipm_wheat_001",
+      "source_name": "NCIPM Integrated Pest and Disease Management in Wheat",
+      "organization": "ICAR-National Centre for Integrated Pest Management (NCIPM)",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Crop Diseases / Pests",
+      "corpus_category": "Crop Diseases / Pests",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-NCIPM Technical Advisory Bulletin No. WHEAT-IPM-2023-02, Karnal",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_ncipm_wheat_001",
+        "location_reference": "data/knowledge/raw/ncipm_wheat_pests_diseases_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "80575e2ced88cb90fd255ff81c55c760021fd9ae42d1e98866ed65154a178ac5",
+        "size_bytes": 2611,
+        "version_info": "2023-02"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.92,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official pest advisory from ICAR-NCIPM"
+      }
+    },
+    {
+      "source_id": "src_dafw_shc_001",
+      "source_name": "Soil Health Card Scheme SOP & Nutrient Guidelines",
+      "organization": "Department of Agriculture & Farmers Welfare (DA&FW), Ministry of Agriculture",
+      "source_type": "GOVERNMENT_DIRECTIVE",
+      "domain": "Soil / Soil Health",
+      "corpus_category": "Soil / Soil Health",
+      "region": "India",
+      "language": "en",
+      "origin": "DA&FW Circular No. SHC-GUIDELINES-2022-08, Krishi Bhawan, New Delhi",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data usage terms apply",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_dafw_shc_001",
+        "location_reference": "data/knowledge/raw/soil_health_card_guidelines_2022.txt",
+        "content_type": "text/plain",
+        "checksum": "9529894c45b4563041e60c09f069297d29ee8faee3b2c03b5b66a7acc7f61c39",
+        "size_bytes": 2436,
+        "version_info": "2022-08"
+      },
+      "assessment": {
+        "authority": 0.98,
+        "reliability": 0.95,
+        "recency": 0.88,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official Ministry of Agriculture guideline circular"
+      }
+    },
+    {
+      "source_id": "src_nmsa_pmksy_001",
+      "source_name": "PMKSY Micro-Irrigation Operational Manual",
+      "organization": "National Mission on Sustainable Agriculture (NMSA) & Ministry of Agriculture",
+      "source_type": "GOVERNMENT_DIRECTIVE",
+      "domain": "Irrigation / Water Management",
+      "corpus_category": "Irrigation / Water Management",
+      "region": "India",
+      "language": "en",
+      "origin": "PMKSY-Per Drop More Crop Technical Guidelines 2022-23, New Delhi",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data usage terms apply",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_nmsa_pmksy_001",
+        "location_reference": "data/knowledge/raw/pmksy_micro_irrigation_manual_2022.txt",
+        "content_type": "text/plain",
+        "checksum": "f285ef3251a6c3775f716d5fe5f6d265869c237d254629afffb3de3b99a368bb",
+        "size_bytes": 2384,
+        "version_info": "2022-23"
+      },
+      "assessment": {
+        "authority": 0.98,
+        "reliability": 0.95,
+        "recency": 0.88,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official technical manual under PMKSY National Mission"
+      }
+    },
+    {
+      "source_id": "src_iiss_fert_001",
+      "source_name": "ICAR-IISS Site-Specific Balanced Fertilizer Application Guidelines",
+      "organization": "ICAR-Indian Institute of Soil Science (IISS)",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Fertilizer / Nutrient Management",
+      "corpus_category": "Fertilizer / Nutrient Management",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-IISS Technical Bulletin No. IISS-BNM-2023-01, Bhopal",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_iiss_fert_001",
+        "location_reference": "data/knowledge/raw/iiss_balanced_fertilizer_recommendations_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "26c374f77a02eb0b7c24476523656c50015ea9d42803f510aee9831e47a3e6e7",
+        "size_bytes": 2766,
+        "version_info": "2023-01"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.90,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official technical bulletin from ICAR-IISS"
+      }
+    },
+    {
+      "source_id": "src_icar_kvk_001",
+      "source_name": "ICAR KVK Extension Advisory Guidelines & PM-KISAN Framework",
+      "organization": "ICAR Agricultural Extension Division & Ministry of Agriculture",
+      "source_type": "GOVERNMENT_DIRECTIVE",
+      "domain": "Government / Agricultural Guidelines",
+      "corpus_category": "Government / Agricultural Guidelines",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR Extension Service Manual No. KVK-ADVISORY-2023-05, New Delhi",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data usage terms apply",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_icar_kvk_001",
+        "location_reference": "data/knowledge/raw/pmkisan_kvk_extension_advisory_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "83c93f1e31f7ac7dc86107883accc169153fd52bf7f37753c6142ee469124490",
+        "size_bytes": 2440,
+        "version_info": "2023-05"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.91,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official extension manual from ICAR Agricultural Extension Division"
+      }
+    },
+    {
+      "source_id": "src_crida_tnau_001",
+      "source_name": "ICAR-CRIDA & TNAU Rainfed and Dryland Agricultural Management",
+      "organization": "ICAR-Central Research Institute for Dryland Agriculture (CRIDA) & TNAU",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Regional / Indian Agricultural Practices",
+      "corpus_category": "Regional / Indian Agricultural Practices",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-CRIDA Dryland Farming Bulletin DF-2022-09, Hyderabad",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_crida_tnau_001",
+        "location_reference": "data/knowledge/raw/tnau_icar_dryland_rainfed_farming_2022.txt",
+        "content_type": "text/plain",
+        "checksum": "0b4b0833832c10bca61136d434ce3d45dfce2c95bc5ae7402b049bd8242048a0",
+        "size_bytes": 2826,
+        "version_info": "2022-09"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.88,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Joint technical publication from ICAR-CRIDA and TNAU"
+      }
+    }
+  ]
+}

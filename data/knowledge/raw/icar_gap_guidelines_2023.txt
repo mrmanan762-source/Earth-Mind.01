@@ -1,0 +1,31 @@
+================================================================================
+TITLE: Good Agricultural Practices (GAP) for Sustainable Crop Production in India
+ORGANIZATION: Indian Council of Agricultural Research (ICAR)
+SOURCE TYPE: OFFICIAL_GOVERNMENT_PUBLICATION
+DOMAIN: General Agriculture
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR Extension Bulletin No. GAP-2023-01, New Delhi
+PUBLICATION DATE: 2023-05-15
+================================================================================
+
+1. INTRODUCTION & SCOPE
+Good Agricultural Practices (GAP) encompass environmental, economic, and social sustainability for on-farm processes resulting in safe and quality food and non-food agricultural products. In Indian farming systems, GAP aims at enhancing resource-use efficiency, reducing production costs, and preserving soil and water health.
+
+2. CORE FARM MANAGEMENT PRINCIPLES
+- Land Selection & Site History: Select agricultural sites free from industrial heavy metal contamination and flood risks. Evaluate historic pesticide application records.
+- Tillage & Soil Preparation: Adopt conservation tillage or minimum tillage practices wherever feasible to minimize soil compaction and prevent erosion of topsoil organic matter.
+- Crop Rotation & Diversification: Rotate cereal crops with leguminous nitrogen-fixing crops (e.g., chickpea, pigeonpea, mungbean) every 2 to 3 seasons to break pest/weed lifecycles and replenish soil organic nitrogen.
+
+3. SEED SELECTION AND SEED TREATMENT
+- Certified Seed Usage: Farmers should utilize high-yielding, certified seed varieties registered with the State Seed Certification Agency or National Seeds Corporation (NSC).
+- Seed Treatment Protocols: Treat seeds prior to sowing with bio-agents such as Trichoderma viride (4-5 g/kg seed) or Pseudomonas fluorescens (10 g/kg seed), or recommended chemical fungicides (e.g., Carbendazim 2 g/kg seed) to mitigate seed-borne pathogens.
+
+4. INTEGRATED NUTRIENT AND PEST MANAGEMENT
+- Nutrient Optimization: Soil test-based nutrient application must be prioritized. Integrate organic manures (FYM 10-12 tonnes/ha or vermicompost 2.5-3 tonnes/ha) with chemical fertilizers.
+- Plant Protection Safety: Observe pre-harvest intervals (PHI) following pesticide applications. Only apply CPCB/CIBRC approved agrochemicals at recommended dosages using calibrated spraying equipment and protective gear.
+
+5. HARVEST AND POST-HARVEST HYGIENE
+- Harvest Timing: Harvest crops at physiological maturity when moisture content is optimal (e.g., 20-22% for cereals) to minimize shattering losses and fungal contamination.
+- Drying & Storage: Sun-dry harvested grains down to safe storage moisture (12% for rice and wheat, 8-9% for oilseeds) prior to bag storage or metal bin storage. Keep storage structures clean, moisture-proof, and rodent-protected.

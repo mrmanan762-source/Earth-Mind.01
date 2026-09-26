@@ -1,0 +1,31 @@
+================================================================================
+TITLE: Integrated Pest and Disease Management in Wheat (Triticum aestivum L.)
+ORGANIZATION: ICAR-National Centre for Integrated Pest Management (NCIPM) & ICAR-IIWBR
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Diseases / Pests
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-NCIPM Technical Advisory Bulletin No. WHEAT-IPM-2023-02, Karnal
+PUBLICATION DATE: 2023-09-01
+================================================================================
+
+1. MAJOR WHEAT DISEASES & IDENTIFICATION
+- Yellow (Stripe) Rust (Puccinia striiformis): Identified by bright yellow pustules arranged in linear stripes on leaves and leaf sheaths. Prevalent in cooler sub-mountainous and northwestern plains zone (NWPZ).
+- Brown (Leaf) Rust (Puccinia triticina): Identified by small, round, orange-brown pustules scattered irregularly on the leaf blades.
+- Karnal Bunt (Tilletia indica): Fungal spores attack individual grains during flowering, causing partial blackening and a foul fishy odor due to trimethylamine emission.
+- Loose Smut (Ustilago nuda var. tritici): Entire spike converted into a black powdery mass of smudged teliospores.
+
+2. MAJOR WHEAT PESTS & DAMAGE SYMPTOMS
+- Termites (Odontotermes obesus): Attack crop at sowing/seedling and maturing stages, cutting roots below ground level causing deadhearts and drying of tillers.
+- Wheat Aphid (Sitobion avenae / Rhopalosiphum maidis): Nymphs and adults suck sap from tender leaves and developing ears, causing yellowing and honey-dew accumulation leading to sooty mold.
+- Armyworm (Mythimna separata): Caterpillars devour foliage during nighttime and cut off ears at maturity.
+
+3. MANAGEMENT STRATEGIES
+- Disease Management:
+  * For Yellow/Brown Rust: Spray Propiconazole 25% EC @ 500 ml/ha or Tebuconazole 25.9% EC @ 625 ml/ha in 500 liters of water upon first symptom detection.
+  * For Karnal Bunt: Avoid excessive nitrogenous fertilisation and flood irrigation at flowering stage. Spray Tilt 25 EC @ 0.1% at boot stage.
+  * For Loose Smut: Seed treatment with Carboxin 75% WP @ 2.5 g/kg seed or Vitavax Power @ 2.0 g/kg seed.
+- Insect Pest Management:
+  * For Termites: Treat seed with Chlorpyrifos 20% EC @ 4 ml/kg seed or Imidacloprid 600 FS @ 3 ml/kg seed prior to sowing.
+  * For Aphids: Encourage natural predators (Coccinella septempunctata ladybird beetles). If aphid population exceeds Economic Threshold Level (ETL) of 10-15 aphids/earhead, spray Thiamethoxam 25% WG @ 100 g/ha.

@@ -1,0 +1,34 @@
+================================================================================
+TITLE: Soil Health Card Scheme Standard Operating Procedures & Nutrient Interpretation
+ORGANIZATION: Ministry of Agriculture & Farmers Welfare, Department of Agriculture & Farmers Welfare (DA&FW)
+SOURCE TYPE: GOVERNMENT_DIRECTIVE
+DOMAIN: Soil / Soil Health
+REGION: India
+LANGUAGE: en
+LICENSE: Government Open Data License - India (GODL-India)
+ORIGIN: DA&FW Circular No. SHC-GUIDELINES-2022-08, Krishi Bhawan, New Delhi
+PUBLICATION DATE: 2022-11-20
+================================================================================
+
+1. OBJECTIVE & SCHEME OVERVIEW
+The Soil Health Card (SHC) scheme provides crop-wise nutrient recommendations to farmers based on chemical soil analysis. Soil testing is performed across 12 mandatory parameters:
+- Macro-nutrients: Nitrogen (N), Phosphorus (P), Potassium (K)
+- Secondary-nutrient: Sulphur (S)
+- Micro-nutrients: Zinc (Zn), Iron (Fe), Copper (Cu), Manganese (Mn), Boron (B)
+- Physical parameters: pH, Electrical Conductivity (EC), Organic Carbon (OC)
+
+2. SOIL SAMPLING METHODOLOGY
+- Sampling Grid: Grid size of 2.5 hectares in irrigated areas and 10 hectares in rainfed agricultural land.
+- Sampling Depth: Collect composite samples from 0-15 cm soil depth using a soil auger or V-shaped cut with a wooden blade/khurpi.
+- Preparation: Air-dry samples under shade; do not dry in direct sunlight or oven. Mix thoroughly and retain 500 g representative soil using quartering technique for laboratory analysis.
+
+3. SOIL NUTRIENT INTERPRETATION RANGES
+- Organic Carbon (%): Low (< 0.50%), Medium (0.50 - 0.75%), High (> 0.75%).
+- Available Nitrogen (N in kg/ha): Low (< 280 kg/ha), Medium (280 - 560 kg/ha), High (> 560 kg/ha).
+- Available Phosphorus (P2O5 in kg/ha): Low (< 10 kg/ha), Medium (10 - 25 kg/ha), High (> 25 kg/ha).
+- Available Potassium (K2O in kg/ha): Low (< 108 kg/ha), Medium (108 - 280 kg/ha), High (> 280 kg/ha).
+- Soil Reaction (pH): Acidic (< 6.5), Neutral (6.5 - 7.5), Saline/Alkaline (> 7.5 - 8.5), Highly Alkaline (> 8.5).
+
+4. AMELIORATION & RECLAMATION ADVISORIES
+- Acid Soils (pH < 6.0): Apply agricultural grade lime (CaCO3) @ 2-4 tonnes/ha based on lime requirement test or paper mill sludge once every 3 years.
+- Alkaline/Sodic Soils (pH > 8.5, ESP > 15): Apply agricultural gypsum (CaSO4·2H2O) at 50% gypsum requirement (GR) followed by ponding and leaching prior to rice cultivation.

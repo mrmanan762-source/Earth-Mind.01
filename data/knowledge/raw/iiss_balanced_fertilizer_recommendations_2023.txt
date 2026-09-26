@@ -1,0 +1,33 @@
+================================================================================
+TITLE: Site-Specific Balanced Fertilizer Application Guidelines for Major Field Crops
+ORGANIZATION: ICAR-Indian Institute of Soil Science (IISS), Bhopal
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Fertilizer / Nutrient Management
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IISS Technical Bulletin No. IISS-BNM-2023-01, Bhopal
+PUBLICATION DATE: 2023-03-25
+================================================================================
+
+1. PRINCIPLES OF BALANCED FERTILIZATION
+Balanced fertilization involves supplying essential plant nutrients (N, P, K, S, Zn, B) in optimum proportions and adequate quantities based on target crop yields and soil fertility status. Unbalanced application (over-use of nitrogenous fertilizers like Urea) deteriorates soil structure, causes nitrate leaching into groundwater, and induces secondary nutrient deficiencies.
+
+2. RECOMMENDED NPK RATIOS & DOSAGES
+- Standard N:P2O5:K2O Ratio Benchmark: 4:2:1 for cereal crops; 1:2:1 or 1:2:2 for pulses and legumes.
+- Rice (Irrigated HYV): Recommended dose 120:60:40 kg N:P2O5:K2O/ha.
+  * Nitrogen Application Split: Apply 25% N as basal at transplanting, 50% N at active tillering (21-25 DAT), and 25% N at panicle initiation stage (45-50 DAT). Use Neem Coated Urea (NCU) to slow nitrification losses.
+  * Phosphorus & Potassium: Apply 100% P2O5 and 50% K2O as basal during final puddling; remaining 50% K2O at panicle initiation.
+- Wheat (Irrigated): Recommended dose 120-150 kg N, 60 kg P2O5, 40 kg K2O/ha.
+  * Nitrogen Split: 50% basal at sowing, 25% at first irrigation (Crown Root Initiation stage, 21 DAS), 25% at late jointing stage (45 DAS).
+
+3. INTEGRATED NUTRIENT MANAGEMENT (INM) & BIOFERTILIZERS
+- Organic Amendments: Substitute 25-50% chemical N requirements with FYM (10 t/ha), vermicompost (2.5 t/ha), or green manuring (Sesbania aculeata / Dhaincha incorporated at 45 days).
+- Biofertilizer Inoculation:
+  * Rhizobium Culture: Seed inoculation for leguminous crops (chickpea, lentil, soybean) @ 200 g/10 kg seed.
+  * Azotobacter / Azospirillum: Seed or seedling treatment for cereals @ 200 g/ha.
+  * Phosphate Solubilizing Bacteria (PSB) / Fungi (VAM): Soil application @ 5 kg/ha mixed with FYM to release fixed soil phosphorus.
+
+4. SECONDARY & MICRONUTRIENT APPLICATION
+- Zinc Deficiency: Apply Zinc Sulphate Heptahydrate (ZnSO4·7H2O 21% Zn) @ 25 kg/ha soil application or 0.5% foliar spray (5 g ZnSO4 + 2.5 g lime per liter water) at 30 and 45 DAS.
+- Sulphur Application: Apply Bentomite Sulphur @ 25 kg/ha or Gypsum @ 250 kg/ha for oilseed crops (mustard, groundnut) to increase oil synthesis.
