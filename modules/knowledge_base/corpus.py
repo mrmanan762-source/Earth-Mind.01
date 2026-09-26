@@ -12,6 +12,7 @@ Architectural Guarantees:
 import os
 import json
 import hashlib
+from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 
@@ -21,6 +22,7 @@ from modules.knowledge_base.canonical_models import (
     Document,
     DocumentVersion,
 )
+from modules.knowledge_base.provenance import Provenance
 from modules.knowledge_base.enums import (
     SourceStatus,
     ArtifactStatus,
@@ -173,10 +175,20 @@ class CorpusCatalogManager:
             # 2. Canonical Metadata
             meta_obj = CanonicalMetadata(
                 domain=s.get("domain"),
-                corpus_category=s.get("corpus_category"),
-                license_name=s.get("license_info", {}).get("license_name"),
-                license_terms=s.get("license_info", {}).get("terms"),
-                review_required=s.get("license_info", {}).get("review_required", False),
+                region=s.get("region"),
+                language=s.get("language", "en"),
+                extra_metadata={
+                    "corpus_category": s.get("corpus_category"),
+                    "license_name": s.get("license_info", {}).get("license_name"),
+                    "license_terms": s.get("license_info", {}).get("terms"),
+                    "review_required": s.get("license_info", {}).get("review_required", False),
+                },
+                filterable_attributes={
+                    "corpus_category": s.get("corpus_category"),
+                    "license_name": s.get("license_info", {}).get("license_name"),
+                    "license_terms": s.get("license_info", {}).get("terms"),
+                    "review_required": s.get("license_info", {}).get("review_required", False),
+                },
             )
 
             # 3. Source
@@ -221,14 +233,40 @@ class CorpusCatalogManager:
                 assessment=assessment_obj,
             )
 
-            # 6. DocumentVersion
+            # 6. Provenance
             ver_id = f"ver_{s['source_id']}_1_0"
+            prov_obj = Provenance(
+                provenance_id=f"prov_{s['source_id']}",
+                source_id=s["source_id"],
+                artifact_id=art_dict["artifact_id"],
+                document_id=doc_id,
+                version_id=ver_id,
+                processing_stage="CORPUS_FOUNDATION",
+                processing_steps=[
+                    {
+                        "step_id": f"step_init_{s['source_id']}",
+                        "operation": "CORPUS_MANIFEST_REGISTRATION",
+                        "processor_name": "CorpusCatalogManager",
+                        "parameters": {"source_name": s["source_name"]},
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "status": "COMPLETED",
+                    }
+                ],
+            )
+
+            # Assign provenance
+            source_obj.provenance = prov_obj
+            artifact_obj.provenance = prov_obj
+            document_obj.provenance = prov_obj
+
+            # 7. DocumentVersion
             version_obj = DocumentVersion(
                 version_id=ver_id,
                 document_id=doc_id,
                 version_number=art_dict.get("version_info", "1.0.0"),
                 status=DocumentVersionStatus.ACTIVE,
                 metadata=meta_obj,
+                provenance=prov_obj,
             )
 
             canonical_tuples.append((source_obj, artifact_obj, document_obj, version_obj))

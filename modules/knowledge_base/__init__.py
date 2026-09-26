@@ -94,6 +94,10 @@ from modules.knowledge_base.publication import (
     PublicationRecord,
     PublicationStatus,
 )
+from modules.knowledge_base.ingestion import (
+    CorpusIngestionEngine,
+    IngestionPipelineSummary,
+)
 
 __all__ = [
     # Enums
@@ -179,4 +183,7 @@ __all__ = [
     "PublicationRecord",
     "PublicationEligibilityValidator",
     "KnowledgePublicationEngine",
+    # R3 Ingestion Pipeline
+    "CorpusIngestionEngine",
+    "IngestionPipelineSummary",
 ]
