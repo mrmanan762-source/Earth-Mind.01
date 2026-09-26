@@ -15,6 +15,8 @@ from core.errors.exceptions import (
     EmbeddingProviderUnavailableError,
 )
 from modules.knowledge_base.embedding.fake_provider import FakeEmbeddingProvider
+from modules.knowledge_base.embedding.self_hosted import SelfHostedEmbeddingProvider
+from modules.knowledge_base.embedding.api_provider import APIEmbeddingProvider
 
 
 class EmbeddingAdapter:
@@ -32,8 +34,34 @@ class EmbeddingAdapter:
     @classmethod
     def from_config(cls, config: EmbeddingConfig) -> "EmbeddingAdapter":
         """Factory method creating an EmbeddingAdapter from EmbeddingConfig."""
-        # For prototype/fake provider
-        if config.provider.lower() in ("fake", "mock", "dummy"):
+        prov_name = config.provider.lower()
+
+        if prov_name in ("self_hosted", "sentence_transformers", "huggingface", "local"):
+            provider = SelfHostedEmbeddingProvider(
+                provider_name=config.provider,
+                model_name_or_path=config.model,
+                model_version=config.model_version,
+                dimension=config.dimension,
+                license=config.license,
+                provenance=config.provenance or "https://huggingface.co/" + config.model,
+                device=config.device,
+                batch_size=config.batch_size,
+                max_length=config.max_length,
+                normalize_embeddings=config.normalize,
+                execution_mode=config.execution_mode,
+                allow_download=config.allow_download,
+            )
+        elif prov_name in ("api", "remote_api", "jina", "openai", "cohere"):
+            provider = APIEmbeddingProvider(
+                provider_name=config.provider,
+                model_name=config.model,
+                model_version=config.model_version,
+                dimension=config.dimension,
+                endpoint=config.endpoint,
+                credential_reference=config.credential_reference,
+                timeout=config.timeout,
+            )
+        elif prov_name in ("fake", "mock", "dummy"):
             provider = FakeEmbeddingProvider(
                 provider_name=config.provider,
                 model_name=config.model,
@@ -45,14 +73,12 @@ class EmbeddingAdapter:
                 provenance=config.provenance or "EarthMind Prototype Embedding Standard",
             )
         else:
-            # Fallback or external adapter default
-            provider = FakeEmbeddingProvider(
+            # Fallback or generic self-hosted default
+            provider = SelfHostedEmbeddingProvider(
                 provider_name=config.provider,
-                model_name=config.model,
+                model_name_or_path=config.model,
                 model_version=config.model_version,
                 dimension=config.dimension,
-                endpoint=config.endpoint,
-                credential_reference=config.credential_reference,
                 license=config.license,
                 provenance=f"Adapter wrapper for {config.provider}",
             )
