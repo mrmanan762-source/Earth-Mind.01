@@ -173,15 +173,22 @@ class PlainTextProcessor(IDocumentProcessor):
             line = lines[i]
             stripped = line.strip()
 
-            # Check heading
+            # Check heading (Markdown # or numbered heading like '1. CLIMATIC REQUIREMENTS')
             header_match = re.match(r"^(#{1,6})\s+(.+)$", stripped)
-            if header_match and cfg.preserve_structure:
+            num_header_match = re.match(r"^(\d+(?:\.\d+)*)\.?\s+([A-Z][A-Za-z0-9\s&,–\-\(\)\.\:\/]{2,})$", stripped) if not header_match else None
+
+            if cfg.preserve_structure and (header_match or num_header_match):
                 # Flush pending text
                 active_sec = current_section_stack[-1] if current_section_stack else None
                 flush_current_text(active_sec)
 
-                level = len(header_match.group(1))
-                heading_title = header_match.group(2).strip()
+                if header_match:
+                    level = len(header_match.group(1))
+                    heading_title = header_match.group(2).strip()
+                else:
+                    num_prefix = num_header_match.group(1).rstrip(".")
+                    level = len(num_prefix.split("."))
+                    heading_title = f"{num_header_match.group(1)}. {num_header_match.group(2).strip()}"
 
                 if doc_title is None and level == 1:
                     doc_title = heading_title

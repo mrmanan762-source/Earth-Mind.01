@@ -64,7 +64,7 @@
         "artifact_id": "art_icar_rice_001",
         "location_reference": "data/knowledge/raw/icar_rice_cultivation_package_2023.txt",
         "content_type": "text/plain",
-        "checksum": "fc90b8840ff80dbe4fe8c2b0ea6c34254e917c628837444f76c77413e244f3be",
+        "checksum": "8b6e6b548576c18f7e69ab02a3beb5de593e59669dd8a9ac4465574416386568",
         "size_bytes": 2476,
         "version_info": "2023-04"
       },
