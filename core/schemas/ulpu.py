@@ -200,3 +200,33 @@ class ResponseLocalizationResponse(BaseModel):
     target_language: str = Field(..., description="Target language code")
     target_modality: InputModality = Field(..., description="Target modality")
     audio_output: Optional[TTSResponse] = Field(default=None, description="TTS output if target_modality is AUDIO")
+
+
+class ULPUTextPipelineRequest(BaseModel):
+    """Input contract for ULPU text processing pipeline."""
+    text: str = Field(..., description="Text input string")
+    target_language: str = Field(default="hi", description="Desired target language ISO code")
+    request_id: Optional[str] = Field(default=None, description="Optional trace/request identifier")
+    source_language_hint: Optional[str] = Field(default=None, description="Optional hint for source language")
+
+    @field_validator("text")
+    @classmethod
+    def validate_text_non_empty(cls, v: str) -> str:
+        if v is None or not v.strip():
+            raise ValueError("text must not be empty or whitespace-only")
+        return v
+
+
+class ULPUTextPipelineResponse(BaseModel):
+    """Output contract returned by ULPU text processing pipeline."""
+    request_id: str = Field(..., description="Unique request/trace ID")
+    original_input: str = Field(..., description="Verbatim original user input text")
+    detected_language: str = Field(..., description="Detected source ISO language code")
+    detection_confidence: float = Field(..., ge=0.0, le=1.0, description="Language detection confidence score")
+    normalized_text: str = Field(..., description="Cleaned, normalized text")
+    canonical_text: str = Field(..., description="Canonical system text representation")
+    target_language: str = Field(..., description="Confirmed target ISO language code")
+    translated_text: str = Field(..., description="Translated text output")
+    system_representation: SystemLanguageRepresentation = Field(..., description="Complete SystemLanguageRepresentation object")
+    transformation_metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata trace from pipeline execution")
+    errors: List[str] = Field(default_factory=list, description="Non-fatal warning or error notes")

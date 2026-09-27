@@ -7,6 +7,8 @@ from core.schemas.ulpu import (
     InputSource,
     InputModality,
     ScriptType,
+    ULPUTextPipelineRequest,
+    ULPUTextPipelineResponse,
 )
 from modules.ulpu.config import ULPUConfig
 from modules.ulpu.registry import LanguageRegistry
@@ -18,6 +20,7 @@ from modules.ulpu.providers.mocks import (
     MockTranslator,
     MockTTSProvider,
 )
+from modules.ulpu.pipeline import ULPUTextPipelineEngine
 from core.logging.logger import get_logger
 
 logger = get_logger("modules.ulpu.service")
@@ -86,3 +89,28 @@ class UlpuService:
             transformation_metadata=metadata or {},
             uncertainty=[],
         )
+
+    def process_text(
+        self,
+        text: str,
+        target_language: str = "hi",
+        request_id: Optional[str] = None,
+    ) -> ULPUTextPipelineResponse:
+        """
+        Process English or multi-lingual text input through the functional ULPU pipeline.
+        """
+        engine = ULPUTextPipelineEngine(
+            config=self.config,
+            language_registry=self.language_registry,
+            provider_registry=self.provider_registry,
+        )
+        try:
+            req = ULPUTextPipelineRequest(
+                text=text,
+                target_language=target_language,
+                request_id=request_id,
+            )
+        except Exception as e:
+            from core.errors.exceptions import InvalidInputError
+            raise InvalidInputError(str(e))
+        return engine.process(req)
