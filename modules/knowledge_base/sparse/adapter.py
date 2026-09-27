@@ -19,6 +19,7 @@ from core.errors.exceptions import (
     SparseVectorValidationError,
 )
 from modules.knowledge_base.sparse.fake_provider import FakeSparseProvider
+from modules.knowledge_base.sparse.bm25_provider import BM25SparseProvider
 
 
 class SparseRepresentationAdapter:
@@ -35,7 +36,12 @@ class SparseRepresentationAdapter:
 
     @classmethod
     def default_adapter(cls) -> "SparseRepresentationAdapter":
-        """Factory method creating default adapter with FakeSparseProvider."""
+        """Factory method creating default adapter with BM25SparseProvider."""
+        return cls(BM25SparseProvider())
+
+    @classmethod
+    def fake_adapter(cls) -> "SparseRepresentationAdapter":
+        """Factory method creating adapter with FakeSparseProvider."""
         return cls(FakeSparseProvider())
 
     @property
