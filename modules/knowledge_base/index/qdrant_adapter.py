@@ -16,7 +16,7 @@ from core.errors.exceptions import (
     InvalidIndexRecordError,
     QdrantAdapterError,
 )
-from core.interfaces.index import IKnowledgeIndexAdapter
+from core.interfaces.index import DenseSearchResult, IKnowledgeIndexAdapter
 from core.schemas.embedding import SparseVector
 from modules.knowledge_base.enums import IndexStatus, KnowledgeContentType, KnowledgeLifecycleState
 from modules.knowledge_base.index.record import IndexBatchResult, IndexRecord
@@ -412,6 +412,53 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
             return None
         except Exception as e:
             raise QdrantAdapterError(f"Failed to retrieve record '{record_id}' from collection '{name}': {str(e)}")
+
+    def search_dense(
+        self,
+        collection_name: str,
+        query_vector: List[float],
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
+        with_record: bool = True,
+    ) -> List[DenseSearchResult]:
+        """Perform dense vector search in Qdrant."""
+        name = collection_name.strip()
+        try:
+            filter_conditions = None
+            if filters:
+                must_clauses = [
+                    models.FieldCondition(key=k, match=models.MatchValue(value=v))
+                    for k, v in filters.items()
+                ]
+                filter_conditions = models.Filter(must=must_clauses)
+
+            res = self.client.search(
+                collection_name=name,
+                query_vector=models.NamedVector(name="dense", vector=query_vector),
+                limit=top_k,
+                query_filter=filter_conditions,
+                with_payload=True,
+            )
+
+            results: List[DenseSearchResult] = []
+            for hit in res:
+                payload = hit.payload or {}
+                rec_id = payload.get("_index_record_id", str(hit.id))
+                rec = None
+                if with_record:
+                    rec = self.get_record(name, rec_id)
+
+                results.append(
+                    DenseSearchResult(
+                        record_id=rec_id,
+                        score=hit.score,
+                        record=rec,
+                        payload={k: v for k, v in payload.items() if not k.startswith("_")},
+                    )
+                )
+            return results
+        except Exception as e:
+            raise QdrantAdapterError(f"Dense search failed in '{name}': {str(e)}")
 
     def get_status(self, collection_name: str) -> Dict[str, Any]:
         """Return collection status and count metrics."""
