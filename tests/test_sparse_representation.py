@@ -208,7 +208,7 @@ def test_10_document_version_traceability(sample_canonical_hierarchy):
 
 def test_11_provenance_preservation(sample_canonical_hierarchy):
     """Verify sparse generation processing step is appended to provenance chain."""
-    engine = KnowledgeSparseEngine()
+    engine = KnowledgeSparseEngine(provider=FakeSparseProvider())
     chk = sample_canonical_hierarchy["chunk"]
 
     rec = engine.generate_sparse_chunk(chk)
