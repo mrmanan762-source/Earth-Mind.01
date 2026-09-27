@@ -80,6 +80,19 @@ class Settings(BaseModel):
     )
     embedding: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
     qdrant: QdrantConfig = Field(default_factory=QdrantConfig)
+    ulpu: Dict[str, Any] = Field(
+        default_factory=lambda: {
+            "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],
+            "default_source_language": "hi",
+            "default_canonical_language": "en",
+            "stt_provider": "mock_stt",
+            "translation_provider": "mock_translation",
+            "tts_provider": "mock_tts",
+            "language_detection_provider": "mock_detection",
+            "timeout_seconds": 15.0,
+            "confidence_threshold": 0.6,
+        }
+    )
 
 
 settings = Settings()

@@ -1108,3 +1108,138 @@ class PrivacyBoundaryError(BoundaryValidationError):
             details=f"Privacy boundary violation: {details}",
             metadata={"details": details}
         )
+
+
+class ULPUError(EarthMindException):
+    """Base exception for all ULPU (Universal Language Processing Unit) errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "ULPU_ERROR",
+        operation: str = "language_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="ulpu",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidInputError(ULPUError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid ULPU input: {details}",
+            error_code="INVALID_INPUT",
+            operation="validate_input",
+            metadata={"details": details}
+        )
+
+
+class UnsupportedLanguageError(ULPUError):
+    def __init__(self, language_code: str, capability: str = "general"):
+        super().__init__(
+            message=f"Unsupported language code '{language_code}' for capability '{capability}'.",
+            error_code="UNSUPPORTED_LANGUAGE",
+            operation="check_language_support",
+            metadata={"language_code": language_code, "capability": capability}
+        )
+
+
+class AudioProcessingError(ULPUError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Audio processing error: {details}",
+            error_code="AUDIO_PROCESSING_ERROR",
+            operation="process_audio",
+            metadata={"details": details}
+        )
+
+
+class STTError(ULPUError):
+    def __init__(self, provider_name: str, details: str, retryable: bool = False):
+        super().__init__(
+            message=f"Speech-to-Text error from provider '{provider_name}': {details}",
+            error_code="STT_ERROR",
+            operation="transcribe_speech",
+            retryable=retryable,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class TranslationError(ULPUError):
+    def __init__(self, provider_name: str, source_lang: str, target_lang: str, details: str, retryable: bool = False):
+        super().__init__(
+            message=f"Translation error ({source_lang} -> {target_lang}) from provider '{provider_name}': {details}",
+            error_code="TRANSLATION_ERROR",
+            operation="translate_text",
+            retryable=retryable,
+            metadata={"provider_name": provider_name, "source_lang": source_lang, "target_lang": target_lang, "details": details}
+        )
+
+
+class TTSError(ULPUError):
+    def __init__(self, provider_name: str, details: str, retryable: bool = False):
+        super().__init__(
+            message=f"Text-to-Speech synthesis error from provider '{provider_name}': {details}",
+            error_code="TTS_ERROR",
+            operation="synthesize_speech",
+            retryable=retryable,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class ProviderError(ULPUError):
+    def __init__(self, provider_name: str, details: str, retryable: bool = False):
+        super().__init__(
+            message=f"ULPU provider error for '{provider_name}': {details}",
+            error_code="PROVIDER_ERROR",
+            operation="invoke_provider",
+            retryable=retryable,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class ULPUTimeoutError(ULPUError):
+    def __init__(self, operation: str, timeout: float):
+        super().__init__(
+            message=f"ULPU operation '{operation}' timed out after {timeout} seconds.",
+            error_code="ULPU_TIMEOUT",
+            operation=operation,
+            retryable=True,
+            metadata={"timeout": timeout}
+        )
+
+
+class LowConfidenceError(ULPUError):
+    def __init__(self, operation: str, confidence: float, threshold: float):
+        super().__init__(
+            message=f"ULPU confidence {confidence:.2f} below threshold {threshold:.2f} for operation '{operation}'.",
+            error_code="LOW_CONFIDENCE",
+            operation=operation,
+            metadata={"confidence": confidence, "threshold": threshold}
+        )
+
+
+class ULPUConfigurationError(ULPUError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"ULPU configuration error: {details}",
+            error_code="ULPU_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class InternalULPUError(ULPUError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Internal ULPU failure: {details}",
+            error_code="INTERNAL_ULPU_ERROR",
+            operation="execute_ulpu",
+            metadata={"details": details}
+        )
