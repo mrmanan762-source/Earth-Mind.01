@@ -1243,3 +1243,95 @@ class InternalULPUError(ULPUError):
             operation="execute_ulpu",
             metadata={"details": details}
         )
+
+
+class RerankError(EarthMindException):
+    """Base exception for Stage R8 Reranking errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "RERANK_ERROR",
+        operation: str = "rerank_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidRerankRequestError(RerankError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid rerank request: {details}",
+            error_code="INVALID_RERANK_REQUEST",
+            operation="validate_request",
+            metadata={"details": details}
+        )
+
+
+class RerankerProviderUnavailableError(RerankError):
+    def __init__(self, provider_name: str, details: str = "Reranker provider unavailable or offline."):
+        super().__init__(
+            message=f"Reranker provider '{provider_name}' unavailable: {details}",
+            error_code="RERANKER_PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class RerankerConfigurationError(RerankError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Reranker configuration error: {details}",
+            error_code="RERANKER_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class RerankerExecutionError(RerankError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Reranker execution error on provider '{provider_name}': {details}",
+            error_code="RERANKER_EXECUTION_ERROR",
+            operation="execute_rerank",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class InvalidRerankerResponseError(RerankError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid reranker response: {details}",
+            error_code="INVALID_RERANKER_RESPONSE",
+            operation="validate_response",
+            metadata={"details": details}
+        )
+
+
+class RerankerTimeoutError(RerankError):
+    def __init__(self, provider_name: str, timeout: float):
+        super().__init__(
+            message=f"Reranking timed out after {timeout} seconds on provider '{provider_name}'.",
+            error_code="RERANKER_TIMEOUT",
+            operation="execute_rerank",
+            retryable=True,
+            metadata={"provider_name": provider_name, "timeout": timeout}
+        )
+
+
+class RerankFallbackError(RerankError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Rerank fallback failed: {details}",
+            error_code="RERANK_FALLBACK_ERROR",
+            operation="execute_fallback",
+            metadata={"details": details}
+        )
