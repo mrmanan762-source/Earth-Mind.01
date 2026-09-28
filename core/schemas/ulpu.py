@@ -230,3 +230,34 @@ class ULPUTextPipelineResponse(BaseModel):
     system_representation: SystemLanguageRepresentation = Field(..., description="Complete SystemLanguageRepresentation object")
     transformation_metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata trace from pipeline execution")
     errors: List[str] = Field(default_factory=list, description="Non-fatal warning or error notes")
+
+
+class ULPUResponseLocalizationRequest(BaseModel):
+    """Input contract for localizing validated system responses into target farmer language."""
+    system_response: str = Field(..., description="Validated system response text string")
+    source_language: str = Field(default="en", description="Source ISO language code of system response")
+    target_language: str = Field(default="hi", description="Target ISO language code for farmer")
+    request_id: Optional[str] = Field(default=None, description="Optional trace/request identifier")
+    target_modality: InputModality = Field(default=InputModality.TEXT, description="Target output modality")
+    voice_id: Optional[str] = Field(default=None, description="Optional voice ID for audio modality")
+    context_metadata: Dict[str, Any] = Field(default_factory=dict, description="Optional context metadata")
+
+    @field_validator("system_response")
+    @classmethod
+    def validate_system_response_non_empty(cls, v: str) -> str:
+        if v is None or not v.strip():
+            raise ValueError("system_response must not be empty or whitespace-only")
+        return v
+
+
+class ULPUResponseLocalizationResponse(BaseModel):
+    """Output contract returned after localizing system response."""
+    request_id: str = Field(..., description="Unique request/trace ID")
+    original_response: str = Field(..., description="Verbatim original system response text")
+    source_language: str = Field(..., description="Source ISO language code")
+    target_language: str = Field(..., description="Target ISO language code")
+    localized_response: str = Field(..., description="Localized human language response text")
+    confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Localization confidence score")
+    transformation_metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata trace from response localization")
+    uncertainty: List[str] = Field(default_factory=list, description="Linguistic uncertainty or ambiguity notes")
+    audio_output: Optional[TTSResponse] = Field(default=None, description="Audio output if audio modality was requested")

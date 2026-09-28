@@ -9,6 +9,8 @@ from core.schemas.ulpu import (
     ScriptType,
     ULPUTextPipelineRequest,
     ULPUTextPipelineResponse,
+    ULPUResponseLocalizationRequest,
+    ULPUResponseLocalizationResponse,
 )
 from modules.ulpu.config import ULPUConfig
 from modules.ulpu.registry import LanguageRegistry
@@ -114,3 +116,34 @@ class UlpuService:
             from core.errors.exceptions import InvalidInputError
             raise InvalidInputError(str(e))
         return engine.process(req)
+
+    def localize_response(
+        self,
+        system_response: str,
+        target_language: str = "hi",
+        source_language: str = "en",
+        request_id: Optional[str] = None,
+        target_modality: InputModality = InputModality.TEXT,
+        voice_id: Optional[str] = None,
+    ) -> ULPUResponseLocalizationResponse:
+        """
+        Localize a validated EarthMind system response into target farmer language and modality.
+        """
+        engine = ULPUTextPipelineEngine(
+            config=self.config,
+            language_registry=self.language_registry,
+            provider_registry=self.provider_registry,
+        )
+        try:
+            req = ULPUResponseLocalizationRequest(
+                system_response=system_response,
+                source_language=source_language,
+                target_language=target_language,
+                request_id=request_id,
+                target_modality=target_modality,
+                voice_id=voice_id,
+            )
+        except Exception as e:
+            from core.errors.exceptions import InvalidInputError
+            raise InvalidInputError(str(e))
+        return engine.localize_response(req)

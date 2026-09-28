@@ -8,10 +8,13 @@ from core.interfaces.ulpu import (
     IDisfluencyProcessor,
     ICanonicalizer,
     ITranslator,
+    ITTSProvider,
 )
 from core.schemas.ulpu import (
     ULPUTextPipelineRequest,
     ULPUTextPipelineResponse,
+    ULPUResponseLocalizationRequest,
+    ULPUResponseLocalizationResponse,
     SystemLanguageRepresentation,
     InputSource,
     InputModality,
@@ -21,6 +24,7 @@ from core.schemas.ulpu import (
     DisfluencyRequest,
     CanonicalizationRequest,
     TranslationRequest,
+    ResponseLocalizationRequest,
 )
 from core.errors.exceptions import (
     InvalidInputError,
@@ -35,6 +39,7 @@ from modules.ulpu.providers.registry import ProviderRegistry
 from modules.ulpu.processors.normalizer import StandardNormalizer
 from modules.ulpu.processors.disfluency import StandardDisfluencyProcessor
 from modules.ulpu.processors.canonicalizer import StandardCanonicalizer
+from modules.ulpu.processors.localizer import StandardResponseLocalizer
 from core.logging.logger import get_logger
 
 logger = get_logger("modules.ulpu.pipeline")
@@ -178,4 +183,63 @@ class ULPUTextPipelineEngine:
             system_representation=system_representation,
             transformation_metadata=transformation_metadata,
             errors=[],
+        )
+
+    def localize_response(self, request: ULPUResponseLocalizationRequest) -> ULPUResponseLocalizationResponse:
+        """Execute response localization from system response to target farmer language."""
+        request_id = request.request_id or f"ulpu_loc_{uuid.uuid4().hex[:10]}"
+        system_response = request.system_response
+        source_lang = request.source_language.lower().strip()
+        target_lang = request.target_language.lower().strip()
+
+        logger.info(f"[{request_id}] Localizing system response ({source_lang} -> {target_lang})")
+
+        # 1. Validation
+        if not system_response or not system_response.strip():
+            raise InvalidInputError("System response text cannot be empty or whitespace-only.")
+
+        if not self.language_registry.is_supported(source_lang):
+            raise UnsupportedLanguageError(source_lang, "source_language")
+
+        if not self.language_registry.is_supported(target_lang, "translation"):
+            raise UnsupportedLanguageError(target_lang, "target_language")
+
+        # 2. Retrieve Translator & Optional TTS Provider
+        translator: ITranslator = self.provider_registry.get_provider(
+            "translation", self.config.translation_provider
+        )
+        tts_provider: Optional[ITTSProvider] = None
+        if request.target_modality == InputModality.AUDIO:
+            tts_provider = self.provider_registry.get_provider(
+                "tts", self.config.tts_provider
+            )
+
+        # 3. Invoke Response Localizer Processor
+        localizer = StandardResponseLocalizer(translator=translator, tts_provider=tts_provider)
+        loc_req = ResponseLocalizationRequest(
+            system_response=system_response,
+            target_language=target_lang,
+            target_modality=request.target_modality,
+            voice_id=request.voice_id,
+        )
+        loc_res = localizer.localize_response(loc_req)
+
+        transformation_metadata = {
+            "source_language": source_lang,
+            "target_language": target_lang,
+            "translation_provider": translator.get_provider_name(),
+            "target_modality": request.target_modality.value,
+            "context_metadata": request.context_metadata,
+        }
+
+        return ULPUResponseLocalizationResponse(
+            request_id=request_id,
+            original_response=system_response,
+            source_language=source_lang,
+            target_language=target_lang,
+            localized_response=loc_res.localized_text,
+            confidence=1.0 if source_lang == target_lang else 0.96,
+            transformation_metadata=transformation_metadata,
+            uncertainty=[],
+            audio_output=loc_res.audio_output,
         )
