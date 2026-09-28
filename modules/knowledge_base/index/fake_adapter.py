@@ -5,8 +5,9 @@ Provides an in-memory implementation of IKnowledgeIndexAdapter for:
 - Verifying interface isolation and adapter replaceability.
 """
 
+import math
 from typing import Any, Dict, List, Optional
-from core.interfaces.index import IKnowledgeIndexAdapter
+from core.interfaces.index import DenseSearchResult, IKnowledgeIndexAdapter
 from core.errors.exceptions import (
     CollectionOperationError,
     IndexExecutionError,
@@ -14,6 +15,18 @@ from core.errors.exceptions import (
 )
 from modules.knowledge_base.enums import IndexStatus
 from modules.knowledge_base.index.record import IndexBatchResult, IndexRecord
+
+
+def _cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
+    """Compute cosine similarity between two float vectors."""
+    if not vec1 or not vec2 or len(vec1) != len(vec2):
+        return 0.0
+    dot = sum(a * b for a, b in zip(vec1, vec2))
+    norm1 = math.sqrt(sum(a * a for a in vec1))
+    norm2 = math.sqrt(sum(b * b for b in vec2))
+    if norm1 == 0.0 or norm2 == 0.0:
+        return 0.0
+    return dot / (norm1 * norm2)
 
 
 class FakeIndexAdapter(IKnowledgeIndexAdapter):
@@ -147,6 +160,59 @@ class FakeIndexAdapter(IKnowledgeIndexAdapter):
         if c_name in self.collections:
             return self.collections[c_name].get(record_id)
         return None
+
+    def search_dense(
+        self,
+        collection_name: str,
+        query_vector: List[float],
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
+        with_record: bool = True,
+    ) -> List[DenseSearchResult]:
+        """Perform dense vector cosine similarity search in memory."""
+        if not self._is_available:
+            raise IndexExecutionError("fake", "FakeIndexAdapter is set to unavailable.")
+
+        c_name = collection_name.strip()
+        if c_name not in self.collections:
+            return []
+
+        scored: List[tuple[str, float]] = []
+        for rec_id, record in self.collections[c_name].items():
+            if not record.dense_vector:
+                continue
+
+            # Apply filters if provided
+            if filters:
+                match = True
+                payload = record.payload_metadata or {}
+                for k, v in filters.items():
+                    if payload.get(k) != v:
+                        match = False
+                        break
+                if not match:
+                    continue
+
+            score = _cosine_similarity(query_vector, record.dense_vector)
+            scored.append((rec_id, score))
+
+        # Sort by similarity score descending
+        scored.sort(key=lambda x: x[1], reverse=True)
+        top_results = scored[:top_k]
+
+        results: List[DenseSearchResult] = []
+        for rec_id, score in top_results:
+            rec = self.collections[c_name][rec_id]
+            results.append(
+                DenseSearchResult(
+                    record_id=rec_id,
+                    score=round(score, 6),
+                    record=rec if with_record else None,
+                    payload=rec.payload_metadata or {},
+                )
+            )
+
+        return results
 
     def get_status(self, collection_name: str) -> Dict[str, Any]:
         """Return status metrics for the specified collection."""

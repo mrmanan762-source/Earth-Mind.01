@@ -1,6 +1,16 @@
 """Generic IKnowledgeIndexAdapter Interface for EarthMind C.2 Knowledge Base Index Layer."""
 
 from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+from pydantic import BaseModel, Field
+
+
+class DenseSearchResult(BaseModel):
+    """Result structure for dense vector retrieval lookup primitives."""
+
+    record_id: str = Field(..., description="IndexRecord identifier")
+    score: float = Field(..., description="Dense vector similarity score (e.g., Cosine / Dot product)")
+    record: Optional[Any] = Field(None, description="Full IndexRecord payload if requested")
+    payload: Dict[str, Any] = Field(default_factory=dict, description="Filterable payload metadata")
 
 
 @runtime_checkable
@@ -37,6 +47,17 @@ class IKnowledgeIndexAdapter(Protocol):
 
     def get_record(self, collection_name: str, record_id: str) -> Optional[Any]:
         """Retrieve an index record from the specified collection by record_id."""
+        ...
+
+    def search_dense(
+        self,
+        collection_name: str,
+        query_vector: List[float],
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
+        with_record: bool = True,
+    ) -> List[DenseSearchResult]:
+        """Perform dense vector lookup primitive given a dense query vector."""
         ...
 
     def get_status(self, collection_name: str) -> Dict[str, Any]:
