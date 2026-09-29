@@ -63,6 +63,93 @@ class MockSTTProvider(ISTTProvider):
         return True
 
 
+class ConfigurableFailureMockTranslator(ITranslator):
+    """Failure-injection mock translator for reliability and fallback testing."""
+
+    def __init__(
+        self,
+        provider_name: str = "configurable_mock_translator",
+        mode: str = "success",  # "success", "fail_once", "always_fail", "timeout"
+        translation_prefix: str = "[CONFIGURABLE_TRANSLATED]",
+    ) -> None:
+        self.provider_name = provider_name
+        self.mode = mode
+        self.translation_prefix = translation_prefix
+        self.call_count = 0
+
+    def translate(self, request: TranslationRequest) -> TranslationResponse:
+        self.call_count += 1
+        if self.mode == "always_fail":
+            from core.errors.exceptions import TranslationError
+            raise TranslationError(self.provider_name, request.source_language, request.target_language, "Forced failure mode")
+
+        elif self.mode == "fail_once":
+            if self.call_count == 1:
+                from core.errors.exceptions import TranslationError
+                raise TranslationError(self.provider_name, request.source_language, request.target_language, "Forced transient failure (call 1)")
+
+        elif self.mode == "timeout":
+            from core.errors.exceptions import ULPUTimeoutError
+            raise ULPUTimeoutError("translation", 5.0)
+
+        translated = f"{self.translation_prefix} ({request.target_language}): {request.text}"
+        return TranslationResponse(
+            translated_text=translated,
+            source_language=request.source_language,
+            target_language=request.target_language,
+            confidence=0.96,
+            metadata={"provider": self.provider_name, "mode": self.mode, "calls": self.call_count},
+        )
+
+    def get_provider_name(self) -> str:
+        return self.provider_name
+
+    def is_available(self) -> bool:
+        return self.mode != "always_fail"
+
+
+class ConfigurableFailureMockDetector(ILanguageDetector):
+    """Failure-injection mock detector for reliability testing."""
+
+    def __init__(
+        self,
+        provider_name: str = "configurable_mock_detector",
+        mode: str = "success",  # "success", "fail_once", "always_fail", "low_confidence"
+        default_language: str = "en",
+    ) -> None:
+        self.provider_name = provider_name
+        self.mode = mode
+        self.default_language = default_language
+        self.call_count = 0
+
+    def detect_language(self, request: LanguageDetectionRequest) -> LanguageDetectionResponse:
+        self.call_count += 1
+        if self.mode == "always_fail":
+            from core.errors.exceptions import ProviderError
+            raise ProviderError(self.provider_name, "Language detector service down")
+
+        elif self.mode == "fail_once":
+            if self.call_count == 1:
+                from core.errors.exceptions import ProviderError
+                raise ProviderError(self.provider_name, "Transient language detector error")
+
+        confidence = 0.20 if self.mode == "low_confidence" else 0.98
+
+        return LanguageDetectionResponse(
+            detected_language=self.default_language,
+            script=ScriptType.LATIN,
+            confidence=confidence,
+            alternative_languages=[],
+            metadata={"provider": self.provider_name, "mode": self.mode, "calls": self.call_count},
+        )
+
+    def get_provider_name(self) -> str:
+        return self.provider_name
+
+    def is_available(self) -> bool:
+        return self.mode != "always_fail"
+
+
 class MockLanguageDetector(ILanguageDetector):
     """Mock Language Detector for automated testing."""
 

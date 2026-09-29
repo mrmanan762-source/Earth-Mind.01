@@ -44,18 +44,40 @@ class ULPUConfig(BaseModel):
         description="Selected Language Detection provider name"
     )
 
-    # Fallback Providers
-    fallback_stt_provider: Optional[str] = Field(
-        default_factory=lambda: os.getenv("EARTHMIND_ULPU_FALLBACK_STT_PROVIDER"),
-        description="Fallback STT provider name"
+    # Fallback Providers List
+    translation_fallbacks: List[str] = Field(
+        default_factory=lambda: [
+            p.strip() for p in os.getenv("EARTHMIND_ULPU_TRANSLATION_FALLBACKS", "").split(",") if p.strip()
+        ],
+        description="Ordered list of fallback translation provider names"
     )
-    fallback_translation_provider: Optional[str] = Field(
-        default_factory=lambda: os.getenv("EARTHMIND_ULPU_FALLBACK_TRANSLATION_PROVIDER"),
-        description="Fallback Translation provider name"
+    language_detection_fallbacks: List[str] = Field(
+        default_factory=lambda: [
+            p.strip() for p in os.getenv("EARTHMIND_ULPU_DETECTION_FALLBACKS", "").split(",") if p.strip()
+        ],
+        description="Ordered list of fallback language detection provider names"
     )
-    fallback_tts_provider: Optional[str] = Field(
-        default_factory=lambda: os.getenv("EARTHMIND_ULPU_FALLBACK_TTS_PROVIDER"),
-        description="Fallback TTS provider name"
+    stt_fallbacks: List[str] = Field(
+        default_factory=lambda: [
+            p.strip() for p in os.getenv("EARTHMIND_ULPU_STT_FALLBACKS", "").split(",") if p.strip()
+        ],
+        description="Ordered list of fallback STT provider names"
+    )
+    tts_fallbacks: List[str] = Field(
+        default_factory=lambda: [
+            p.strip() for p in os.getenv("EARTHMIND_ULPU_TTS_FALLBACKS", "").split(",") if p.strip()
+        ],
+        description="Ordered list of fallback TTS provider names"
+    )
+
+    # Retry and Resilience Settings
+    max_retries: int = Field(
+        default_factory=lambda: int(os.getenv("EARTHMIND_ULPU_MAX_RETRIES", "2")),
+        description="Maximum number of retries per provider attempt"
+    )
+    retry_delay_seconds: float = Field(
+        default_factory=lambda: float(os.getenv("EARTHMIND_ULPU_RETRY_DELAY", "0.1")),
+        description="Base retry delay in seconds"
     )
 
     # Thresholds and Timeouts
