@@ -11,6 +11,19 @@ from core.schemas.embedding import (
     EmbeddingRequest,
     EmbeddingResponse,
 )
+from core.schemas.query import (
+    QueryProcessingStatus,
+    QueryClassification,
+    StructuredQueryFilter,
+    AgriculturalMetadata,
+    QueryMetadata,
+    QueryExpansion,
+    DenseQuery,
+    SparseQuery,
+    RetrievalQuery,
+    QueryProcessingRequest,
+    QueryProcessingResponse,
+)
 
 __all__ = [
     "ErrorContract",
@@ -26,4 +39,15 @@ __all__ = [
     "EmbeddingMetadata",
     "EmbeddingRequest",
     "EmbeddingResponse",
+    "QueryProcessingStatus",
+    "QueryClassification",
+    "StructuredQueryFilter",
+    "AgriculturalMetadata",
+    "QueryMetadata",
+    "QueryExpansion",
+    "DenseQuery",
+    "SparseQuery",
+    "RetrievalQuery",
+    "QueryProcessingRequest",
+    "QueryProcessingResponse",
 ]
