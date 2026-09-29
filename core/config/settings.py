@@ -106,6 +106,15 @@ class WebSearchConfig(BaseModel):
     user_agent: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_USER_AGENT", "EarthMind-RAG/1.0"), description="Custom User-Agent header for HTTP requests")
 
 
+class EvidenceBuilderConfig(BaseModel):
+    """Configuration settings for Stage R11 Evidence Builder Engine."""
+    max_items: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_EVIDENCE_MAX_ITEMS", "20")), description="Maximum total evidence items allowed in package")
+    max_content_length: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_EVIDENCE_MAX_CONTENT_LENGTH", "2000")), description="Maximum character length per evidence content string")
+    deduplicate: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_EVIDENCE_DEDUPLICATE", "true").lower() == "true", description="Enable conservative deduplication across sources")
+    deterministic_ordering: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_EVIDENCE_DETERMINISTIC", "true").lower() == "true", description="Enforce deterministic evidence ordering")
+    package_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EVIDENCE_PACKAGE_VERSION", "1.0.0"), description="Evidence Package schema version string")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -129,6 +138,7 @@ class Settings(BaseModel):
     rerank: RerankConfig = Field(default_factory=RerankConfig)
     query_processing: QueryProcessingConfig = Field(default_factory=QueryProcessingConfig)
     web_search: WebSearchConfig = Field(default_factory=WebSearchConfig)
+    evidence_builder: EvidenceBuilderConfig = Field(default_factory=EvidenceBuilderConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],

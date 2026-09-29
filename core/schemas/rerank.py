@@ -9,11 +9,13 @@ Defines Pydantic models for:
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from core.schemas.hybrid import CandidateRetrievalSource, HybridCandidate, HybridRetrievalResponse
-from modules.knowledge_base.index.record import IndexRecord
+
+if TYPE_CHECKING:
+    from modules.knowledge_base.index.record import IndexRecord
 
 
 class RerankStatus(str, Enum):
@@ -61,7 +63,7 @@ class RerankCandidate(BaseModel):
     retrieval_sources: List[CandidateRetrievalSource] = Field(default_factory=list, description="Retrieval branches from R7")
     payload_metadata: Dict[str, Any] = Field(default_factory=dict, description="Domain and administrative metadata")
     provenance: Optional[Any] = Field(None, description="Lineage provenance chain")
-    record: Optional[IndexRecord] = Field(None, description="Optional full IndexRecord payload")
+    record: Optional[Any] = Field(None, description="Optional full IndexRecord payload")
 
     @classmethod
     def from_hybrid_candidate(

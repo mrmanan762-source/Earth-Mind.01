@@ -10,10 +10,11 @@ Defines Pydantic models for:
 
 from enum import Enum
 import time
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
-from modules.knowledge_base.index.record import IndexRecord
+if TYPE_CHECKING:
+    from modules.knowledge_base.index.record import IndexRecord
 
 
 class HybridRetrievalStatus(str, Enum):
@@ -59,7 +60,7 @@ class HybridCandidate(BaseModel):
     sparse_score: Optional[float] = Field(None, description="Raw score in sparse retrieval (if present)")
     payload_metadata: Dict[str, Any] = Field(default_factory=dict, description="Domain and administrative metadata")
     provenance: Optional[Any] = Field(None, description="Lineage provenance chain")
-    record: Optional[IndexRecord] = Field(None, description="Optional full IndexRecord payload")
+    record: Optional[Any] = Field(None, description="Optional full IndexRecord payload")
 
 
 class HybridRetrievalRequest(BaseModel):

@@ -30,6 +30,14 @@ from core.schemas.query import (
     QueryProcessingRequest,
     QueryProcessingResponse,
 )
+from core.schemas.evidence import (
+    EvidenceSourceType,
+    EvidenceBuildStatus,
+    EvidenceItem,
+    EvidencePackage,
+    EvidenceBuildRequest,
+    EvidenceBuildResponse,
+)
 
 __all__ = [
     "ErrorContract",
@@ -60,4 +68,10 @@ __all__ = [
     "WebSearchResult",
     "WebSearchRequest",
     "WebSearchResponse",
+    "EvidenceSourceType",
+    "EvidenceBuildStatus",
+    "EvidenceItem",
+    "EvidencePackage",
+    "EvidenceBuildRequest",
+    "EvidenceBuildResponse",
 ]

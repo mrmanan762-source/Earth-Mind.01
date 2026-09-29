@@ -800,6 +800,56 @@ class WebSearchRateLimitError(WebSearchError):
         )
 
 
+class EvidenceBuilderError(EarthMindException):
+    """Base exception for Stage R11 Evidence Builder errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "EVIDENCE_BUILDER_ERROR",
+        operation: str = "evidence_building",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidEvidenceBuildRequestError(EvidenceBuilderError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid evidence build request: {details}",
+            error_code="INVALID_EVIDENCE_BUILD_REQUEST",
+            operation="validate_request",
+            metadata={"details": details}
+        )
+
+
+class EvidenceBuilderConfigurationError(EvidenceBuilderError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evidence builder configuration error: {details}",
+            error_code="EVIDENCE_BUILDER_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class EvidenceConstructionError(EvidenceBuilderError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evidence construction failure: {details}",
+            error_code="EVIDENCE_CONSTRUCTION_ERROR",
+            operation="construct_package",
+            metadata={"details": details}
+        )
+
+
 class EmbeddingRateLimitError(EmbeddingError):
     def __init__(self, provider_name: str, details: str = "Rate limit exceeded."):
         super().__init__(

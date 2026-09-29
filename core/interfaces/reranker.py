@@ -1,7 +1,9 @@
 """Generic IRerankerProvider Interface for EarthMind Stage R8 Reranking."""
 
-from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
-from core.schemas.rerank import RerankScoreResult
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Protocol, runtime_checkable
+
+if TYPE_CHECKING:
+    from core.schemas.rerank import RerankScoreResult
 
 
 @runtime_checkable
@@ -14,7 +16,7 @@ class IRerankerProvider(Protocol):
         documents: List[Dict[str, Any]],
         top_k: Optional[int] = None,
         timeout: Optional[float] = None,
-    ) -> List[RerankScoreResult]:
+    ) -> List["RerankScoreResult"]:
         """Compute relevance scores for a query across a list of candidate documents.
 
         Args:
