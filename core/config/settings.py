@@ -77,6 +77,24 @@ class RerankConfig(BaseModel):
     device: str = Field(default_factory=lambda: os.getenv("EARTHMIND_RERANK_DEVICE", "cpu"), description="Execution device (cpu, cuda, mps, auto)")
 
 
+class QueryProcessingConfig(BaseModel):
+    """Configuration settings for Stage R9 Query Processing Engine."""
+    max_query_length: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_MAX_LENGTH", "1000")), description="Maximum character length for queries")
+    min_query_length: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_MIN_LENGTH", "1")), description="Minimum character length for queries")
+    expansion_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_EXPANSION_ENABLED", "true").lower() == "true", description="Enable query expansion by default")
+    max_expansions: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_MAX_EXPANSIONS", "3")), description="Maximum expansions per query")
+    normalization_policy: str = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_NORMALIZATION_POLICY", "STANDARD"), description="Normalization strategy identifier")
+    default_language: str = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_DEFAULT_LANG", "hi"), description="Default language code")
+    supported_languages: list[str] = Field(default_factory=lambda: ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"], description="Supported language list")
+    default_top_k: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_DEFAULT_TOP_K", "10")), description="Default fused top-k")
+    default_dense_top_k: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_DEFAULT_DENSE_TOP_K", "20")), description="Default dense top-k")
+    default_sparse_top_k: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_QUERY_DEFAULT_SPARSE_TOP_K", "20")), description="Default sparse top-k")
+    collection_name: str = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_COLLECTION", "earthmind_knowledge"), description="Default target collection")
+    timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_QUERY_TIMEOUT", "10.0")), description="Query processing timeout in seconds")
+    deterministic_mode: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_DETERMINISTIC", "true").lower() == "true", description="Enforce deterministic normalization and expansion")
+    processing_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_PROCESSING_VERSION", "1.0.0"), description="R9 pipeline version tag")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -98,6 +116,7 @@ class Settings(BaseModel):
     embedding: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
     qdrant: QdrantConfig = Field(default_factory=QdrantConfig)
     rerank: RerankConfig = Field(default_factory=RerankConfig)
+    query_processing: QueryProcessingConfig = Field(default_factory=QueryProcessingConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],

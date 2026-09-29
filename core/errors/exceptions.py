@@ -1335,3 +1335,84 @@ class RerankFallbackError(RerankError):
             operation="execute_fallback",
             metadata={"details": details}
         )
+
+
+class QueryProcessingError(EarthMindException):
+    """Base exception for Stage R9 Query Processing errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "QUERY_PROCESSING_ERROR",
+        operation: str = "query_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidQueryError(QueryProcessingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid query: {details}",
+            error_code="INVALID_QUERY",
+            operation="validate_request",
+            metadata={"details": details}
+        )
+
+
+class QueryValidationError(QueryProcessingError):
+    def __init__(self, details: str, errors: Optional[list] = None):
+        super().__init__(
+            message=f"Query validation error: {details}",
+            error_code="QUERY_VALIDATION_ERROR",
+            operation="validate_query",
+            metadata={"details": details, "errors": errors or []}
+        )
+
+
+class QueryNormalizationError(QueryProcessingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Query normalization error: {details}",
+            error_code="QUERY_NORMALIZATION_ERROR",
+            operation="normalize_query",
+            metadata={"details": details}
+        )
+
+
+class QueryExpansionError(QueryProcessingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Query expansion error: {details}",
+            error_code="QUERY_EXPANSION_ERROR",
+            operation="expand_query",
+            metadata={"details": details}
+        )
+
+
+class QueryProcessingTimeoutError(QueryProcessingError):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Query processing timed out after {timeout} seconds for request '{request_id}'.",
+            error_code="QUERY_PROCESSING_TIMEOUT",
+            operation="process_query",
+            retryable=True,
+            metadata={"request_id": request_id, "timeout": timeout}
+        )
+
+
+class QueryConfigurationError(QueryProcessingError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Query processing configuration error: {details}",
+            error_code="QUERY_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
