@@ -707,6 +707,99 @@ class EmbeddingConfigurationError(EmbeddingError):
         )
 
 
+class WebSearchError(EarthMindException):
+    """Base exception for Stage R10 Web Search Integration errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "WEB_SEARCH_ERROR",
+        operation: str = "web_search_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidWebSearchRequestError(WebSearchError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid web search request: {details}",
+            error_code="INVALID_WEB_SEARCH_REQUEST",
+            operation="validate_request",
+            metadata={"details": details}
+        )
+
+
+class WebSearchProviderUnavailableError(WebSearchError):
+    def __init__(self, provider_name: str, details: str = "Web search provider unavailable or offline."):
+        super().__init__(
+            message=f"Web search provider '{provider_name}' unavailable: {details}",
+            error_code="WEB_SEARCH_PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class WebSearchConfigurationError(WebSearchError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Web search configuration error: {details}",
+            error_code="WEB_SEARCH_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class WebSearchExecutionError(WebSearchError):
+    def __init__(self, provider_name: str, details: str):
+        super().__init__(
+            message=f"Web search execution error on provider '{provider_name}': {details}",
+            error_code="WEB_SEARCH_EXECUTION_ERROR",
+            operation="execute_search",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class WebSearchTimeoutError(WebSearchError):
+    def __init__(self, provider_name: str, timeout: float):
+        super().__init__(
+            message=f"Web search timed out after {timeout} seconds on provider '{provider_name}'.",
+            error_code="WEB_SEARCH_TIMEOUT",
+            operation="execute_search",
+            retryable=True,
+            metadata={"provider_name": provider_name, "timeout": timeout}
+        )
+
+
+class WebSearchAuthenticationError(WebSearchError):
+    def __init__(self, provider_name: str, details: str = "Authentication failed or API key missing."):
+        super().__init__(
+            message=f"Authentication error on web search provider '{provider_name}': {details}",
+            error_code="WEB_SEARCH_AUTHENTICATION_ERROR",
+            operation="authenticate",
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class WebSearchRateLimitError(WebSearchError):
+    def __init__(self, provider_name: str, details: str = "Rate limit exceeded."):
+        super().__init__(
+            message=f"Web search rate limit exceeded on provider '{provider_name}': {details}",
+            error_code="WEB_SEARCH_RATE_LIMIT",
+            operation="execute_search",
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
 class EmbeddingRateLimitError(EmbeddingError):
     def __init__(self, provider_name: str, details: str = "Rate limit exceeded."):
         super().__init__(

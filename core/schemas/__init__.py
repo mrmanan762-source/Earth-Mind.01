@@ -11,6 +11,12 @@ from core.schemas.embedding import (
     EmbeddingRequest,
     EmbeddingResponse,
 )
+from core.schemas.web_search import (
+    WebSearchStatus,
+    WebSearchResult,
+    WebSearchRequest,
+    WebSearchResponse,
+)
 from core.schemas.query import (
     QueryProcessingStatus,
     QueryClassification,
@@ -50,4 +56,8 @@ __all__ = [
     "RetrievalQuery",
     "QueryProcessingRequest",
     "QueryProcessingResponse",
+    "WebSearchStatus",
+    "WebSearchResult",
+    "WebSearchRequest",
+    "WebSearchResponse",
 ]

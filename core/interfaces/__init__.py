@@ -3,6 +3,7 @@ from core.interfaces.runtime import IRuntime, RuntimeState
 from core.interfaces.initializer import IModelInitializer, InitializationState
 from core.interfaces.embedding import IEmbeddingProvider
 from core.interfaces.reranker import IRerankerProvider
+from core.interfaces.web_search import IWebSearchProvider
 from core.interfaces.query_processor import (
     IQueryValidator,
     IQueryNormalizer,
@@ -20,6 +21,7 @@ __all__ = [
     "InitializationState",
     "IEmbeddingProvider",
     "IRerankerProvider",
+    "IWebSearchProvider",
     "IQueryValidator",
     "IQueryNormalizer",
     "IQueryClassifier",

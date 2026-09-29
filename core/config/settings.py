@@ -95,6 +95,17 @@ class QueryProcessingConfig(BaseModel):
     processing_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_QUERY_PROCESSING_VERSION", "1.0.0"), description="R9 pipeline version tag")
 
 
+class WebSearchConfig(BaseModel):
+    """Configuration settings for Stage R10 Web Search Engine."""
+    provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_PROVIDER", "fake"), description="Web search provider name")
+    api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_API_KEY"), description="Web search provider API key")
+    endpoint: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_ENDPOINT"), description="Web search provider API endpoint URL")
+    timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEB_SEARCH_TIMEOUT", "10.0")), description="Web search execution timeout in seconds")
+    max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_MAX_RESULTS", "10")), description="Default maximum results returned per query")
+    safe_search: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_SAFE_SEARCH", "true").lower() == "true", description="Enable safe search filtering")
+    user_agent: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_USER_AGENT", "EarthMind-RAG/1.0"), description="Custom User-Agent header for HTTP requests")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -117,6 +128,7 @@ class Settings(BaseModel):
     qdrant: QdrantConfig = Field(default_factory=QdrantConfig)
     rerank: RerankConfig = Field(default_factory=RerankConfig)
     query_processing: QueryProcessingConfig = Field(default_factory=QueryProcessingConfig)
+    web_search: WebSearchConfig = Field(default_factory=WebSearchConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],
