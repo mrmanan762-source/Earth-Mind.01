@@ -850,6 +850,56 @@ class EvidenceConstructionError(EvidenceBuilderError):
         )
 
 
+class EvidenceValidatorError(EarthMindException):
+    """Base exception for Stage R12 Evidence Validator errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "EVIDENCE_VALIDATOR_ERROR",
+        operation: str = "evidence_validation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidEvidenceValidationRequestError(EvidenceValidatorError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid evidence validation request: {details}",
+            error_code="INVALID_EVIDENCE_VALIDATION_REQUEST",
+            operation="validate_request",
+            metadata={"details": details}
+        )
+
+
+class EvidenceValidatorConfigurationError(EvidenceValidatorError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evidence validator configuration error: {details}",
+            error_code="EVIDENCE_VALIDATOR_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class EvidenceValidationExecutionError(EvidenceValidatorError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evidence validation execution failure: {details}",
+            error_code="EVIDENCE_VALIDATION_EXECUTION_ERROR",
+            operation="execute_validation",
+            metadata={"details": details}
+        )
+
+
 class EmbeddingRateLimitError(EmbeddingError):
     def __init__(self, provider_name: str, details: str = "Rate limit exceeded."):
         super().__init__(

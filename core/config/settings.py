@@ -115,6 +115,16 @@ class EvidenceBuilderConfig(BaseModel):
     package_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EVIDENCE_PACKAGE_VERSION", "1.0.0"), description="Evidence Package schema version string")
 
 
+class EvidenceValidatorConfig(BaseModel):
+    """Configuration settings for Stage R12 Evidence Validator Engine."""
+    strict_mode: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_STRICT_MODE", "false").lower() == "true", description="Enforce strict package invalidation on error")
+    max_items_limit: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_VALIDATOR_MAX_ITEMS", "100")), description="Maximum allowed evidence items per validation request")
+    require_identity: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_REQUIRE_IDENTITY", "true").lower() == "true", description="Require valid evidence_id on items")
+    require_provenance: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_REQUIRE_PROVENANCE", "true").lower() == "true", description="Require provenance dictionary on items")
+    require_content: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_REQUIRE_CONTENT", "true").lower() == "true", description="Require non-empty content string on items")
+    validator_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_VERSION", "1.0.0"), description="Evidence Validator implementation version string")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -139,6 +149,7 @@ class Settings(BaseModel):
     query_processing: QueryProcessingConfig = Field(default_factory=QueryProcessingConfig)
     web_search: WebSearchConfig = Field(default_factory=WebSearchConfig)
     evidence_builder: EvidenceBuilderConfig = Field(default_factory=EvidenceBuilderConfig)
+    evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],
