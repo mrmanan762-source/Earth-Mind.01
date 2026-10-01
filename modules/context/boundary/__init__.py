@@ -20,7 +20,6 @@ from modules.context.boundary.models import (
     PromotionRecord,
 )
 from modules.context.boundary.validator import BoundaryValidator
-from modules.context.boundary.governance import ContextGovernanceEngine
 from core.errors.exceptions import (
     BoundaryError,
     BoundaryValidationError,
@@ -36,6 +35,12 @@ def __getattr__(name: str):
     elif name in {"RAGContextProviderAdapter", "MemoryContextProviderAdapter"}:
         import modules.context.boundary.adapters as _adapters
         return getattr(_adapters, name)
+    elif name == "RAGContextProvider":
+        import modules.knowledge_base.integration as _mki
+        return getattr(_mki, name)
+    elif name == "ContextGovernanceEngine":
+        import modules.context.boundary.governance as _gov
+        return getattr(_gov, name)
     raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
 
 __all__ = [

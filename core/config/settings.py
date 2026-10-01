@@ -125,6 +125,15 @@ class EvidenceValidatorConfig(BaseModel):
     validator_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_VALIDATOR_VERSION", "1.0.0"), description="Evidence Validator implementation version string")
 
 
+class RAGIntegrationConfig(BaseModel):
+    """Configuration settings for Stage R13 RAG → B2 Integration Engine."""
+    enable_web_search: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_RAG_ENABLE_WEB_SEARCH", "true").lower() == "true", description="Enable Stage R10 Web Search in RAG pipeline")
+    max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_RAG_MAX_RESULTS", "10")), description="Default maximum result count requested from RAG pipeline")
+    strict_validation: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_RAG_STRICT_VALIDATION", "false").lower() == "true", description="Strict mode for R12 Evidence Validator gate")
+    timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_RAG_TIMEOUT", "15.0")), description="Overall RAG pipeline execution timeout in seconds")
+    provider_name: str = Field(default_factory=lambda: os.getenv("EARTHMIND_RAG_PROVIDER_NAME", "rag_provider"), description="RAG Context Provider identifier name")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -150,6 +159,7 @@ class Settings(BaseModel):
     web_search: WebSearchConfig = Field(default_factory=WebSearchConfig)
     evidence_builder: EvidenceBuilderConfig = Field(default_factory=EvidenceBuilderConfig)
     evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
+    rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],

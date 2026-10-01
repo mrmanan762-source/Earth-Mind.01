@@ -283,7 +283,32 @@ class EvidencePackage(BaseModel):
                 provenance=dict(item.provenance),
                 trace_id=self.request_id,
                 source_id=item.source_id or item.candidate_id or item.web_result_id,
-                metadata=dict(item.metadata),
+                metadata={
+                    **dict(item.metadata),
+                    "evidence_metadata": {
+                        "evidence_id": item.evidence_id,
+                        "source_type": item.source_type.value,
+                        "title": item.title,
+                        "url": item.url,
+                        "is_truncated": item.is_truncated,
+                        "truncation_reason": item.truncation_reason,
+                        "source_assessment": item.source_assessment,
+                        "agricultural_metadata": item.metadata,
+                    },
+                    "retrieval_metadata": {
+                        "retrieval_rank": item.retrieval_rank,
+                        "dense_rank": item.dense_rank,
+                        "sparse_rank": item.sparse_rank,
+                        "fused_rank": item.fused_rank,
+                        "rerank_rank": item.rerank_rank,
+                        "dense_score": item.dense_score,
+                        "sparse_score": item.sparse_score,
+                        "fused_score": item.fused_score,
+                        "rerank_score": item.rerank_score,
+                        "provider": item.provider,
+                    },
+                    "provenance": dict(item.provenance),
+                },
             )
             contracts.append(contract)
         return contracts
