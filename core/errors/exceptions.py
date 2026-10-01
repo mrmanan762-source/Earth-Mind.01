@@ -707,6 +707,66 @@ class EmbeddingConfigurationError(EmbeddingError):
         )
 
 
+class EvaluationError(EarthMindException):
+    """Base exception for Stage R15 Quality & Performance Evaluation errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "EVALUATION_ERROR",
+        operation: str = "evaluation_processing",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="knowledge_base",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class InvalidEvaluationDatasetError(EvaluationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid evaluation dataset: {details}",
+            error_code="INVALID_EVALUATION_DATASET",
+            operation="validate_dataset",
+            metadata={"details": details}
+        )
+
+
+class InsufficientGroundTruthError(EvaluationError):
+    def __init__(self, case_id: str, details: str = "Ground truth labels are missing or insufficient for calculation."):
+        super().__init__(
+            message=f"Insufficient ground truth for case '{case_id}': {details}",
+            error_code="INSUFFICIENT_GROUND_TRUTH",
+            operation="calculate_metric",
+            metadata={"case_id": case_id, "details": details}
+        )
+
+
+class EvaluationExecutionError(EvaluationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evaluation execution failure: {details}",
+            error_code="EVALUATION_EXECUTION_ERROR",
+            operation="execute_evaluation",
+            metadata={"details": details}
+        )
+
+
+class EvaluationConfigurationError(EvaluationError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Evaluation configuration error: {details}",
+            error_code="EVALUATION_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
 class RAGIntegrationError(EarthMindException):
     """Base exception for Stage R13 RAG → B2 Integration errors."""
     def __init__(
