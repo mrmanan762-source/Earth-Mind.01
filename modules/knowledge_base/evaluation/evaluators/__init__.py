@@ -1,1 +1,0 @@
-"""Evaluators package for EarthMind Stage R15 Evaluation Framework."""
