@@ -432,16 +432,27 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
                 ]
                 filter_conditions = models.Filter(must=must_clauses)
 
-            res = self.client.search(
-                collection_name=name,
-                query_vector=models.NamedVector(name="dense", vector=query_vector),
-                limit=top_k,
-                query_filter=filter_conditions,
-                with_payload=True,
-            )
+            if hasattr(self.client, "query_points"):
+                q_res = self.client.query_points(
+                    collection_name=name,
+                    query=query_vector,
+                    using="dense",
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
+                hits = q_res.points
+            else:
+                hits = self.client.search(
+                    collection_name=name,
+                    query_vector=models.NamedVector(name="dense", vector=query_vector),
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
 
             results: List[DenseSearchResult] = []
-            for hit in res:
+            for hit in hits:
                 payload = hit.payload or {}
                 rec_id = payload.get("_index_record_id", str(hit.id))
                 rec = None

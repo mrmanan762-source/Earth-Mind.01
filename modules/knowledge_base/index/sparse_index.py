@@ -508,16 +508,27 @@ class QdrantSparseIndexAdapter(ISparseIndexAdapter):
                 ]
                 filter_conditions = models.Filter(must=must_clauses)
 
-            res = self.client.search(
-                collection_name=name,
-                query_vector=models.NamedSparseVector(name="sparse", vector=sparse_query),
-                limit=top_k,
-                query_filter=filter_conditions,
-                with_payload=True,
-            )
+            if hasattr(self.client, "query_points"):
+                q_res = self.client.query_points(
+                    collection_name=name,
+                    query=sparse_query,
+                    using="sparse",
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
+                hits = q_res.points
+            else:
+                hits = self.client.search(
+                    collection_name=name,
+                    query_vector=models.NamedSparseVector(name="sparse", vector=sparse_query),
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
 
             results: List[SparseSearchResult] = []
-            for hit in res:
+            for hit in hits:
                 payload = hit.payload or {}
                 rec_id = payload.get("_index_record_id", str(hit.id))
                 rec = None
