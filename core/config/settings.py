@@ -134,6 +134,17 @@ class RAGIntegrationConfig(BaseModel):
     provider_name: str = Field(default_factory=lambda: os.getenv("EARTHMIND_RAG_PROVIDER_NAME", "rag_provider"), description="RAG Context Provider identifier name")
 
 
+class EvaluationConfig(BaseModel):
+    """Configuration settings for Stage R15 Quality & Performance Evaluation."""
+    k_values: list[int] = Field(default_factory=lambda: [1, 3, 5, 10], description="K values for evaluation metrics")
+    default_dataset_id: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EVAL_DEFAULT_DATASET", "ds_earthmind_agri_v1"), description="Default benchmark dataset ID")
+    max_concurrency: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_EVAL_MAX_CONCURRENCY", "4")), description="Max concurrency for concurrent evaluation runs")
+    timeout_per_case: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_EVAL_CASE_TIMEOUT", "30.0")), description="Timeout in seconds per evaluation case")
+    collect_resource_usage: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_EVAL_COLLECT_RESOURCES", "true").lower() == "true", description="Collect CPU/Memory process indicators")
+    regression_threshold_pct: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_EVAL_REGRESSION_THRESHOLD_PCT", "5.0")), description="Threshold percentage for regression flags")
+    eval_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EVAL_VERSION", "1.0.0"), description="Evaluation pipeline implementation version")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = os.getenv("EARTHMIND_ENV", "development")
@@ -160,6 +171,7 @@ class Settings(BaseModel):
     evidence_builder: EvidenceBuilderConfig = Field(default_factory=EvidenceBuilderConfig)
     evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
     rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
+    evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],
