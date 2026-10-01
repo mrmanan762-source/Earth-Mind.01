@@ -1,0 +1,205 @@
+{
+  "dataset_id": "agri_rag_eval_v1",
+  "dataset_name": "EarthMind Agricultural RAG Evaluation Benchmark v1",
+  "dataset_version": "1.0.0",
+  "description": "Curated agricultural RAG ground-truth benchmark over the R3 real knowledge corpus.",
+  "created_at": "2026-10-01T10:00:00Z",
+  "metadata": {
+    "corpus_reference": "data/knowledge/raw/",
+    "total_cases": 12,
+    "languages": ["en", "hi"],
+    "domains": ["crop", "disease", "soil", "irrigation", "fertilizer", "general"]
+  },
+  "cases": [
+    {
+      "case_id": "case_001_rice_fertilizer",
+      "query": "What are the recommended fertilizer doses for rice cultivation?",
+      "language": "en",
+      "domain_category": "crop",
+      "expected_document_ids": ["doc_src_icar_rice_001", "doc_src_iiss_fert_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_icar_rice_001_1_0_005_001", "chk_ku_ver_src_iiss_fert_001_1_0_005_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_icar_rice_001_1_0_005_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_icar_rice_001_1_0_005_001": 1.0,
+        "chk_ku_ver_src_iiss_fert_001_1_0_005_001": 0.8
+      },
+      "difficulty": "easy",
+      "version": "1.0.0",
+      "metadata": {"topic": "rice_fertilizer"}
+    },
+    {
+      "case_id": "case_002_wheat_yellow_rust",
+      "query": "yellow rust disease control in wheat",
+      "language": "en",
+      "domain_category": "disease",
+      "expected_document_ids": ["doc_src_ncipm_wheat_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_ncipm_wheat_001_1_0_003_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_ncipm_wheat_001_1_0_003_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_ncipm_wheat_001_1_0_003_001": 1.0
+      },
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "wheat_yellow_rust"}
+    },
+    {
+      "case_id": "case_003_soil_health_card",
+      "query": "soil health card sampling guidelines and parameters",
+      "language": "en",
+      "domain_category": "soil",
+      "expected_document_ids": ["doc_src_dac_shc_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_dac_shc_001_1_0_002_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_dac_shc_001_1_0_002_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_dac_shc_001_1_0_002_001": 1.0
+      },
+      "difficulty": "easy",
+      "version": "1.0.0",
+      "metadata": {"topic": "soil_health_card"}
+    },
+    {
+      "case_id": "case_004_drip_flushing",
+      "query": "drip irrigation lateral flushing and maintenance practice",
+      "language": "en",
+      "domain_category": "irrigation",
+      "expected_document_ids": ["doc_src_nmsa_pmksy_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_nmsa_pmksy_001_1_0_002_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_nmsa_pmksy_001_1_0_002_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_nmsa_pmksy_001_1_0_002_001": 1.0
+      },
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "drip_irrigation"}
+    },
+    {
+      "case_id": "case_005_balanced_fertilizer",
+      "query": "balanced fertilizer application guidelines for major crops",
+      "language": "en",
+      "domain_category": "fertilizer",
+      "expected_document_ids": ["doc_src_iiss_fert_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_iiss_fert_001_1_0_005_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_iiss_fert_001_1_0_005_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_iiss_fert_001_1_0_005_001": 1.0
+      },
+      "difficulty": "easy",
+      "version": "1.0.0",
+      "metadata": {"topic": "balanced_fertilizer"}
+    },
+    {
+      "case_id": "case_006_hindi_rice",
+      "query": "धान की फसल में खाद प्रबंधन",
+      "language": "hi",
+      "domain_category": "crop",
+      "expected_document_ids": ["doc_src_icar_rice_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_icar_rice_001_1_0_005_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_icar_rice_001_1_0_005_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_icar_rice_001_1_0_005_001": 1.0
+      },
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "hindi_rice"}
+    },
+    {
+      "case_id": "case_007_dryland_farming",
+      "query": "rainfed dryland farming moisture conservation techniques",
+      "language": "en",
+      "domain_category": "general",
+      "expected_document_ids": ["doc_src_tnau_icar_dryland_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_tnau_icar_dryland_001_1_0_002_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_tnau_icar_dryland_001_1_0_002_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_tnau_icar_dryland_001_1_0_002_001": 1.0
+      },
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "dryland_farming"}
+    },
+    {
+      "case_id": "case_008_pmkisan_kvk",
+      "query": "pm kisan kvk extension advisories and guidance",
+      "language": "en",
+      "domain_category": "general",
+      "expected_document_ids": ["doc_src_pmkisan_kvk_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_pmkisan_kvk_001_1_0_002_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_pmkisan_kvk_001_1_0_002_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_pmkisan_kvk_001_1_0_002_001": 1.0
+      },
+      "difficulty": "easy",
+      "version": "1.0.0",
+      "metadata": {"topic": "pmkisan_advisory"}
+    },
+    {
+      "case_id": "case_009_empty_no_match",
+      "query": "",
+      "language": "en",
+      "domain_category": "general",
+      "expected_document_ids": [],
+      "expected_chunk_ids": [],
+      "expected_evidence_ids": [],
+      "expected_source_types": [],
+      "relevance_judgments": {},
+      "difficulty": "easy",
+      "version": "1.0.0",
+      "metadata": {"topic": "empty_query"}
+    },
+    {
+      "case_id": "case_010_non_existent_term",
+      "query": "xyz_non_existent_term_987654321",
+      "language": "en",
+      "domain_category": "general",
+      "expected_document_ids": [],
+      "expected_chunk_ids": [],
+      "expected_evidence_ids": [],
+      "expected_source_types": [],
+      "relevance_judgments": {},
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "negative_query"}
+    },
+    {
+      "case_id": "case_011_icar_gap_guidelines",
+      "query": "good agricultural practices icar guidelines for crop production",
+      "language": "en",
+      "domain_category": "crop",
+      "expected_document_ids": ["doc_src_icar_gap_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_icar_gap_001_1_0_002_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_icar_gap_001_1_0_002_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_icar_gap_001_1_0_002_001": 1.0
+      },
+      "difficulty": "medium",
+      "version": "1.0.0",
+      "metadata": {"topic": "gap_guidelines"}
+    },
+    {
+      "case_id": "case_012_ambiguous_crop",
+      "query": "crop nutrient management",
+      "language": "en",
+      "domain_category": "fertilizer",
+      "expected_document_ids": ["doc_src_iiss_fert_001", "doc_src_icar_rice_001"],
+      "expected_chunk_ids": ["chk_ku_ver_src_iiss_fert_001_1_0_005_001", "chk_ku_ver_src_icar_rice_001_1_0_005_001"],
+      "expected_evidence_ids": ["ev_kb_chk_ku_ver_src_iiss_fert_001_1_0_005_001"],
+      "expected_source_types": ["KNOWLEDGE_BASE"],
+      "relevance_judgments": {
+        "chk_ku_ver_src_iiss_fert_001_1_0_005_001": 1.0,
+        "chk_ku_ver_src_icar_rice_001_1_0_005_001": 0.7
+      },
+      "difficulty": "hard",
+      "version": "1.0.0",
+      "metadata": {"topic": "ambiguous_query"}
+    }
+  ]
+}
