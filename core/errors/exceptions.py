@@ -707,6 +707,49 @@ class EmbeddingConfigurationError(EmbeddingError):
         )
 
 
+class RAGIntegrationError(EarthMindException):
+    """Base exception for Stage R13 RAG → B2 Integration errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "RAG_INTEGRATION_ERROR",
+        operation: str = "rag_integration",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {},
+        )
+
+
+class RAGPipelineExecutionError(RAGIntegrationError):
+    """Exception raised when execution of an upstream RAG pipeline stage fails."""
+    def __init__(self, stage_name: str, details: str, request_id: Optional[str] = None):
+        super().__init__(
+            message=f"RAG pipeline stage '{stage_name}' execution failed: {details}",
+            error_code="RAG_PIPELINE_EXECUTION_ERROR",
+            operation="execute_rag_pipeline",
+            retryable=True,
+            metadata={"stage_name": stage_name, "details": details, "request_id": request_id},
+        )
+
+
+class RAGContractMappingError(RAGIntegrationError):
+    """Exception raised when mapping validated evidence packages to B2 contracts fails."""
+    def __init__(self, details: str, request_id: Optional[str] = None):
+        super().__init__(
+            message=f"RAG contract mapping error: {details}",
+            error_code="RAG_CONTRACT_MAPPING_ERROR",
+            operation="map_contracts",
+            retryable=False,
+            metadata={"details": details, "request_id": request_id},
+        )
+
+
 class WebSearchError(EarthMindException):
     """Base exception for Stage R10 Web Search Integration errors."""
     def __init__(
