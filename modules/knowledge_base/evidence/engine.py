@@ -85,7 +85,7 @@ class EvidenceBuilderEngine(IEvidenceBuilderEngine):
         # 1. Process KB evidence from R8
         rerank_resp = request.rerank_response
         if rerank_resp:
-            if rerank_resp.status == RerankStatus.SUCCESS:
+            if rerank_resp.status in (RerankStatus.SUCCESS, RerankStatus.FALLBACK):
                 for candidate in rerank_resp.candidates:
                     try:
                         item = EvidenceItem.from_rerank_candidate(
@@ -96,6 +96,9 @@ class EvidenceBuilderEngine(IEvidenceBuilderEngine):
                         warn_msg = f"Failed to parse R8 candidate '{getattr(candidate, 'candidate_id', 'unknown')}': {ex}"
                         warnings.append(warn_msg)
                         is_partial = True
+                if rerank_resp.status == RerankStatus.FALLBACK:
+                    is_partial = True
+                    warnings.append("R8 reranker used fallback ordering.")
             else:
                 is_partial = True
                 err_msg = f"R8 reranking returned non-SUCCESS status: {rerank_resp.status}"

@@ -22,10 +22,14 @@ from core.errors.exceptions import (
     RAGPipelineExecutionError,
 )
 from core.interfaces.boundary import IRAGContextProvider
+from core.interfaces.embedding import IEmbeddingProvider
 from core.interfaces.evidence import IEvidenceBuilderEngine
 from core.interfaces.evidence_validator import IEvidenceValidatorEngine
 from core.interfaces.query_processor import IQueryProcessorEngine
+from core.interfaces.sparse import ISparseRepresentationProvider
 from core.interfaces.web_search import IWebSearchProvider
+from core.schemas.embedding import EmbeddingRequest
+from core.schemas.sparse import SparseRepresentationRequest
 from core.logging.logger import get_logger
 from core.schemas.evidence import EvidenceBuildRequest, EvidenceBuildResponse, EvidencePackage
 from core.schemas.evidence_validator import (
@@ -38,11 +42,13 @@ from core.schemas.rerank import RerankRequest, RerankResponse, RerankStatus
 from core.schemas.web_search import WebSearchRequest, WebSearchResponse, WebSearchStatus
 from modules.context.boundary.models import RAGContextContract, RAGContextRequest
 from modules.context.schemas import ContextRequest
+from modules.knowledge_base.embedding.self_hosted import SelfHostedEmbeddingProvider
 from modules.knowledge_base.evidence.engine import EvidenceBuilderEngine
 from modules.knowledge_base.evidence.validator import EvidenceValidatorEngine
 from modules.knowledge_base.query_processing.engine import QueryProcessingEngine
 from modules.knowledge_base.reranking.engine import RerankEngine
 from modules.knowledge_base.retrieval.hybrid_engine import HybridRetrievalEngine
+from modules.knowledge_base.sparse.bm25_provider import BM25SparseProvider
 from modules.knowledge_base.web_search.engine import WebSearchEngine
 
 logger = get_logger("modules.knowledge_base.integration.provider")
@@ -62,6 +68,8 @@ class RAGContextProvider(IRAGContextProvider):
         web_search_provider: Optional[IWebSearchProvider] = None,
         evidence_builder: Optional[IEvidenceBuilderEngine] = None,
         evidence_validator: Optional[IEvidenceValidatorEngine] = None,
+        embedding_provider: Optional[IEmbeddingProvider] = None,
+        sparse_provider: Optional[ISparseRepresentationProvider] = None,
         config: Optional[RAGIntegrationConfig] = None,
         provider_name: Optional[str] = None,
     ):
@@ -77,6 +85,10 @@ class RAGContextProvider(IRAGContextProvider):
         self.web_search_provider = web_search_provider if web_search_provider is not None else WebSearchEngine()
         self.evidence_builder = evidence_builder or EvidenceBuilderEngine()
         self.evidence_validator = evidence_validator or EvidenceValidatorEngine()
+        self.embedding_provider = embedding_provider or SelfHostedEmbeddingProvider(
+            execution_mode="self_hosted", allow_download=False
+        )
+        self.sparse_provider = sparse_provider or BM25SparseProvider()
 
     def get_rag_context(self, request: Any) -> List[RAGContextContract]:
         """
@@ -202,11 +214,43 @@ class RAGContextProvider(IRAGContextProvider):
         """Stage R7: Execute hybrid dense + sparse vector retrieval."""
         if max_results:
             retrieval_query.top_k = max_results
+
+        # Ensure query representations (dense vector and sparse vector) are populated if missing
+        q_text = retrieval_query.normalized_query or retrieval_query.original_query
+        if retrieval_query.dense_query.dense_vector is None and self.embedding_provider and self.embedding_provider.is_available():
+            try:
+                emb_res = self.embedding_provider.embed(EmbeddingRequest(texts=[q_text]))
+                if emb_res and emb_res.dense_vectors:
+                    retrieval_query.dense_query.dense_vector = emb_res.dense_vectors[0].vector
+            except Exception as e:
+                logger.warning(f"Dense query embedding generation failed: {str(e)}")
+
+        if (
+            (retrieval_query.sparse_query.sparse_indices is None or retrieval_query.sparse_query.sparse_values is None)
+            and self.sparse_provider
+            and self.sparse_provider.is_available()
+        ):
+            try:
+                sp_res = self.sparse_provider.generate_sparse(SparseRepresentationRequest(texts=[q_text]))
+                if sp_res and sp_res.sparse_vectors:
+                    retrieval_query.sparse_query.sparse_indices = sp_res.sparse_vectors[0].indices
+                    retrieval_query.sparse_query.sparse_values = sp_res.sparse_vectors[0].values
+            except Exception as e:
+                logger.warning(f"Sparse query representation generation failed: {str(e)}")
+
         hybrid_request = retrieval_query.to_hybrid_retrieval_request(timeout=self.config.timeout)
         if request_id:
             hybrid_request.request_id = request_id
 
-        return self.hybrid_retriever.search(hybrid_request)
+        hybrid_response = self.hybrid_retriever.search(hybrid_request)
+
+        # Fallback to search without hard filters if strict metadata filters produced 0 candidates
+        if (not hybrid_response or not getattr(hybrid_response, "candidates", None)) and hybrid_request.filters:
+            logger.info(f"Hybrid retrieval with filters {hybrid_request.filters} produced 0 candidates for request_id={request_id}. Retrying without hard filters.")
+            hybrid_request_unfiltered = hybrid_request.model_copy(update={"filters": None})
+            hybrid_response = self.hybrid_retriever.search(hybrid_request_unfiltered)
+
+        return hybrid_response
 
     def _execute_reranking(
         self, hybrid_response: Any, max_results: int, request_id: Optional[str]

@@ -37,6 +37,10 @@ class HybridRetrievalEngine:
         self.sparse_adapter = sparse_adapter
         self.fusion_engine = fusion_engine or CandidateFusionEngine()
 
+    def search(self, request: HybridRetrievalRequest) -> HybridRetrievalResponse:
+        """Alias method for retrieve to align with search interface callers."""
+        return self.retrieve(request)
+
     def retrieve(self, request: HybridRetrievalRequest) -> HybridRetrievalResponse:
         """Execute hybrid retrieval over dense and sparse branches and return fused candidates."""
         start_time = time.time()
