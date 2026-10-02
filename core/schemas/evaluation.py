@@ -43,6 +43,16 @@ class EvaluationCase(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Arbitrary case metadata")
     version: str = Field("1.0.0", description="Case schema/version tag")
 
+    @property
+    def query(self) -> str:
+        """Alias property for query_text."""
+        return self.query_text
+
+    @property
+    def agricultural_category(self) -> str:
+        """Alias property for domain_category."""
+        return self.domain_category
+
 
 class EvaluationDataset(BaseModel):
     """Collection of evaluation cases for benchmark runs."""
@@ -63,6 +73,7 @@ class EvaluationMeasurement(BaseModel):
     case_id: str = Field(..., description="Associated EvaluationCase ID")
     request_id: str = Field(..., description="Pipeline request ID")
     trace_id: str = Field(..., description="Pipeline trace ID")
+    correlation_id: Optional[str] = Field(None, description="Pipeline correlation ID")
     status: ReliabilityStatus = Field(ReliabilityStatus.SUCCESS, description="Execution status")
     error_code: Optional[str] = Field(None, description="Error code if failed")
     error_message: Optional[str] = Field(None, description="Error message if failed")
@@ -160,10 +171,12 @@ class EvaluationRun(BaseModel):
     dataset_id: str = Field(..., description="EvaluationDataset ID used")
     dataset_version: str = Field("1.0.0", description="EvaluationDataset version")
     timestamp: str = Field(..., description="ISO start timestamp")
+    correlation_id: Optional[str] = Field(None, description="Run correlation ID")
     knowledge_base_version: str = Field("R2_R3_v1.0", description="Target knowledge base/corpus version")
     embedding_model_version: str = Field("1.0.0", description="Embedding model version")
     sparse_version: str = Field("BM25_v1", description="Sparse index version")
-    qdrant_version: str = Field("1.19.1", description="Vector index version")
+    dense_index_version: str = Field("Qdrant_v1.19.1", description="Dense vector index version")
+    qdrant_version: str = Field("1.19.1", description="Vector index engine version")
     fusion_strategy_version: str = Field("R7_RRF_v1", description="Hybrid fusion version")
     reranker_version: str = Field("BAAI_bge_v1", description="Reranker version")
     query_processing_version: str = Field("R9_v1.0", description="Query processing version")
@@ -175,6 +188,11 @@ class EvaluationRun(BaseModel):
     performance_metrics: Optional[PerformanceMetrics] = Field(None, description="Aggregated performance metrics")
     reliability_metrics: Optional[ReliabilityMetrics] = Field(None, description="Aggregated reliability metrics")
     status: str = Field("COMPLETED", description="Overall run status")
+
+    @property
+    def evaluation_run_id(self) -> str:
+        """Alias property for run_id."""
+        return self.run_id
 
 
 class EvaluationReport(BaseModel):

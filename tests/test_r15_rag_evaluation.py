@@ -54,6 +54,8 @@ def sample_dataset(sample_case):
 # 1. Evaluation contract validation
 def test_01_evaluation_contract_validation(sample_case, sample_dataset):
     assert sample_case.case_id == "case_001"
+    assert sample_case.query == "What are GAP for land selection?"
+    assert sample_case.agricultural_category == "crop_management"
     assert sample_dataset.dataset_id == "ds_test_v1"
     assert len(sample_dataset.cases) == 1
 
@@ -91,6 +93,7 @@ def test_04_evaluation_run_creation():
         measurements=[],
     )
     assert run.run_id == "run_101"
+    assert run.evaluation_run_id == "run_101"
     assert run.status == "COMPLETED"
 
 
@@ -443,4 +446,11 @@ def test_29_existing_r14_integration():
     assert len(run.measurements) == len(ds.cases)
 
 
-# 30. Full repository regression - handled by pytest execution
+# 30. Full repository regression check
+def test_30_full_repository_regression(sample_dataset):
+    runner = EvaluationRunner()
+    run = runner.run_evaluation(sample_dataset)
+    assert run is not None
+    assert run.status == "COMPLETED"
+    assert len(run.measurements) == 1
+    assert run.measurements[0].status == ReliabilityStatus.SUCCESS

@@ -77,7 +77,7 @@ class EvaluationReportGenerator:
                 agricultural_breakdown[domain] = self.quality_evaluator.evaluate_quality(cases, domain_meas)
 
         # Track NOT_EVALUABLE fields
-        if evaluation_run.quality_metrics.status != QualityStatus.EVALUATED:
+        if evaluation_run.quality_metrics and evaluation_run.quality_metrics.status != QualityStatus.EVALUATED:
             not_evaluable_fields.append(f"quality_metrics: {evaluation_run.quality_metrics.status_reason}")
 
         # Sample case traces
@@ -87,6 +87,7 @@ class EvaluationReportGenerator:
                 "case_id": m.case_id,
                 "request_id": m.request_id,
                 "trace_id": m.trace_id,
+                "correlation_id": m.correlation_id,
                 "status": m.status,
                 "total_latency_ms": m.total_latency_ms,
                 "retrieved_count": len(m.retrieved_chunk_ids),
@@ -99,13 +100,20 @@ class EvaluationReportGenerator:
             "Resource usage indicators report process RSS memory and CPU times.",
         ]
 
+        q_metrics = evaluation_run.quality_metrics or QualityMetrics(
+            status=QualityStatus.NOT_EVALUABLE, status_reason="No quality metrics provided"
+        )
+
         return EvaluationReport(
             run_id=evaluation_run.run_id,
             timestamp=now_iso,
             evaluation_metadata={
+                "evaluation_run_id": evaluation_run.evaluation_run_id,
+                "correlation_id": evaluation_run.correlation_id,
                 "knowledge_base_version": evaluation_run.knowledge_base_version,
                 "embedding_model_version": evaluation_run.embedding_model_version,
                 "sparse_version": evaluation_run.sparse_version,
+                "dense_index_version": evaluation_run.dense_index_version,
                 "qdrant_version": evaluation_run.qdrant_version,
                 "fusion_strategy_version": evaluation_run.fusion_strategy_version,
                 "reranker_version": evaluation_run.reranker_version,
@@ -119,7 +127,7 @@ class EvaluationReportGenerator:
                 "total_cases_evaluated": len(evaluation_run.measurements),
             },
             configuration_info=clean_config,
-            quality_metrics=evaluation_run.quality_metrics,
+            quality_metrics=q_metrics,
             performance_metrics=evaluation_run.performance_metrics,
             reliability_metrics=evaluation_run.reliability_metrics,
             multilingual_breakdown=multilingual_breakdown,
@@ -127,8 +135,8 @@ class EvaluationReportGenerator:
             baseline_comparisons=baseline_results or [],
             regression_comparisons=regression_results or [],
             failure_summary={
-                "total_failures": evaluation_run.reliability_metrics.system_failure_count,
-                "breakdown": evaluation_run.reliability_metrics.failure_breakdown,
+                "total_failures": evaluation_run.reliability_metrics.system_failure_count if evaluation_run.reliability_metrics else 0,
+                "breakdown": evaluation_run.reliability_metrics.failure_breakdown if evaluation_run.reliability_metrics else {},
             },
             traceability_samples=sample_traces,
             limitations=limitations,
@@ -153,15 +161,17 @@ class EvaluationReportGenerator:
         md.append(f"- **Precision@5:** `{q.precision_at_k.get(5)}`")
         md.append(f"- **Recall@5:** `{q.recall_at_k.get(5)}`\n")
 
-        md.append("## 2. Performance Metrics Summary")
-        md.append(f"- **E2E Latency (Mean):** `{p.total_latency.mean_ms} ms`")
-        md.append(f"- **E2E Latency (P50 / P90 / P99):** `{p.total_latency.p50_ms} ms` / `{p.total_latency.p90_ms} ms` / `{p.total_latency.p99_ms} ms`")
-        md.append(f"- **Throughput:** `{p.throughput_qps} QPS` ({p.cases_per_second} cases/sec)\n")
+        if p:
+            md.append("## 2. Performance Metrics Summary")
+            md.append(f"- **E2E Latency (Mean):** `{p.total_latency.mean_ms} ms`")
+            md.append(f"- **E2E Latency (P50 / P90 / P99):** `{p.total_latency.p50_ms} ms` / `{p.total_latency.p90_ms} ms` / `{p.total_latency.p99_ms} ms`")
+            md.append(f"- **Throughput:** `{p.throughput_qps} QPS` ({p.cases_per_second} cases/sec)\n")
 
-        md.append("## 3. Reliability Summary")
-        md.append(f"- **Success Rate:** `{r.success_rate * 100:.1f}%` ({r.success_count}/{r.total_cases})")
-        md.append(f"- **Valid Empty Rate:** `{r.empty_result_rate * 100:.1f}%` ({r.valid_empty_count})")
-        md.append(f"- **System Failure Count:** `{r.system_failure_count}`\n")
+        if r:
+            md.append("## 3. Reliability Summary")
+            md.append(f"- **Success Rate:** `{r.success_rate * 100:.1f}%` ({r.success_count}/{r.total_cases})")
+            md.append(f"- **Valid Empty Rate:** `{r.empty_result_rate * 100:.1f}%` ({r.valid_empty_count})")
+            md.append(f"- **System Failure Count:** `{r.system_failure_count}`\n")
 
         if report.multilingual_breakdown:
             md.append("## 4. Multilingual Quality Breakdown")
@@ -173,6 +183,19 @@ class EvaluationReportGenerator:
             md.append("## 5. Agricultural Domain Quality Breakdown")
             for dom, dq in report.agricultural_breakdown.items():
                 md.append(f"- **Domain `{dom}`:** MRR=`{dq.mrr}`, HitRate@5=`{dq.hit_rate_at_k.get(5)}`")
+            md.append("")
+
+        if report.baseline_comparisons:
+            md.append("## 6. Baseline Comparisons")
+            for b in report.baseline_comparisons:
+                md.append(f"- **{b.baseline_name}:** MRR=`{b.quality_metrics.mrr}`, P50 Latency=`{b.performance_metrics.total_latency.p50_ms} ms`")
+            md.append("")
+
+        if report.regression_comparisons:
+            md.append("## 7. Regression Comparisons")
+            for reg in report.regression_comparisons:
+                status_str = "REGRESSION" if reg.regression_detected else "NO REGRESSION"
+                md.append(f"- **{reg.metric_name}:** Run A={reg.value_a}, Run B={reg.value_b} ({status_str})")
             md.append("")
 
         return "\n".join(md)

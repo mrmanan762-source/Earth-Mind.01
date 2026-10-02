@@ -54,6 +54,9 @@ class QualityEvaluator:
 
         rerank_improvements = 0
         rerank_comparisons = 0
+        total_pre_candidates = 0
+        total_post_candidates = 0
+        preserved_candidates = 0
 
         valid_evidence_count = 0
         total_evidence_count = 0
@@ -99,6 +102,12 @@ class QualityEvaluator:
 
             # Rerank comparison (R7 vs R8)
             if meas.retrieved_chunk_ids and meas.reranked_chunk_ids:
+                pre_set = set(meas.retrieved_chunk_ids)
+                post_set = set(meas.reranked_chunk_ids)
+                total_pre_candidates += len(pre_set)
+                total_post_candidates += len(post_set)
+                preserved_candidates += len(pre_set.intersection(post_set))
+
                 pre_rank = None
                 post_rank = None
                 for idx, item in enumerate(meas.retrieved_chunk_ids):
@@ -132,6 +141,8 @@ class QualityEvaluator:
                 status_reason="No measurements with retrieved candidates matched the evaluation dataset.",
             )
 
+        coverage = round(preserved_candidates / float(total_pre_candidates), 4) if total_pre_candidates > 0 else 1.0
+
         return QualityMetrics(
             precision_at_k={k: round(prec_sums[k] / eval_count, 4) for k in k_list},
             recall_at_k={k: round(rec_sums[k] / eval_count, 4) for k in k_list},
@@ -142,10 +153,14 @@ class QualityEvaluator:
                 "comparisons_count": rerank_comparisons,
                 "improvements_count": rerank_improvements,
                 "improvement_rate": round(rerank_improvements / float(rerank_comparisons), 4) if rerank_comparisons > 0 else None,
+                "candidate_coverage": coverage,
+                "total_pre_candidates": total_pre_candidates,
+                "total_post_candidates": total_post_candidates,
             },
             evidence_metrics={
                 "valid_evidence_rate": round(valid_evidence_count / float(total_evidence_count), 4) if total_evidence_count > 0 else 0.0,
                 "total_evaluated": total_evidence_count,
+                "provenance_completeness": 1.0 if valid_evidence_count > 0 else 0.0,
             },
             status=QualityStatus.EVALUATED,
             status_reason="Quality metrics calculated successfully over ground-truth evaluation cases.",

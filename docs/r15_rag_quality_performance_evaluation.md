@@ -8,7 +8,7 @@ R15 strictly adheres to the principle that **R15 measures and reports only**—i
 
 ---
 
-## 1. Strict Boundary & Architecture
+## 1. Architecture & Boundaries
 
 ```
 Production Execution Path:
@@ -41,7 +41,7 @@ Evaluation Execution Path:
 ### Strict Architectural Boundaries
 - **No Agricultural Reasoning:** R15 evaluates retrieved candidate IDs, ground-truth alignments, stage latencies, and reliability statuses. It never generates domain conclusions or advice.
 - **No Direct Mutation:** R15 never modifies production retrieval weights, thresholds, Qdrant indices, or configuration settings.
-- **Traceability:** Preserves `request_id`, `trace_id`, model versions, corpus versions, and full environment metadata across all evaluation runs.
+- **Traceability:** Preserves `request_id`, `trace_id`, `correlation_id`, model versions, corpus versions, and full environment metadata across all evaluation runs.
 
 ---
 
@@ -52,17 +52,17 @@ Evaluation Execution Path:
 2. **Dataset & Query Set Repository (`modules/knowledge_base/evaluation/dataset.py`):**
    - `EvaluationDatasetRepository` manages benchmark datasets. Includes pre-seeded `ds_earthmind_agri_v1` with 10 multilingual (English, Devanagari/Hindi) agricultural benchmark cases covering GAP, Rice/Wheat pests, Soil Health, PMKSY, KVK advice, and negative control queries.
 3. **Quality Evaluator (`modules/knowledge_base/evaluation/quality.py`):**
-   - Calculates Precision@K, Recall@K, Hit Rate@K, MRR, nDCG@K, reranking position movement, and evidence package validation pass rates. Returns `NOT_EVALUABLE` or `INSUFFICIENT_DATA` when ground truth labels are absent.
+   - Calculates Precision@K, Recall@K, Hit Rate@K, MRR, nDCG@K, reranking position movement, candidate coverage, and evidence package validation pass rates. Returns `NOT_EVALUABLE` or `INSUFFICIENT_DATA` when ground truth labels are absent.
 4. **Performance Evaluator (`modules/knowledge_base/evaluation/performance.py`):**
-   - Computes P50, P90, P95, P99, mean, min, and max latencies across the pipeline and per stage (R9, R7, R8, R10, R11, R12, R13, B2). Measures throughput (QPS and cases/sec) and captures process RSS memory usage.
+   - Computes P50, P90, P95, P99, mean, min, and max latencies across the pipeline and per stage (R9, R7, R8, R10, R11, R12, R13, B2). Measures throughput (QPS and cases/sec) and captures process RSS memory usage and CPU time.
 5. **Reliability Evaluator (`modules/knowledge_base/evaluation/reliability.py`):**
-   - Classifies case execution statuses (`SUCCESS`, `VALID_EMPTY_RESULT`, `SYSTEM_FAILURE`, `TIMEOUT`, `PARTIAL_RESULT`) and computes success, failure, and empty result rates.
+   - Classifies case execution statuses (`SUCCESS`, `VALID_EMPTY_RESULT`, `SYSTEM_FAILURE`, `TIMEOUT`, `PARTIAL_RESULT`, `UNAVAILABLE`) and computes success, failure, and empty result rates.
 6. **Baseline Comparator (`modules/knowledge_base/evaluation/baseline.py`):**
    - Summarizes and compares controlled retrieval configurations (Dense-only, Sparse-only, Hybrid, Hybrid+Reranker).
 7. **Regression Evaluator (`modules/knowledge_base/evaluation/regression.py`):**
    - Compares previous vs current evaluation runs and flags metrics exceeding configured regression thresholds (default 5.0%).
 8. **Evaluation Runner (`modules/knowledge_base/evaluation/runner.py`):**
-   - Executes evaluation runs using the real `R14RealRetrievalHarness`. Preserves complete request/trace IDs, model/index version tags, and environment metadata.
+   - Executes evaluation runs using the real `R14RealRetrievalHarness`. Preserves complete request/trace/correlation IDs, model/index version tags, and environment metadata.
 9. **Evaluation Report Generator (`modules/knowledge_base/evaluation/report.py`):**
    - Compiles structured JSON `EvaluationReport`s and human-readable Markdown summaries. Automatically redacts API keys, credentials, and tokens.
 
@@ -110,5 +110,5 @@ print(markdown_summary)
 
 ## 5. Implementation Status
 
-- **R15 Quality & Performance Evaluation:** Complete, tested (29 tests in `tests/test_r15_rag_evaluation.py`), and validated across the full 649-test repository suite.
+- **R15 Quality & Performance Evaluation:** Complete, tested (30 tests in `tests/test_r15_rag_evaluation.py`), and validated across the full repository test suite.
 - **Status:** `R15 IMPLEMENTATION COMPLETE`
