@@ -1,6 +1,5 @@
 """Stage R15 Evaluation Execution Runner."""
 
-import os
 import platform
 import time
 import uuid
@@ -52,6 +51,7 @@ class EvaluationRunner:
             EvaluationRun containing per-case measurements, quality metrics, performance metrics, and reliability metrics.
         """
         run_id = f"eval_run_{uuid.uuid4().hex[:8]}"
+        run_cor_id = f"cor_run_{uuid.uuid4().hex[:8]}"
         start_iso = datetime.now(timezone.utc).isoformat()
         start_time = time.perf_counter()
 
@@ -66,6 +66,7 @@ class EvaluationRunner:
         for case in dataset.cases:
             req_id = f"req_eval_{uuid.uuid4().hex[:8]}"
             trc_id = f"trc_eval_{uuid.uuid4().hex[:8]}"
+            cor_id = f"cor_case_{uuid.uuid4().hex[:8]}"
             case_start = time.perf_counter()
 
             try:
@@ -114,6 +115,7 @@ class EvaluationRunner:
                     case_id=case.case_id,
                     request_id=req_id,
                     trace_id=trc_id,
+                    correlation_id=cor_id,
                     status=status,
                     error_code=err_code,
                     error_message=err_msg,
@@ -135,6 +137,7 @@ class EvaluationRunner:
                     case_id=case.case_id,
                     request_id=req_id,
                     trace_id=trc_id,
+                    correlation_id=cor_id,
                     status=ReliabilityStatus.SYSTEM_FAILURE,
                     error_code="EVAL_UNHANDLED_EXCEPTION",
                     error_message=str(e),
@@ -180,9 +183,11 @@ class EvaluationRunner:
             dataset_id=dataset.dataset_id,
             dataset_version=dataset.version,
             timestamp=start_iso,
+            correlation_id=run_cor_id,
             knowledge_base_version="R2_R3_v1.0",
             embedding_model_version=settings.embedding.model_version,
             sparse_version="BM25_v1",
+            dense_index_version="Qdrant_v1.19.1",
             qdrant_version="1.19.1",
             fusion_strategy_version="R7_RRF_v1",
             reranker_version=settings.rerank.model_version,
