@@ -19,9 +19,11 @@ class ContextBuilder:
         state: ContextState = ContextState.COMPLETED,
         warnings: List[str] = None,
         errors: List[str] = None,
+        metrics: Dict[str, Any] = None,
     ) -> ContextResult:
         warnings = warnings or []
         errors = errors or []
+        metrics = metrics or {}
 
         # Build structured context dictionary for direct LLM / model consumption
         structured_context: Dict[str, Any] = {
@@ -73,6 +75,23 @@ class ContextBuilder:
             }
             structured_context["items"].append(item_dict)
 
+        exec_metadata = {
+            "b2_version": metrics.get("b2_version", "1.0.0"),
+            "context_version": metrics.get("context_version", "1.0.0"),
+            "items_received": metrics.get("items_received", len(items)),
+            "items_retained": len(items),
+            "items_filtered": metrics.get("items_filtered", 0),
+            "items_dropped_budget": metrics.get("items_dropped_budget", 0),
+            "provider_statuses": metrics.get("provider_statuses", {}),
+            "execution_latency_ms": metrics.get("execution_latency_ms", 0.0),
+            "validation_status": metrics.get("validation_status", "PASSED" if not errors else "FAILED"),
+            "prioritization_summary": {
+                "HIGH": sum(1 for item in items if getattr(item.priority, "value", str(item.priority)) == "HIGH"),
+                "MEDIUM": sum(1 for item in items if getattr(item.priority, "value", str(item.priority)) == "MEDIUM"),
+                "LOW": sum(1 for item in items if getattr(item.priority, "value", str(item.priority)) == "LOW"),
+            },
+        }
+
         result = ContextResult(
             request_id=request.request_id,
             state=state,
@@ -83,6 +102,7 @@ class ContextBuilder:
             trace_id=request.trace_id,
             warnings=warnings,
             errors=errors,
+            metadata=exec_metadata,
         )
 
         return result
