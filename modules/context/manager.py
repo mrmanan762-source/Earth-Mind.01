@@ -1,4 +1,6 @@
+import time
 from typing import List, Optional
+from core.config.settings import ContextConfig, settings
 from core.errors.exceptions import (
     ContextOutputValidationError,
     ContextPrivacyViolationError,
@@ -35,10 +37,12 @@ class B2ContextManager:
         providers: Optional[List[ContextProvider]] = None,
         cache_provider: Optional[CacheProvider] = None,
         compression_provider: Optional[CompressionProvider] = None,
+        config: Optional[ContextConfig] = None,
     ):
         self.collector = ContextCollector(providers)
         self.cache_provider = cache_provider
         self.compression_provider = compression_provider
+        self.config = config or getattr(settings, "context", ContextConfig())
 
     def register_provider(self, provider: ContextProvider) -> None:
         self.collector.register_provider(provider)
@@ -47,9 +51,16 @@ class B2ContextManager:
         """
         Executes the 12-stage context preparation pipeline for a ContextRequest.
         """
+        start_time = time.perf_counter()
         logger.info(f"Starting B2 context preparation for request {request.request_id}")
         warnings: List[str] = []
         errors: List[str] = []
+
+        # Apply config defaults to request if unspecified
+        if request.token_limit <= 0:
+            request.token_limit = self.config.default_token_limit
+        if request.policy and request.policy.timeout_seconds <= 0:
+            request.policy.timeout_seconds = self.config.default_timeout
 
         # 1. REQUESTED & VALIDATING
         if not request.request_id or not request.request_id.strip():
@@ -109,14 +120,27 @@ class B2ContextManager:
         organized = ContextOrganizer.organize_and_sort(prioritized)
 
         # 10. LIMITING
+        items_dropped_budget = 0
         try:
             limited_items = LimitManager.enforce_limits(
                 organized, request, compression_provider=self.compression_provider
             )
+            items_dropped_budget = len(organized) - len(limited_items)
         except InsufficientContextError as e:
             msg = str(e)
+            latency_ms = (time.perf_counter() - start_time) * 1000.0
+            metrics = {
+                "b2_version": self.config.b2_version,
+                "context_version": self.config.context_version,
+                "items_received": len(raw_items),
+                "items_filtered": len(raw_items) - len(organized),
+                "items_dropped_budget": len(organized),
+                "provider_statuses": getattr(self.collector, "last_provider_statuses", {}),
+                "execution_latency_ms": latency_ms,
+                "validation_status": "FAILED",
+            }
             return ContextBuilder.build_context_result(
-                request, [], state=ContextState.INSUFFICIENT_CONTEXT, warnings=warnings, errors=[msg]
+                request, [], state=ContextState.INSUFFICIENT_CONTEXT, warnings=warnings, errors=[msg], metrics=metrics
             )
 
         # Determine final state (COMPLETED or PARTIAL)
@@ -124,9 +148,24 @@ class B2ContextManager:
         if errors and request.policy and request.policy.allow_partial:
             final_state = ContextState.PARTIAL
 
+        # Compute metrics
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+        items_received = len(raw_items)
+        items_filtered = len(raw_items) - len(organized)
+        metrics = {
+            "b2_version": self.config.b2_version,
+            "context_version": self.config.context_version,
+            "items_received": items_received,
+            "items_filtered": items_filtered,
+            "items_dropped_budget": items_dropped_budget,
+            "provider_statuses": getattr(self.collector, "last_provider_statuses", {}),
+            "execution_latency_ms": latency_ms,
+            "validation_status": "PASSED" if not errors else "PARTIAL_PASSED",
+        }
+
         # 11. BUILDING
         result = ContextBuilder.build_context_result(
-            request, limited_items, state=final_state, warnings=warnings, errors=errors
+            request, limited_items, state=final_state, warnings=warnings, errors=errors, metrics=metrics
         )
 
         # 12. VALIDATING_OUTPUT

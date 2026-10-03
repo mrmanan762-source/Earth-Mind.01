@@ -552,6 +552,37 @@ class ContextProviderError(ContextError):
         )
 
 
+class ContextConfigurationError(ContextError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Context configuration error: {details}",
+            error_code="CONTEXT_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details}
+        )
+
+
+class ContextTimeoutError(ContextError):
+    def __init__(self, request_id: str, timeout: float):
+        super().__init__(
+            message=f"Context collection timed out after {timeout} seconds for request '{request_id}'.",
+            error_code="CONTEXT_TIMEOUT",
+            operation="collect_context",
+            retryable=True,
+            metadata={"request_id": request_id, "timeout": timeout}
+        )
+
+
+class UnsupportedContextTypeError(ContextError):
+    def __init__(self, context_type: str):
+        super().__init__(
+            message=f"Unsupported context type '{context_type}'.",
+            error_code="UNSUPPORTED_CONTEXT_TYPE",
+            operation="validate_item",
+            metadata={"context_type": context_type}
+        )
+
+
 class UnknownModelVersionError(EarthMindException):
     def __init__(self, identifier: str, version: str):
         super().__init__(

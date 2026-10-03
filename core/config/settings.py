@@ -134,6 +134,18 @@ class RAGIntegrationConfig(BaseModel):
     provider_name: str = Field(default_factory=lambda: os.getenv("EARTHMIND_RAG_PROVIDER_NAME", "rag_provider"), description="RAG Context Provider identifier name")
 
 
+class ContextConfig(BaseModel):
+    """Configuration settings for B2 Context Manager Engine."""
+    default_token_limit: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_CONTEXT_DEFAULT_TOKEN_LIMIT", "4096")), description="Default token limit budget")
+    default_relevance_threshold: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CONTEXT_RELEVANCE_THRESHOLD", "0.5")), description="Default relevance threshold")
+    default_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CONTEXT_TIMEOUT", "5.0")), description="Default provider collection timeout in seconds")
+    allow_pii_default: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_ALLOW_PII", "false").lower() == "true", description="Default allow PII flag")
+    b2_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_B2_VERSION", "1.0.0"), description="B2 Context Manager engine version string")
+    context_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_VERSION", "1.0.0"), description="Context package schema version string")
+    enable_cache: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_ENABLE_CACHE", "true").lower() == "true", description="Enable context cache by default")
+    strict_output_validation: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_STRICT_OUTPUT_VALIDATION", "true").lower() == "true", description="Enforce strict output validation")
+
+
 class EvaluationConfig(BaseModel):
     """Configuration settings for Stage R15 Quality & Performance Evaluation."""
     k_values: list[int] = Field(default_factory=lambda: [1, 3, 5, 10], description="K values for evaluation metrics")
@@ -172,6 +184,7 @@ class Settings(BaseModel):
     evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
     rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
     evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
+    context: ContextConfig = Field(default_factory=ContextConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
             "supported_languages": ["en", "hi", "mr", "pa", "te", "ta", "gu", "bn", "kn", "ml"],
