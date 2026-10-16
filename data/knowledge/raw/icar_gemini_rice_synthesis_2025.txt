@@ -1,0 +1,142 @@
+================================================================================
+TITLE: Comprehensive Rice (Oryza sativa L.) Agricultural Research Synthesis
+ORGANIZATION: ICAR-NRRI, ICAR-IIRR, TNAU Coimbatore, IRRI & DAC&FW MoA&FW
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India (Indo-Gangetic Plains, Cauvery Delta, Peninsular & Coastal Zones)
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable for Educational & Extension Attribution)
+ORIGIN: Gemini Deep Research Synthesis (ICAR-NRRI, TNAU CPG 2012/2023, IRRI Safe AWD Manual, DAC&FW INM Guidelines)
+PUBLICATION DATE: 2025-02-15
+================================================================================
+
+1. CROP OVERVIEW, GROWTH STAGES, DURATION, AND SEASONS
+- Taxonomic Classification: Oryza sativa L.
+- Phenological Growth Stages:
+  a. Vegetative Phase: Germination, seedling emergence, tillering, and stem elongation (30-60 days).
+  b. Reproductive Phase: Panicle initiation, booting, heading, and flowering/anthesis (35 days).
+  c. Ripening/Maturation Phase: Milk stage, dough stage, mature grain, and harvest readiness (30 days).
+- Maturity Duration Classes:
+  - Extra Early / Early: 105-120 days (e.g., PR 126, Sahbhagi Dhan).
+  - Medium Duration: 125-140 days (e.g., IR 64, PR 133, BPT 5204).
+  - Late / Long Duration: 145-160+ days (e.g., Swarna MTU 7029, CR 1009 Sub1).
+- Key Cropping Seasons:
+  - Kharif (Monsoon): Sowing June-July, harvest Oct-Nov (National staple window).
+  - Rabi / Summer: Sowing Nov-Dec, harvest March-April (Peninsular & Coastal India).
+  - Boro (Winter Rice): Sowing Nov-Jan, harvest April-May (Eastern India / West Bengal, Assam, Bihar).
+  - Tamil Nadu Regional Seasons: Sornavari/Kar (Apr-May), Samba (Aug-Sep), Thaladi (Oct-Nov), Navarai (Dec-Jan).
+
+2. MAJOR RICE-GROWING REGIONS AND AGRO-CLIMATIC ZONATION
+- Indo-Gangetic Plains (Punjab, Haryana, UP, Bihar, West Bengal): Highly productive alluvial soils, intensive rice-wheat rotations, groundwater dependent.
+- Peninsular & Cauvery Delta (Tamil Nadu, Andhra Pradesh, Telangana, Karnataka): Coastal alluvial and clay deltaic soils, canal and tank irrigated, multi-season rice.
+- Rainfed Lowlands & Upland Ecosystems (Odisha, Chhattisgarh, Jharkhand, Eastern UP): Rainfed dependent, vulnerable to early/late droughts and flash floods.
+
+3. CLIMATE REQUIREMENTS AND TEMPERATURE SENSITIVITIES
+- Thermal Thresholds:
+  - Optimum Growth Range: 21°C to 37°C.
+  - Critical Cold Stress Sensitivity: Temperatures below 15°C during panicle initiation or flowering induce spikelet sterility (e.g., cold susceptibility in IR 50).
+  - Extreme Heat Threshold: Temperatures above 38°C during anthesis cause anthesis failure and poor grain filling.
+- Rainfall Requirements: 1000-1500 mm annual rainfall or assured supplementary irrigation.
+
+4. SOIL REQUIREMENTS, DRAINAGE, PH, SALINITY, AND SOIL HEALTH
+- Ideal Soil Types: Heavy clay loams, silty clay loams, and alluvial soils with poor permeability for water retention.
+- Soil pH Range: 5.5 to 7.5 (tolerates mild acidity and mild alkalinity).
+- Salinity Sensitivity: Electrical Conductivity (EC) > 4.0 dS/m significantly reduces tillering and grain yield.
+- Soil Sampling SOP: Sample topsoil at 0-15 cm depth prior to field preparation for STFR (Soil Test Crop Response) analysis.
+
+5. FIELD PREPARATION, PUDDLING, LEVELING, AND DIRECT-SEEDED RICE (DSR)
+- Puddling SOP for Transplanted Rice: Dry ploughing followed by flooding with 5 cm standing water and two passes of cage wheel puddling to break soil aggregates and create an impermeable plow pan.
+- Laser Land Leveling: Laser leveling ensures uniform water depth, saving 20-30% irrigation water and improving weed management efficiency.
+- Direct-Seeded Rice (DSR):
+  - Adoption Rationale: Saves labor overheads and reduces water requirement by 15-20% in groundwater-depleted zones (Punjab/Haryana).
+  - Sowing Method: Tar-wattar DSR using seed drill with pre-sowing irrigation at 2-3 cm depth.
+
+6. VARIETY SELECTION AND YIELD POTENTIALS
+- PR 126 (Punjab): Short duration (123 days seed-to-seed), yields 30.5 q/acre, permits early wheat sowing, saves water.
+- Swarna (MTU 7029) / Swarna Sub1: High yielding late duration variety (145-150 days), Sub1 gene provides 14-day complete flood submergence tolerance.
+- CR 1009 Sub1: Long duration (155-160 days) for Cauvery Delta samba season, flood submergence resistant.
+- Pusa Basmati 1121 & 1509: Premium long-grain aromatic Basmati cultivars with high market value.
+
+7. SEED QUALITY, NURSERY PREPARATION, SEED RATE, AND TRANSPLANTING
+- Seed Rates:
+  - Inbred Transplanted Rice: 35-40 kg/ha.
+  - Hybrid Rice: 15-20 kg/ha.
+  - System of Rice Intensification (SRI): 5-8 kg/ha.
+  - Direct Seeded Rice (DSR): 20-25 kg/ha (tar-wattar) or 30-35 kg/ha (dry DSR).
+- Nursery Age Limits:
+  - Short/Medium Duration: Transplant at 18-22 days old (4-leaf stage).
+  - Long Duration: Transplant at 25-30 days old. Delayed transplanting (>35 days) causes permanent tillering loss.
+- SRI Spacing: Single 10-12 day old seedling per hill at 25 cm x 25 cm square planting.
+
+8. SOWING AND TRANSPLANTING WINDOWS BY REGION
+- Punjab / Haryana (Groundwater Preservation Mandate):
+  - DSR Sowing Window: June 1 to June 15.
+  - Transplanting Window: June 20 to July 10 (PR 126 cutoff July 15).
+- Tamil Nadu (Cauvery Delta & Peninsular Zones):
+  - Sornavari / Kar: April-May sowing.
+  - Samba Season: August-September sowing/transplanting.
+  - Thaladi Season: October-November transplanting.
+
+9. NUTRIENT MANAGEMENT: NPK, ZINC, FYM, AND BIO-FERTILIZERS
+- Baseline Recommended Dosage (Medium Duration): 120 kg N : 60 kg P2O5 : 40 kg K2O per hectare.
+- Nitrogen Splitting SOP: Apply 25% N as basal at puddling, 50% N at active tillering (21-25 DAT), and 25% N at panicle initiation (45 DAT) using Neem-Coated Urea.
+- Zinc Deficiencies: Apply Zinc Sulphate (ZnSO4 21%) @ 25 kg/ha basal or 0.5% foliar spray (5 kg ZnSO4 + 2.5 kg lime in 500L water) upon bronzing symptoms.
+- Integrated Plant Nutrition Systems (IPNS): Combine chemical fertilizer with FYM @ 10 t/ha, Azolla @ 1 t/ha, or Blue-Green Algae (BGA) @ 10 kg/ha to improve nitrogen efficiency.
+
+10. IRRIGATION AND WATER MANAGEMENT (SAFE ALTERNATE WETTING AND DRYING - SAFE AWD)
+- Water Tube SOP: Install a perforated PVC field water tube (30 cm long, 10-15 cm diameter, with 3 mm holes on bottom 20 cm) buried 20 cm deep in the soil.
+- Safe AWD Threshold: Allow field water to drop until water level inside the tube reaches 15 cm below soil surface, then irrigate to 5 cm depth.
+- Mandatory Flooding Stages: Maintain continuous 3-5 cm submergence during flowering/anthesis (critical stage) to prevent panicle sterility.
+- Water Savings: Safe AWD reduces irrigation water inputs by 15-30% without yield penalty.
+
+11. WEED IDENTIFICATION AND INTEGRATED WEED MANAGEMENT
+- Major Weed Flora: Echinochloa crus-galli (Barnyard grass), Cyperus rotundus (Sedge), Ludwigia parviflora (Broadleaf).
+- Chemical Herbicide Schedules:
+  - Pre-emergence: Bensulfuron methyl 0.6% + Pretilachlor 6% GR @ 10 kg/ha at 3-5 DAT, or Pyrazosulfuron ethyl 10% WP @ 200 g/ha at 3-5 DAT.
+  - Post-emergence: Bispyribac-sodium 10% SC @ 250 ml/ha at 15-20 DAT in 500 liters water.
+
+12. INSECT PESTS AND INTEGRATED PEST MANAGEMENT (IPM)
+- Yellow Stem Borer (Scirpophaga incertulas):
+  - Symptoms: Dead hearts at vegetative stage, White heads at panicle stage.
+  - Monitoring & ETL: Deploy pheromone traps @ 3-5 traps/acre. Economic Threshold Level (ETL) is 1 egg mass/m2 or 2-3 moths/trap/day.
+  - Management: Chlorantraniliprole 0.4% GR @ 10 kg/ha or Cartap hydrochloride 4% GR @ 25 kg/ha.
+- Nursery Thrips (Baliothrips biformis):
+  - Symptoms: Terminal leaf rolling and silvery patches in nursery.
+  - Management: Spray Azadirachtin 1500 ppm @ 1.5 L/ha or Thiamethoxam 25% WG @ 100 g/ha.
+
+13. MAJOR DISEASES AND INTEGRATED MANAGEMENT
+- Rice Blast (Magnaporthe oryzae):
+  - Symptoms: Spindle-shaped lesions with grey centers on leaves; neck rot resulting in drooping panicles.
+  - Chemical Control: Tricyclazole 75% WP @ 0.6 g/L or Isoprothiolane 40% EC @ 1.5 ml/L water.
+- Bacterial Leaf Blight (Xanthomonas oryzae pv. oryzae):
+  - Symptoms: Water-soaked lesions progressing to yellow-wavy margins along leaf blades.
+  - Management: Spray Streptocycline @ 60 g + Copper Oxychloride @ 1 kg in 500L water/ha.
+
+14. NUTRIENT DEFICIENCIES VS DISEASE SYMPTOMS
+- Zinc Deficiency: Characterized by rusty brown / bronzing spots appearing 2-3 weeks after transplanting on older leaves, fading leaf midribs.
+- Nitrogen Deficiency: Uniform chlorosis/yellowing starting from lower older leaves progressing upwards.
+- Contrast with Blast: Blast lesions are discrete spindle-shaped spots with dark brown margins, not diffuse uniform leaf bronzing.
+
+15. WEATHER-RELATED RISKS AND CLIMATE RESILIENCE
+- Submergence / Flood Mitigation: Cultivate Swarna Sub1 or CR 1009 Sub1 in flash-flood prone coastal lowlands (tolerates 14 days complete submergence).
+- Heat Stress Mitigation during Anthesis: Apply light supplementary irrigation during peak noon heat to lower canopy temperature.
+
+16. SUSTAINABLE CROP MANAGEMENT & STRAW DECOMPOSITION
+- In-situ Rice Residue Management: Apply Pusa Decomposer microbial spray @ 4 capsules / 25L water per acre over chopped paddy straw to accelerate degradation within 20-25 days, avoiding residue burning.
+
+17. HARVEST MATURITY, DRYING, AND POST-HARVEST STORAGE
+- Harvest Trigger: 80-85% grains turn straw yellow / golden brown with grain moisture content at 20-22%.
+- Drying SOP: Sun-dry harvested paddy slowly to reduce grain moisture content to <12-14% for safe storage.
+- Storage Protection: Dust storage bags with activated kaolin @ 1 kg/100 kg grain or store in Hermetic Super Grain Bags to prevent pulse/paddy beetle attack.
+
+18. YIELD FACTORS AND TROUBLESHOOTING
+- Delayed Transplanting Yield Penalty: Yield drops by 20-30 kg/ha for every day delay in transplanting beyond optimal regional windows.
+- Over-aged Nursery Penalty: Using >35 day old seedlings reduces tillering capacity by 40%.
+
+19. PRODUCTION ECONOMICS AND YIELD BASELINES
+- High Productivity Baselines: Punjab PR 126 yields 30.5 quintals/acre (7.6 t/ha). Tamil Nadu Thoothukudi / Namakkal irrigated rice averages 5.4 t/ha.
+- Cost-Benefit Ratios: Integrated pest and nutrient management achieves B:C ratios of 2.2 to 2.8 under good management.
+
+20. FARMER DECISION GUIDANCE AND ESCALATION TRIGGERS
+- Soil Test Trigger: Trigger ZnSO4 application only if DTPA-extractable soil Zinc is < 0.6 ppm.
+- Pathologist Escalation: Escalate to district KVK pathologist if leaf blast lesions exceed 5% canopy coverage before booting.

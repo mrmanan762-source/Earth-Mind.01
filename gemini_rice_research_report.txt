@@ -1,0 +1,740 @@
+Gemini
+EarthMind Rice (Oryza sativa L.) Agricultural Knowledge Research Report
+A. Research Summary
+
+The national agricultural research corpus for Rice (Oryza sativa L.) in India is established upon multi-decadal scientific output from premier national research centers—including the ICAR–National Rice Research Institute (NRRI), ICAR–Indian Institute of Rice Research (IIRR), and ICAR–Indian Agricultural Research Institute (IARI)—alongside State Agricultural Universities (SAUs) such as Punjab Agricultural University (PAU) and Tamil Nadu Agricultural University (TNAU). This research report synthesizes operational agronomic evidence across twenty standardized core knowledge domains to construct a verified knowledge corpus for EarthMind.  
+
+The synthesized evidence reflects a structural shift toward resource-conserving, low-emission, and climate-resilient crop establishment models. Direct Seeded Rice (DSR) and unpuddled establishment are increasingly replacing traditional puddled transplanting across the Indo-Gangetic Plains to mitigate groundwater depletion and lower operational labor overheads. In irrigated lowland ecosystems, Safe Alternate Wetting and Drying (Safe AWD)—operating on a strict 15 cm field water tube threshold—reduces irrigation water inputs by 15% to 30% (equivalent to 117–171 mm per season) without incurring yield penalties, while yielding net productivity increases of 14% to 22% (550–900 kg/ha) through enhanced soil aeration and root system vigor.  
+
+Nutrient management strategies highlight significant structural imbalances in field-level fertilizer applications. Current national consumption ratios stand at 6.5 : 2.4 : 1.1 (N :
+P
+2
+O
+5
+P
+2
+	​
+
+O
+5
+	​
+
+ :
+K
+2
+O
+K
+2
+	​
+
+O) against the recommended benchmark ratio of 4 : 2 : 1. Integrated Plant Nutrition Systems (IPNS) combining targeted chemical NPK splits, neem-coated urea, micronutrient supplementation (zinc sulphate @ 20 kg/ha), green manures (Sesbania), and bio-fertilizers (Azolla, Blue-Green Algae) present verified mechanisms to rebuild soil organic carbon and raise nutrient use efficiency.  
+
+Core evidence gaps persist regarding standardized nationwide economic threshold levels (ETLs) for emerging viral vectors—such as Southern Rice Black-Streaked Dwarf Virus (Rice Dwarfing Disease)—and micro-level cost-of-cultivation enterprise budgets. Furthermore, while all inspected documents represent authoritative public extension manuals, commercial AI integration requires formal usage rights reviews for institutional publications lacking explicit open-licensing terms.  
+
+B. Verified Source Catalogue
+Source ID	Exact Document / Page Title	Publishing Institution	Direct URL	Official Landing Page	Document Type & Year	Language	Geographic Applicability	Rice Topics Covered	Accessibility Status	Section Headings / Pages	Limitations & Conflicting Guidance	Copyright / Licence Evidence	Usage Rights Classification
+1	Indian Agriculture after Independence	ICAR, New Delhi	https://icar.org.in/sites/default/files/2022-12/Indian-Agriculture-after-Independence.pdf	https://icar.org.in	Book (2022)	English	India-wide	Breeding history, crop improvement, transgenics	Accessible & Inspected	Chapter 4, pp. 426	Macro historical overview; lacks district fertilizer schedules	"This publication may be used/shared freely for non-commercial purposes, with proper attribution..."	PERMITTED_FOR_INTENDED_USE
+2	Viksit Krishi Sankalp Abhiyan 2025: Impactful Farmer-Led Innovations	ICAR, New Delhi	http://www.icar.org.in/sites/default/files/Circulars/Farmers%20Innovations_2025___English.pdf	http://www.icar.org.in	Compendium (2025)	English	India-wide	Farmer innovations, tools, low-cost machinery	Accessible & Inspected	Field Crops section, pp. 268	Grassroots innovations require local validation prior to scaling	"©2025 Indian Council of Agricultural Research (ICAR), New Delhi. All Rights Reserved."	RIGHTS_REVIEW_REQUIRED
+8	ICAR-IIRR Organises 58th Annual Rice Group Meeting	ICAR-IIRR / AAU Jorhat	https://icar.org.in/en/icar-indian-institute-rice-research-organises-58th-annual-rice-group-meeting	https://icar.org.in	Extension Article (2023)	English	India-wide	AICRIP highlights, DSR, carbon credits	Accessible & Inspected	Main article text	Summary report; detailed protocols in full AICRIP reports	Standard portal copyright policy; commercial AI rights unstated	RIGHTS_REVIEW_REQUIRED
+18	ICAR Institute Profile — ICAR-IARI	ICAR-IARI, New Delhi	https://icar.org.in/sites/default/files/2022-12/ICAR-INSTITUTE-PROFILE_.pdf	https://icar.org.in	Institutional Profile (2022)	English	India-wide	Neem-coated urea, Pusa Decomposer, STFR mini-lab	Accessible & Inspected	IARI profile, pp. 1-10	Strategic profile document rather than field step-by-step guide	Official ICAR publication terms; no explicit commercial AI license	RIGHTS_REVIEW_REQUIRED
+22	Agro Advisory Service Bulletin for Rice (Feb I 2020)	ICAR-NRRI, Cuttack	https://icar-crri.in/wp-content/uploads/2020/02/AAS_Feb_I_2020_English.pdf	https://icar-crri.in	Extension Bulletin (2020)	English	Eastern India / Odisha	Nursery thrips, seedling blight, puddling, NPK, herbicides	Accessible & Inspected	Fortnightly advisory, pp. 1-2	Specific to early February window; requires seasonal adaptation	Official bulletin issued by ICAR-NRRI; website terms apply	RIGHTS_REVIEW_REQUIRED
+24	Crop Production Guide: Agriculture 2012	TNAU & Directorate of Agriculture, TN	https://agritech.tnau.ac.in/pdf/2013/CPG%202012.pdf	https://agritech.tnau.ac.in	Manual (2012)	English	Tamil Nadu	Upland compaction, crop production techniques	Accessible & Inspected	Rice chapter	Manual published in 2012; varietal lists updated seasonally	"© TNAU All Rights Reserved"	RIGHTS_REVIEW_REQUIRED
+30	Crop Production Guide 2012 — Rice Seasons and Varieties	TNAU, Coimbatore	https://agritech.tnau.ac.in/pdf/2013/CPG%202012.pdf	https://agritech.tnau.ac.in	Manual (2012)	English	Tamil Nadu (District-wise)	Seasons, varietal characteristics, storage protection	Accessible & Inspected	Rice Section I & II	Older varieties supplemented by newer TNAU releases	"© TNAU All Rights Reserved"	RIGHTS_REVIEW_REQUIRED
+31	Comprehensive District Agriculture Plan — Namakkal District	TNAU & Dept of Agriculture, TN	https://agritech.tnau.ac.in/govt_schemes_services/pdf/NADP/13.%20Namakkal%20DAP%20Final%20Report%202017-18.pdf	https://agritech.tnau.ac.in	Planning Document (2017)	English	Namakkal, Tamil Nadu	Rainfall, groundwater, district rice yields	Accessible & Inspected	Chapter 2 & 3, pp. 8-15	District planning document; yield figures reflect 2017 baseline	Government of Tamil Nadu / NADP RKVY document	RIGHTS_REVIEW_REQUIRED
+35	Comprehensive District Agriculture Plan — Tiruvannamalai	TNAU & Dept of Agriculture, TN	https://agritech.tnau.ac.in/govt_schemes_services/pdf/NADP/23.%20Thiruvannamalai%20DAP%20Final%20Report%202017-18.pdf	https://agritech.tnau.ac.in	Planning Document (2017)	English	Tiruvannamalai, TN	Yield gaps, machine planting, seed drill DSR	Accessible & Inspected	Chapter 3 & 4, pp. 11-55	Regional to Tiruvannamalai district development plans	Government of Tamil Nadu / NADP RKVY document	RIGHTS_REVIEW_REQUIRED
+39	Package of Practices for the Crops of Punjab — Kharif 2026	PAU, Ludhiana	https://pau.edu/content/ccil/pf/pp_kharif.pdf	https://pau.edu	Manual (2026)	English	Punjab / NW India	PR varieties, seedling age, DSR, virus vector control	Accessible & Inspected	Rice section, pp. 1-27	Specific to Punjab agro-climatic conditions	"© Punjab Agricultural University, Ludhiana. All Rights Reserved."	RIGHTS_REVIEW_REQUIRED
+43	For Higher Yield Transplant 'PR' Varieties After 20th June	PAU, Ludhiana	https://pau.edu/index.php?_act=manageEvent&DO=viewEventDetail&dataE=datae&intID=6520	https://pau.edu	Extension Advisory (2022)	English	Punjab	Transplanting window vs yield, water savings	Accessible & Inspected	Advisory body & Table 1	Specific to North-West irrigated alluvial belts	"© Punjab Agricultural University"	RIGHTS_REVIEW_REQUIRED
+54	Manual on Soil Sampling and Analysis	DAC&FW, Ministry of Agriculture, GoI	https://soilhealth.dac.gov.in/files/Manual/140723_ManualClass11_12.pdf	https://soilhealth.dac.gov.in	Training Manual (2023)	English	India-wide	Soil sampling SOPs, mini-labs, Soil Health Cards	Accessible & Inspected	Chapters 2 & 3, pp. 1-12	Educational training manual; requires field interpretation	Published under Soil Health Card scheme portal, GoI	RIGHTS_REVIEW_REQUIRED
+55	Recommended INM Packages for Crops	DAC&FW, Ministry of Agriculture, GoI	https://soilhealth.dac.gov.in/files/portal/Recommended%20INM%20Packages%20-1.pdf	https://soilhealth.dac.gov.in	Technical Guidance (2023)	English	India-wide (Zonal)	NPK ratios, zonal INM schedules, FYM, Azolla, BGA	Accessible & Inspected	Sections 3.1 & 5.1, pp. 1-11	Macro zonal recommendations; micro soil tests take precedence	Official Government of India portal publication	RIGHTS_REVIEW_REQUIRED
+56	Draft Teacher Manual on Soil Health Management	DAC&FW, Ministry of Agriculture, GoI	https://soilhealth.dac.gov.in/files/Manual/140723DraftTeacherManual_PDF.pdf	https://soilhealth.dac.gov.in	Educational Manual (2023)	English	India-wide	Soil degradation, salinization, organic carbon loss	Accessible & Inspected	Chapters 3 & 4, pp. 15-20	Focuses on general soil health; lacks diagnostic plant keys	Official Government of India portal publication	RIGHTS_REVIEW_REQUIRED
+65	Large-Scale Philippine Study Confirms Safe AWD Works	IRRI / Rice Today	https://ricetoday.irri.org/less-water-no-yield-penalty-large-scale-philippine-study-confirms-alternate-wetting-and-drying-awd-works/	https://ricetoday.irri.org	Research Article (2018)	English	Lowland Irrigated Ecosystems	Safe AWD trials, water savings, yield boost	Accessible & Inspected	Main article text	Field trial in gravity system; principles apply universally	CGIAR / IRRI publication terms apply	RIGHTS_REVIEW_REQUIRED
+69	Water Management in Rice: Safe Alternate Wetting and Drying	IRRI Books	http://books.irri.org/9789712202193_content.pdf	http://books.irri.org	Technical Manual (2007)	English	Lowland Irrigated Ecosystems	Safe AWD threshold, field water tube SOP, flowering rules	Accessible & Inspected	Chapter 1, pp. 1-8	Designed for lowland flooded systems; excludes aerobic uplands	"© International Rice Research Institute 2007"	RIGHTS_REVIEW_REQUIRED
+84	Indian Journal of Agricultural Sciences — Copyright Notice	ICAR, New Delhi	https://epubs.icar.org.in/index.php/IJAgS/IJAgS_CopyRight	https://epubs.icar.org.in	Institutional Policy Page (2024)	English	India-wide	Publishing terms, open access rules, copyright policy	Accessible & Inspected	Copyright Notice section	Governs journal papers; establishes ICAR non-commercial terms	"The work is licensed under CC BY-NC-ND 4.0... non-commercial use permitted."	PERMITTED_FOR_INTENDED_USE
+C. Rice Knowledge Coverage Matrix
+Topic Number & Description	Evidence Found	Supporting Source IDs	Regional Applicability	Confidence & Limitations	Coverage Status
+1. Overview, Stages, Duration, Seasons	Growth stages, varietal duration classes (105 to 160 days), multi-season crop calendar		Punjab, Tamil Nadu, Eastern India	High confidence; grounded in official SAU calendars	COVERED
+2. Major Rice-Growing Regions	North-West plains, Cauvery Delta, Agro-climatic INM zonal classifications		Punjab, Tamil Nadu, Gangetic Plains	High confidence; represents core Indian production zones	COVERED
+3. Climate Requirements	Rainfall distribution, temperature sensitivities (cold intolerance in IR 50 / ADT 43)		Tamil Nadu, North India	Moderate confidence; exact cardinal temperatures missing	PARTIAL
+4. Soil Requirements & Health	Soil classes, sampling depth SOP (0-15 cm), compaction of light soils, salt tolerance		All India	High confidence; verified by DAC&FW and TNAU SOPs	COVERED
+5. Field Prep, Puddling & DSR	Puddling SOP, leveling, DSR adoption, dry upland soil rolling		Punjab, Odisha, Tamil Nadu	High confidence; field operations documented	COVERED
+6. Variety Selection	Maturity durations, grain morphology, yield potentials (PR 126, PR 133, CR 1009, CO 43)		Punjab, Tamil Nadu	High confidence; official varietal releases	COVERED
+7. Seed Quality, Nursery & Transplanting	Nursery age limits (18-35 days), spacing (15x15 cm), pest schedules, root dips		Punjab, Odisha, Tamil Nadu	High confidence; pre-sowing chemical seed treatment missing	PARTIAL
+8. Sowing & Transplanting Windows	Precise windows (June 20–July 10 in Punjab; July 15 PR 126 cutoff; TN multi-season)		Punjab, Tamil Nadu	High confidence; empirical SAU trial evidence	COVERED
+9. Nutrient Management	NPK splits, zonal IPNS packages, FYM rates, micronutrients (Zn), STFR mini-labs		All India (Zonal)	High confidence; official Soil Health Card portal rules	COVERED
+10. Water Management & Safe AWD	Field water tube SOP, 15 cm threshold, mandatory flooding during flowering stage		Irrigated Lowlands	High confidence; IRRI verified methodology	COVERED
+11. Weed Management	Pre-emergence herbicides (Bensulfuron+pretilachlor, Pyrazosulfuron), AWD weed delay		Eastern India, Tamil Nadu	High confidence; chemical doses and cultural rules verified	COVERED
+12. Insect Pests & IPM	Yellow Stem Borer (3 traps/acre, ETL 4-5 moths), Nursery Thrips (Azadirachtin, Lambda)		Eastern India, Punjab, Tamil Nadu	High confidence; NRRI extension thresholds	COVERED
+13. Major Diseases & Management	Blast (Carbendazim/Edifenphos), Seedling Blight, Bacterial Blight root dip, Rice Dwarfing Virus		Eastern India, Punjab, Tamil Nadu	High confidence; exact chemical and cultural remedies	COVERED
+14. Deficiencies vs Diseases	Zinc deficiency bronzing vs fungal spots; soil acidification/salinization effects		All India	Moderate confidence; complete diagnostic key missing	PARTIAL
+15. Weather-Related Risks	Cold stress limits, flooding tolerance (Swarna Sub1), rain sticker requirements		Punjab, Tamil Nadu, Eastern India	High confidence; stress mitigation protocols verified	COVERED
+16. Sustainable & Integrated Practices	Pusa Decomposer (20-25 days straw degradation), bio-fertilizers (Azolla, BGA), IPNS		All India	High confidence; official ICAR and DAC technologies	COVERED
+17. Harvest Maturity & Post-Harvest	Moisture threshold (<10%), activated kaolin (@ 1 kg/100 kg), Malathion godown spray		Tamil Nadu / National	High confidence; explicit storage protocols verified	COVERED
+18. Yield Factors & Troubleshooting	Delayed transplanting penalties, nursery aging losses, root aeration productivity boosts		Punjab, Lowland Ecosystems	High confidence; backed by multi-year trial data	COVERED
+19. Production Economics	Yield baselines (4,178 kg/ha Namakkal; 5.4 t/ha Thoothukudi; 30.5 q/acre PR 133)		District-specific	Partial confidence; complete cost budgets missing	PARTIAL
+20. Farmer Decision Guidance	Pre-recommendation parameters, laboratory triggers, pathologist escalation rules		All India	High confidence; diagnostic escalation rules established	COVERED
+ 
+D. Evidence-Backed Knowledge Notes
+1. Crop Overview, Growth Stages, Crop Duration, and Seasonal Context
+
+Rice development progresses through three distinct physiological phases: the vegetative phase (germination to panicle initiation), the reproductive phase (panicle initiation to flowering and heading), and the ripening phase (flowering to grain maturity). Varieties are categorized by maturity duration:  
+
+Short Duration (105–125 days): Includes PR 126 (123 days total duration), ADT 36 (110 days), IR 50 (105–130 days), ADT 37 (105 days), CO 47 (110–115 days), and ASD 16 (110–115 days).  
+
+Medium Duration (130–140 days): Includes PR 133 (111 days post-transplanting), Bhavani (130–135 days), Improved White Ponni (135–140 days), CO 43 (135–140 days), and ADT 38 (130–135 days).  
+
+Long Duration (150–160 days): Exemplified by CR 1009 (155–160 days).  
+
+In Southern India (Tamil Nadu), rice is cultivated across multi-seasonal calendars: Kuruvai (June–July), Samba (August), Late Samba / Thaladi (September–October), Navarai (December–January), Sornavari (April–May), Kar (May–June), Pishanam, and Early Kar. In North-Western India (Punjab), cultivation is aligned with the Kharif monsoon window.  
+
+2. Major Rice-Growing Regions and Region-Specific Differences
+
+Rice production across India spans distinct agro-climatic zones:  
+
+North-Western Plains (Punjab and Haryana): Highly intensive, canal and tube-well irrigated Kharif production characterized by mechanized operations, high synthetic NPK applications, and direct-seeded or transplanted short-to-medium duration cultivars.  
+
+Cauvery Delta and Coastal Plains (Tamil Nadu): Multi-cropped irrigated systems dominated by alluvial and clay loam soils dependent on river releases and tank networks.  
+
+Zonal Frameworks: The Department of Agriculture, Cooperation & Farmers Welfare (DAC&FW) classifies nutrient and management guidelines into macro-zones, including the Upper Gangetic Plain, Central Plateau & Hills, and Southern Plateau & Hills / East Coast Plains & Ghats.  
+
+3. Climate Requirements
+
+Rice is a semi-aquatic cereal requiring high ambient temperatures, abundant solar radiation, and adequate water supply. Precipitation and thermal regimes dictate varietal adaptability:  
+
+Seasonal Rainfall: District-level production relies on monsoon distribution (e.g., Namakkal district receives an average annual rainfall of 776 mm, split between the South-West Monsoon at 40% and North-East Monsoon at 40.6%).  
+
+Thermal Constraints: Specific cultivars demonstrate acute cold sensitivity; varieties IR 50 and ADT 43 are sensitive to low temperatures and are prohibited from cultivation during winter or cold weather periods due to cold-induced sterility and growth stunting.  
+
+4. Soil Requirements, Drainage, pH, Salinity, and Soil-Health Interpretation
+
+Rice is cultivated across diverse soil matrices ranging from red loams, laterites, and black soils to sandy coastal alluvial and clay loams.  
+
+Physical Management of Light Soils: For dry-seeded upland rice grown on light, porous soils, physical compaction by rolling a 400 kg stone roller or oil drum across the field is recommended to consolidate the soil profile and minimize excessive water percolation losses.  
+
+Salinity Management: Salt-affected or alkaline soils require specialized salt-tolerant varieties (TRY 1, TRY 3, TRY (R) 2). Calcareous soils require Integrated Plant Nutrition Systems (IPNS) combining Blue-Green Algae @ 15 kg/ha, Farm Yard Manure (FYM) @ 10 t/ha, and Zinc Sulphate @ 20 kg/ha to prevent micronutrient fixation.  
+
+Standard Soil Sampling Protocol: Representative soil sampling requires taking samples from a depth of 0–15 cm using a stainless steel auger for micronutrient analysis (avoiding rusted iron spades). Collect composite samples using a zigzag or W-pattern, dry in the shade, grind with a mortar, and filter through a 2 mm stainless steel sieve (0.2–0.5 mm for organic carbon analysis). Sampling must avoid recently fertilized bands, bunds, water channels, tree shades, compost piles, and marshy spots.  
+
+5. Field Preparation, Puddling, Leveling, and Direct-Seeded versus Transplanted Rice
+
+Field establishment methods govern water demand and soil physical structure:  
+
+Puddling Protocol: Wet land preparation involves soaking, plowing, and secondary puddling (rotavating under shallow submerged conditions) to destroy soil macro-aggregates, create an impermeable hardpan that reduces percolation losses, suppress weeds, and facilitate seedling insertion. Precision land leveling during final puddling is required to guarantee uniform water depth.  
+
+Direct-Seeded Rice (DSR): DSR eliminates nursery raising and puddling operations, significantly lowering labor requirements and irrigation water use while reducing methane emissions. Seeds are broadcast or drill-sown directly onto unpuddled moist or dry soil profiles.  
+
+6. Variety Selection
+
+Official variety release guidelines prioritize duration, yield potential, grain morphology, and stress resistance:  
+
+Variety Name	Maturity Duration	Potential / Average Grain Yield	Grain Morphology	Regional & Seasonal Suitability	Specific Key Characteristics
+PR 126	123 days total	High (Short duration class)	Medium grain	Punjab (Kharif)
+
+Recommended for late transplanting up to July 15.
+
+
+PR 133	111 days post-transplant	30.5 q/acre (~7,533 kg/ha)	Medium slender	Punjab (Kharif)
+
+Average height 109 cm, high lodging resistance.
+
+
+Bhavani	130–135 days	5,000 kg/ha	Long slender	Tamil Nadu (Samba / Late Samba)
+
+Medium tall habit.
+
+
+ADT 36	110 days	4,000 kg/ha	Medium grain	Tamil Nadu (Kuruvai / Sornavari / Navarai)
+
+Erect habit.
+
+
+CO 43	135–140 days	5,200 kg/ha	Medium slender	Tamil Nadu (Samba / Late Samba)
+
+Erect growth habit.
+
+
+IR 50	105 days (Summer) / 130 days (Winter)	6,000 kg/ha	Long slender	Tamil Nadu (Kar / Kuruvai)
+
+Strictly prohibited during cold weather periods.
+
+
+CR 1009	155–160 days	5,300 kg/ha	Short bold	Tamil Nadu (Samba)
+
+Long duration, erect habit.
+
+
+Improved White Ponni	135–140 days	4,500 kg/ha	Medium slender	Tamil Nadu
+
+Premium grain quality; highly susceptible to blast.
+
+
+CO 47	110–115 days	5,832 kg/ha	Medium slender	Tamil Nadu (Kuruvai / Sornavari)
+
+Erect, high yielding.
+
+
+ASD 16	110–115 days	5,600 kg/ha	Short bold	Tamil Nadu
+
+Semi-dwarf plant habit.
+
+
+ADT 37	105 days	6,200 kg/ha	Short bold	Tamil Nadu
+
+Short duration, high yield potential.
+
+
+ADT 38	130–135 days	6,200 kg/ha	Long slender	Tamil Nadu (Samba / Late Samba)
+
+Semi-dwarf, erect habit.
+
+
+MUT1010 Mutant	Short/Medium	High	Medium grain	India-wide
+
+Genome-edited mutant with enhanced drought and salt tolerance.
+
+ 
+7. Seed Quality, Seed Rate, Seed Treatment, Nursery Preparation, and Transplanting
+
+Seedling age at transplanting dictates post-transplant tiller development and final panicle density:  
+
+Nursery Age Thresholds:
+
+Medium-duration varieties: Transplant seedlings at 30–35 days old.  
+
+Short-duration varieties (e.g., PR 126): Transplant seedlings at 25–30 days old.  
+
+Short-duration Tamil Nadu systems: Seedlings must not remain in the nursery past 18 days to prevent tiller suppression.  
+
+Nursery Plant Protection Schedule:
+
+Apply Methyl demeton 25 EC @ 12 ml or Dimethoate 30 EC @ 12 ml in 6 liters of water per nursery bed unit on the 7th and 14th day after sowing.  
+
+For Nursery Thrips infestations, spray NSKE (Azadirachtin) @ 800 ml/acre, Lambda-Cyhalothrin 5% EC @ 100 ml/acre, or Thiamethoxam 25% WG @ 40 g/acre.  
+
+For Nursery Seedling Blight, apply Carbendazim @ 2 g/L or Propiconazole @ 1 ml/L water.  
+
+Rodent Barrier SOP: Construct a 1.5-meter-wide water channel surrounding the entire nursery bed perimeter and keep it filled with water, particularly at night, to prevent rodent damage.  
+
+Seedling Root Dip Treatment: In Bacterial Leaf Blight endemic zones, dip seedling roots in a 0.1% Plantomycin solution for 30 minutes prior to field transplanting.  
+
+Main Field Transplanting Protocol: Plant seedlings erect at a shallow depth with a plant spacing of 15 x 15 cm, placing 2–3 seedlings per hill.  
+
+8. Sowing and Transplanting Windows by Region and Season
+
+Punjab Window: Transplanting seedlings between June 20 and July 10 optimizes crop yield, reduces underground water extraction, and allows field evacuation for wheat. For short-duration PR 126, transplanting must not extend beyond July 15.  
+
+Tamil Nadu Windows: Kuruvai (June–July); Samba (August); Late Samba / Thaladi (September–October); Navarai (December–January); Sornavari (April–May); Kar (May–June).  
+
+9. Nutrient Management: NPK, Secondary Nutrients, Micronutrients, Soil Testing, and Split Applications
+
+Balanced fertilization relies on quantitative soil testing (e.g., Pusa STFR digital mini-lab analyzing 14 parameters).  
+
+National Fertilizer Ratios: The ideal national NPK ratio is 4 : 2 : 1, whereas actual national consumption stands at 6.5 : 2.4 : 1.1. Current nutrient use efficiency figures are low: N (30–50%), P (15–20%), K (60–70%), S (8–10%), and micronutrients (1–2%).  
+
+Standard Fertilizer Dosage (NRRI Transplanted HYV): Baseline recommendation is 40 kg N – 20 kg
+P
+2
+O
+5
+P
+2
+	​
+
+O
+5
+	​
+
+ – 20 kg
+K
+2
+O
+K
+2
+	​
+
+O per acre. Top-dress 44 kg Urea/acre at active tillering (2–3 weeks post-transplanting).  
+
+Fertigation Split (PAU Drip Systems): Apply 80% of recommended nitrogen in five equal splits starting 21 days after sowing at 10-day intervals.  
+
+Zonal IPNS Recommendations (DAC&FW Soil Health Portal):  
+
+Upper Gangetic Plain: Generalized:
+120
+ N
++
+60
+ 
+P
+2
+O
+5
++
+40
+ 
+K
+2
+O
++
+20
+ kg Zinc Sulphate/ha
+120 N+60 P
+2
+	​
+
+O
+5
+	​
+
++40 K
+2
+	​
+
+O+20 kg Zinc Sulphate/ha. IPNS Package:
+90
+ kg N
++
+30
+ kg 
+K
+2
+O
++
+FYM or Green Manure 
+(
+∗
+𝑆
+𝑒
+𝑠
+𝑏
+𝑎
+𝑛
+𝑖
+𝑎
+∗
+)
+@
+10
+ t/ha
+90 kg N+30 kg K
+2
+	​
+
+O+FYM or Green Manure (∗Sesbania∗)@10 t/ha.
+
+Central Plateau & Hills: Generalized:
+100
+ N
++
+30
+ 
+P
+2
+O
+5
++
+40
+ 
+K
+2
+O kg/ha
+100 N+30 P
+2
+	​
+
+O
+5
+	​
+
++40 K
+2
+	​
+
+O kg/ha. IPNS Package:
+75
+ kg N
++
+FYM/Green Manure 
+@
+5
+ t/ha
+75 kg N+FYM/Green Manure @5 t/ha.
+
+Southern Plateau & East Coast (Rice–Rice System):
+
+Crop 1 IPNS:
+75
+ kg N
++
+15
+ kg 
+P
+2
+O
+5
++
+15
+ kg 
+K
+2
+O
++
+FYM/Green Manure 
+@
+5
+ t/ha
+75 kg N+15 kg P
+2
+	​
+
+O
+5
+	​
+
++15 kg K
+2
+	​
+
+O+FYM/Green Manure @5 t/ha.
+
+Crop 2 IPNS:
+90
+ kg N
++
+60
+ kg 
+P
+2
+O
+5
++
+40
+ kg 
+K
+2
+O
++
+Azolla
+@
+10
+ t/ha
++
+BGA 
+@
+10
+ kg/ha
++
+20
+ kg Zinc Sulphate/ha
+90 kg N+60 kg P
+2
+	​
+
+O
+5
+	​
+
++40 kg K
+2
+	​
+
+O+Azolla@10 t/ha+BGA @10 kg/ha+20 kg Zinc Sulphate/ha.
+
+Organic Manure Composition: FYM provides 1.00% N, 0.54%
+P
+2
+O
+5
+P
+2
+	​
+
+O
+5
+	​
+
+, and 0.90%
+K
+2
+O
+K
+2
+	​
+
+O. Rice straw contains 0.58% N, 0.23%
+P
+2
+O
+5
+P
+2
+	​
+
+O
+5
+	​
+
+, and 1.66%
+K
+2
+O
+K
+2
+	​
+
+O.  
+
+Neem-Coated Urea: Saves 5 kg Urea per bag sold nationwide while retarding nitrification losses.  
+
+10. Irrigation and Water Management, including Safe Alternate Wetting and Drying
+
+Safe AWD is an established water-management technology validated across Asian lowland systems.  
+
+The operational sequence for implementing Safe AWD begins at crop establishment:  
+
+Establishment Phase: Following transplanting or direct seeding, maintain a shallow ponded water layer (1–3 cm) for 1 to 2 weeks to promote root anchorage and seedling survival.  
+
+AWD Implementation Phase: Install a field water tube and allow ponded water to subside naturally. Re-irrigate the field to a depth of ~5 cm only when the water level inside the monitoring tube drops to 15 cm below the soil surface. Water levels dropping deeper than 15 cm cause root moisture stress and yield decline.  
+
+Flowering Phase (Mandatory Flooding): Safe AWD MUST be suspended during the critical reproductive window—from first heading to 1 week after flowering. Keep the field continuously flooded to a depth of 5 cm during this period to prevent spikelet sterility.  
+
+Ripening Phase: Resume Safe AWD during grain filling and ripening. Terminate irrigation 1 to 2 weeks prior to harvest to facilitate field drying and mechanical harvesting.  
+
+Field Water Tube Mechanics: Install a 25 cm long PVC pipe (10–15 cm diameter) perforated with 0.5 cm holes on its lower 15 cm length into the soil profile so that 10 cm remains above the soil surface. Remove soil from inside the tube so the internal water table depth is visible.  
+
+Fertilizer Application Rule: Apply nitrogen top-dressings directly onto the dry soil surface immediately before re-flooding to maximize nutrient uptake.  
+
+Water Savings and Impact: Safe AWD achieves 15% to 30% water savings (117–171 mm seasonal reduction) with zero yield loss, while generating yield increases of 14% to 22% (550–900 kg/ha) by improving soil oxygenation and root vigor.  
+
+11. Weed Identification and Integrated Weed Management
+
+Pre-Emergence Chemical Herbicide Protocols:
+
+Apply Bensulfuron methyl + pretilachlor (Londax Power / Erase Strong) @ 4 kg/acre at 5–10 days after transplanting (DAT), mixed thoroughly with 4 kg dry sand and broadcast uniformly in shallow water.  
+
+Alternatively, spray Pyrazosulfuron ethyl 10 WP @ 80 g/acre at 3–5 DAT.  
+
+Cultural Rule under Safe AWD: If severe weed flushes occur during early vegetative growth, suspend Safe AWD and maintain a ponded water depth of 3–5 cm for 2 to 3 weeks to suppress weed growth.  
+
+12. Major Insect Pests, Symptoms, Monitoring, ETLs, and Integrated Pest Management
+
+Yellow Stem Borer (Scirpophaga incertulas):
+
+Field Monitoring: Install 3 pheromone traps per acre in the rice field.  
+
+Economic Threshold Level (ETL): 4 to 5 male moths per trap per day. Apply recommended foliar insecticides immediately upon reaching ETL.  
+
+Nursery Thrips: Causes leaf tip rolling and drying; treat nursery beds with Azadirachtin (NSKE 5%) @ 800 ml/acre, Lambda-Cyhalothrin 5% EC @ 100 ml/acre, or Thiamethoxam 25% WG @ 40 g/acre.  
+
+13. Major Diseases, Diagnostic Symptoms, Favorable Conditions, and Management
+
+Rice Blast (Pyricularia oryzae): Causes spindle-shaped leaf lesions and neck rot.  
+
+Chemical Remedy: Spray Carbendazim @ 200 g/acre in 200 L water or Edifenphos 50 EC @ 200 ml/acre. Always add a wetting sticker (Teepol @ 1 ml/L) and spray on calm, sunny days.  
+
+Varietal Caution: Improved White Ponni is highly susceptible; prophylactic sprays are required.  
+
+Seedling Blight: Treat infected nursery beds with Carbendazim @ 2 g/L or Propiconazole @ 1 ml/L water.  
+
+Bacterial Leaf Blight (Xanthomonas oryzae): Causes yellow-to-white lesions with wavy margins; perform pre-transplanting seedling root dips in 0.1% Plantomycin for 30 minutes in endemic zones.  
+
+False Smut (Ustilaginoidea virens): Transforms grains into orange/velvety green smut balls; Samba/Late Samba varieties require prophylactic spraying at panicle emergence.  
+
+Southern Rice Black-Streaked Dwarf Virus (Rice Dwarfing Disease): Vectored by planthoppers causing severe plant stunting; keep field bunds weed-free, rogue/bury infected hills, and spray vector control insecticides.  
+
+14. Nutrient Deficiencies and Toxicities versus Disease Symptoms
+
+Zinc Deficiency (Khaira / Bronzing): Appears as rusty brown blotches on lower leaves 2–3 weeks post-transplanting, leading to stunted growth. It is distinguished from fungal leaf spots by its uniform rusting without dark fungal fruiting bodies; corrected by applying 20 kg/ha
+ZnSO
+4
+ZnSO
+4
+	​
+
+.  
+
+Soil Acidification and Salinization: Continuous synthetic acid-forming fertilizers drop soil pH below optimal levels, causing iron toxicity or secondary P-fixation that mimics root rot or drought stunting.  
+
+15. Weather-Related Risks
+
+Cold Stress: Cold weather during nursery or early tillering stages causes stunting and spikelet sterility in sensitive cultivars (IR 50 and ADT 43 are prohibited in winter).  
+
+Inundation and Submergence: Flood-tolerant cultivars with the Sub1 gene (e.g., Swarna Sub1) survive 10–14 days of complete submergence.  
+
+Rainfall during Chemical Sprays: Rain forecasts require adding a sticker (Teepol @ 1 ml/L) and spraying exclusively on calm, sunny days.  
+
+16. Integrated Crop Management and Sustainable Practices
+
+Paddy Straw Management: Apply Pusa Decomposer (microbial consortium) for rapid in situ degradation of rice straw into organic manure within 20–25 days post-harvest following conventional tilling.  
+
+Bio-Fertilizer Integration: Incorporate Azolla (@ 10 t/ha) or Blue-Green Algae (@ 10–15 kg/ha) with organic manures (FYM @ 5–10 t/ha) to substitute up to 25–50% of synthetic N requirements.  
+
+17. Harvest Maturity, Harvesting, Drying, Storage, and Post-Harvest Quality
+
+Grain Moisture Protocol: Harvest when 80–85% of grains turn golden yellow; dry harvested paddy to strictly below 10% moisture content prior to storage.  
+
+Storage Pest Management (Rice Weevil and Rice Moth):
+
+Physical Protection: Mix 1 kg activated kaolin per 100 kg of grain thoroughly before bagging.  
+
+Storage Godown Sanitation: Spray Malathion 50 EC @ 10 ml/L (applying 3 L spray fluid per 100
+m
+2
+m
+2
+) over walls, floors, and stacked bags.  
+
+18. Yield Factors and Troubleshooting Common Crop Problems
+
+Delayed Operations Penalty: In Punjab, delaying transplanting past July 10 causes steep yield losses; for PR 126, transplanting after July 15 impairs yield, grain maturity, and milling recovery.  
+
+Seedling Over-Aging: Retaining short-duration seedlings in nurseries past 18–30 days suppresses productive tiller formation.  
+
+19. Production Economics
+
+District Baseline Yields: Namakkal average rice yield is 4,178 kg/ha; Thoothukudi potential paddy yield reaches 5.4 t/ha.  
+
+Varietal Yield Potentials: PR 133 yields 30.5 q/acre (~7,533 kg/ha) under recommended management.  
+
+20. Farmer Decision Guidance
+
+Pre-Recommendation Diagnostic Requirements: Prior to issuing varietal, fertilizer, or water management advice, confirm: (1) target district and block, (2) seasonal window, (3) irrigation source, (4) soil test report (pH, EC, organic carbon, NPK, Zn), and (5) preceding crop.  
+
+Laboratory Escalation Triggers: Direct the farmer to an official SAU/KVK laboratory or plant pathologist when:
+
+Symptoms indicate viral dwarfing or unmapped leaf chlorosis.  
+
+Soil pH is
+<
+5.5
+<5.5 or
+>
+8.5
+>8.5, or EC
+>
+2.0
+ dS/m
+>2.0 dS/m.  
+
+Unexplained root rot or complete crop failure occurs post-fertilization.  
+
+E. Conflicts, Outdated Guidance, and Safety Flags
+1. Conflicting Recommendations
+
+Regional Transplanting Windows: Punjab guidelines enforce delayed transplanting (after June 20; PR 126 cutoff July 15) to save groundwater. Conversely, Tamil Nadu guidelines schedule transplanting across early summer windows (Sornavari / Kar starting April–May) based on local rainfall patterns. Advisory engines must anchor recommendations to district coordinates.  
+
+Weed Management Protocols: Standard TNAU guides advocate manual/mechanical weeding, whereas NRRI advisories specify precise chemical herbicide windows (Bensulfuron methyl + pretilachlor at 5–10 DAT or Pyrazosulfuron ethyl at 3–5 DAT).  
+
+2. Outdated Guidance
+
+Historical NPK Ratios: Older blanket regional recommendations (e.g., fixed 120 : 60 : 40 kg/ha) are superseded by DAC&FW Soil Health Card zonal IPNS schedules that adjust synthetic inputs downward when combined with FYM, Azolla, or BGA.  
+
+3. Safety Flags and Restricted Chemicals
+
+Pesticide Application Safety: All chemical sprays (e.g., Malathion, Lambda-Cyhalothrin, Carbendazim, Edifenphos) must adhere to label claims and pre-harvest intervals.  
+
+Pollinator Protection: High-toxicity sprays should be restricted during peak flowering to protect beneficial insects and prevent residue accumulation in grains.  
+
+F. Usage Rights Summary
+Classification Status	Source Count	Supporting Source IDs	Evidence & Terms Summary
+PERMITTED_FOR_INTENDED_USE	2	Source 1, Source 84
+
+Source 1 explicitly states: "This publication may be used/shared freely for non-commercial purposes, with proper attribution to the publisher.". Source 84 explicitly states: "The work is licensed under Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0). The Council has no objection to using the material, provided the information is not being utilized for commercial purposes and wherever the information is being used, proper credit is given to ICAR.".
+
+
+RIGHTS_REVIEW_REQUIRED	14	Source 2, 8, 18, 22, 24, 30, 31, 35, 39, 43, 54, 55, 56, 65, 69
+
+Publicly accessible official manuals, extension bulletins, and educational documents from ICAR institutes, SAUs (PAU, TNAU), DAC&FW, and IRRI. While accessible for educational research, explicit commercial open-licensing terms for AI/RAG ingestion are absent on their respective landing pages.
+
+
+RESTRICTED	0	None	No inspected sources contained explicit prohibitions against academic or extension research analysis.
+ 
+G. Jules Integration Handoff
+1. Recommended Source IDs for Integration
+
+Source 22 (ICAR-NRRI Agro Advisory Bulletin)  
+
+Source 39 & 43 (PAU Package of Practices & Advisory)  
+
+Source 24 & 30 (TNAU Crop Production Guide & Varietal Manual)  
+
+Source 54 & 55 (DAC&FW Soil Health Card Manuals & INM Packages)  
+
+Source 65 & 69 (IRRI Safe AWD Technical Manuals)  
+
+2. Exact URLs and Provenance
+
+ICAR-NRRI Bulletin: https://icar-crri.in/wp-content/uploads/2020/02/AAS_Feb_I_2020_English.pdf
+
+[cite: 3]
+
+PAU Kharif Guide: https://pau.edu/content/ccil/pf/pp_kharif.pdf
+
+[cite: 4]
+
+TNAU CPG Manual: https://agritech.tnau.ac.in/pdf/2013/CPG%202012.pdf
+
+[cite: 5]
+
+DAC&FW INM Packages: https://soilhealth.dac.gov.in/files/portal/Recommended%20INM%20Packages%20-1.pdf
+
+[cite: 10]
+
+IRRI Safe AWD Book: http://books.irri.org/9789712202193_content.pdf
+
+[cite: 8]
+
+3. Content Reuse Eligibility & Rights Review
+
+Eligible for Factual Ingestion: Short factual parameters, numerical doses, disease symptoms, and varietal durations may be ingested across all sources under standard factual research fair use.
+
+Rights Review Required for Direct Text Ingestion: Full text ingestion of Source 2, 8, 18, 22, 24, 30, 31, 35, 39, 43, 54, 55, 56, 65, and 69 requires formal legal review before storing raw text blocks in commercial RAG vector stores.
+
+4. Missing Rice Topics Needing Additional Research
+
+Exact bio-chemical seed dressing dosage rules for pre-sowing seed soaking across all private hybrids.
+
+Itemized state-by-state cost of cultivation budgets for 2024–2026.
+
+Diagnostic keys for differentiating Southern Rice Black-Streaked Dwarf Virus from severe zinc or iron micro-nutrient chlorosis in real-time field image processing.
+
+5. Proposed Rice Corpus File Organization
+corpus/
+└── rice/
+    ├── icar_nrri_advisories.json      (NRRI pest ETLs, chemical doses, weed management)
+    ├── pau_package_of_practices.json  (PAU PR-varieties, Punjab transplanting windows, DSR)
+    ├── tnau_crop_production_guide.json(TNAU seasonal calendars, storage, varietal specs)
+    ├── irri_safe_awd_manual.json      (Field water tube SOPs, 15 cm threshold, flowering rules)
+    └── dac_soil_health_inm.json       (Zonal IPNS schedules, soil sampling SOPs, STFR norms)
+
+H. Final Quality Check
+
+Total Distinct Sources Discovered: 16
+
+Number of Direct URLs Verified against Content: 16
+
+Number of Sources with Inspected Agricultural Content: 16
+
+Usage Rights Classification Breakdown:
+
+Permitted for Intended Use: 2  
+
+Rights Review Required: 14  
+
+Restricted: 0
+
+Topic Coverage Status (out of 20 topics):
+
+Fully Covered: 16 topics (Topics 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 20)
+
+Partially Covered: 4 topics (Topic 3 - cardinal temperatures incomplete; Topic 7 - seed soaking chemical doses missing; Topic 14 - visual chlorosis diagnostic key partial; Topic 19 - itemized enterprise cost budgets incomplete)
+
+Missing / Gaps: 0 topics completely unaddressed.
+
+Integration Readiness: The research package provides verified parameters for immediate structured schema integration, subject to rights review for raw full-text ingestion.
+
+Report unsafe content
+Opens in a new window
+About Gemini
+Get Gemini App
+Subscriptions
+For Business
+Sign in
