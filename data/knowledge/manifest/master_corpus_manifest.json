@@ -1,0 +1,972 @@
+{
+  "corpus_version": "1.3.0_RIGOROUS",
+  "description": "Strictly Verified Master Real Agricultural Knowledge Corpus Manifest for EarthMind",
+  "total_unique_sources": 37,
+  "verified_unique_sources_with_working_direct_urls": 26,
+  "unverified_or_unaccessible_remote_url_sources": 11,
+  "permitted_for_intended_use_sources": 29,
+  "rights_review_required_sources": 8,
+  "language_distribution_unique_sources": {
+    "en": 24,
+    "ta": 5,
+    "hi": 3,
+    "bn": 1,
+    "mr": 1,
+    "te": 1,
+    "gu": 1,
+    "kn": 1
+  },
+  "verified_crop_document_mappings_distribution": {
+    "Rice": 5,
+    "Wheat": 3,
+    "Maize": 4,
+    "Potato": 3,
+    "Onion": 4,
+    "Tomato": 3,
+    "Pea": 2,
+    "Chickpea": 5,
+    "Pigeon Pea": 6,
+    "Mustard": 4,
+    "Groundnut": 6,
+    "Soybean": 4,
+    "Sugarcane": 5,
+    "Cotton": 6,
+    "Lentil": 4
+  },
+  "sources": [
+    {
+      "source_id": "src_icar_gap_001",
+      "source_name": "ICAR Good Agricultural Practices (GAP) Guidelines",
+      "publisher": "Indian Council of Agricultural Research (ICAR)",
+      "direct_url": "https://icar.org.in/content/good-agricultural-practices",
+      "publication_date": "2023-01",
+      "language": "en",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Onion",
+        "Tomato",
+        "Pea",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Sugarcane",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "GAP, Soil Health, Integrated Pest Management, Water Conservation",
+      "region": "India (National)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with source attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/icar_gap_guidelines_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_icar_rice_001",
+      "source_name": "ICAR-NRRI Package of Practices for Rice Cultivation",
+      "publisher": "ICAR-National Rice Research Institute (NRRI), Cuttack",
+      "direct_url": "https://nrri.icar.gov.in/package-of-practices-rice",
+      "publication_date": "2023-04",
+      "language": "en",
+      "crops_covered": [
+        "Rice"
+      ],
+      "main_topics": "Sowing, SRI method, Fertilizer dosage, Pest & Disease Management",
+      "region": "India (Indo-Gangetic & Coastal Rice Zones)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with source attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/icar_rice_cultivation_package_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_ncipm_wheat_001",
+      "source_name": "NCIPM Integrated Pest and Disease Management in Wheat",
+      "publisher": "ICAR-National Centre for Integrated Pest Management (NCIPM), Karnal",
+      "direct_url": "https://ncipm.icar.gov.in/wheat-ipm-bulletin",
+      "publication_date": "2023-02",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "Yellow rust, Karnal bunt, Aphid control, IPM",
+      "region": "North India / Indo-Gangetic Plains",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with source attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/ncipm_wheat_pests_diseases_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_dafw_shc_001",
+      "source_name": "Soil Health Card Scheme SOP & Nutrient Guidelines",
+      "publisher": "Department of Agriculture & Farmers Welfare (DA&FW), MoA&FW",
+      "direct_url": "https://soilhealth.dac.gov.in/guidelines/shc-sop-2022.pdf",
+      "publication_date": "2022-08",
+      "language": "en",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Onion",
+        "Tomato",
+        "Pea",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Sugarcane",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "Soil testing, NPK macronutrients, Micronutrient deficiency",
+      "region": "India (National)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data terms apply",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/soil_health_card_guidelines_2022.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_nmsa_pmksy_001",
+      "source_name": "PMKSY Micro-Irrigation Operational Manual",
+      "publisher": "National Mission on Sustainable Agriculture (NMSA) & MoA&FW",
+      "direct_url": "https://pmksy.gov.in/microirrigation/manual-2022.pdf",
+      "publication_date": "2022-12",
+      "language": "en",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Onion",
+        "Tomato",
+        "Pea",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Sugarcane",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "Drip irrigation, Sprinkler systems, Fertigation",
+      "region": "India (National)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data terms apply",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/pmksy_micro_irrigation_manual_2022.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_iiss_fert_001",
+      "source_name": "ICAR-IISS Site-Specific Balanced Fertilizer Application Guidelines",
+      "publisher": "ICAR-Indian Institute of Soil Science (IISS), Bhopal",
+      "direct_url": "https://iiss.icar.gov.in/bulletins/balanced-fertilizers-2023.pdf",
+      "publication_date": "2023-01",
+      "language": "en",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Chickpea",
+        "Mustard",
+        "Soybean",
+        "Sugarcane",
+        "Cotton"
+      ],
+      "main_topics": "Balanced fertilizer dosing, STCR calibration, Organic amendments",
+      "region": "India (National)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with source attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/iiss_balanced_fertilizer_recommendations_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_icar_kvk_001",
+      "source_name": "ICAR KVK Extension Advisory Guidelines & PM-KISAN Framework",
+      "publisher": "ICAR Agricultural Extension Division & MoA&FW",
+      "direct_url": "https://icar.org.in/extension/kvk-advisory-manual-2023.pdf",
+      "publication_date": "2023-05",
+      "language": "en",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Onion",
+        "Tomato",
+        "Pea",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Sugarcane",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "KVK advisory dissemination, Seasonal advisories, Scheme linkage",
+      "region": "India (National)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Government Open Data License - India (GODL-India)",
+        "terms": "Open Government Data terms apply",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/pmkisan_kvk_extension_advisory_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_crida_tnau_001",
+      "source_name": "ICAR-CRIDA & TNAU Rainfed and Dryland Agricultural Management",
+      "publisher": "ICAR-CRIDA Hyderabad & TNAU Coimbatore",
+      "direct_url": "https://crida.in/bulletins/dryland-management-2022.pdf",
+      "publication_date": "2022-09",
+      "language": "en",
+      "crops_covered": [
+        "Maize",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "Dryland farming, Contingency planning, Drought mitigation",
+      "region": "Rainfed India (Peninsular & Central India)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with source attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/tnau_icar_dryland_rainfed_farming_2022.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_vikaspedia_rice_en",
+      "source_name": "Vikaspedia Rice Cultivation & SRI Package",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/cereals/rice-cultivation-1",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Rice"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_wheat_en",
+      "source_name": "Vikaspedia Wheat Cultivation & Rust Advisory",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/cereals/wheat",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_maize_en",
+      "source_name": "Vikaspedia Maize Cultivation & FAW Control",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/cereals/maize",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Maize"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_potato_en",
+      "source_name": "Vikaspedia Potato Production & Late Blight Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/vegetables/potato-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Potato"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_onion_en",
+      "source_name": "Vikaspedia Onion Cultivation & Thrips Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/vegetables/onion-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Onion"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_tomato_en",
+      "source_name": "Vikaspedia Tomato Cultivation & Leaf Curl Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/vegetables/tomato-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Tomato"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_pea_en",
+      "source_name": "Vikaspedia Field Pea Cultivation Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/vegetables/pea-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Pea"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_chickpea_en",
+      "source_name": "Vikaspedia Chickpea Cultivation & Pod Borer Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/pulses/chickpea",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Chickpea"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_pigeonpea_en",
+      "source_name": "Vikaspedia Pigeonpea Cultivation & Intercropping Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/pulses/pigeonpea-or-redgram",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Pigeon Pea"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_mustard_en",
+      "source_name": "Vikaspedia Mustard Cultivation & Aphid Advisory",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/oilseeds/mustard-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Mustard"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_groundnut_en",
+      "source_name": "Vikaspedia Groundnut Cultivation & Gypsum Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/oilseeds/groundnut-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Groundnut"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_soybean_en",
+      "source_name": "Vikaspedia Soybean Cultivation & Weed Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/oilseeds/soybean-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Soybean"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_sugarcane_en",
+      "source_name": "Vikaspedia Sugarcane Cultivation & Red Rot Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/commercial-crops/sugarcane-cultivation-1",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Sugarcane"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_cotton_en",
+      "source_name": "Vikaspedia Cotton Cultivation & Pink Bollworm Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/commercial-crops/cotton-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Cotton"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_lentil_en",
+      "source_name": "Vikaspedia Lentil Production & Seed Treatment Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/pulses/lentil-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Lentil"
+      ],
+      "main_topics": "Package of practices, sowing, pest control, harvesting",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_rice_ta",
+      "source_name": "TNAU Paddy Cultivation & SRI Guide",
+      "publisher": "Tamil Nadu Agricultural University (TNAU)",
+      "direct_url": "http://agritech.tnau.ac.in/agriculture/agri_cropproduction_cereals%20index%20new_rice.html",
+      "publication_date": "2023-01",
+      "language": "ta",
+      "crops_covered": [
+        "Rice"
+      ],
+      "main_topics": "Crop production, irrigation, disease management",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_pulses_ta",
+      "source_name": "TNAU Pulses (Chickpea, Pigeonpea, Lentil) Guide",
+      "publisher": "Tamil Nadu Agricultural University (TNAU)",
+      "direct_url": "http://agritech.tnau.ac.in/agriculture/pulses_index.html",
+      "publication_date": "2023-01",
+      "language": "ta",
+      "crops_covered": [
+        "Chickpea",
+        "Pigeon Pea",
+        "Lentil"
+      ],
+      "main_topics": "Crop production, irrigation, disease management",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_oilseeds_ta",
+      "source_name": "TNAU Oilseeds (Groundnut, Mustard, Soybean) Guide",
+      "publisher": "Tamil Nadu Agricultural University (TNAU)",
+      "direct_url": "http://agritech.tnau.ac.in/agriculture/oilseeds_index.html",
+      "publication_date": "2023-01",
+      "language": "ta",
+      "crops_covered": [
+        "Groundnut",
+        "Mustard",
+        "Soybean"
+      ],
+      "main_topics": "Crop production, irrigation, disease management",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_sugarcane_ta",
+      "source_name": "TNAU Sugarcane Production & Drip Guide",
+      "publisher": "Tamil Nadu Agricultural University (TNAU)",
+      "direct_url": "http://agritech.tnau.ac.in/agriculture/sugarcrops_index.html",
+      "publication_date": "2023-01",
+      "language": "ta",
+      "crops_covered": [
+        "Sugarcane"
+      ],
+      "main_topics": "Crop production, irrigation, disease management",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_cotton_ta",
+      "source_name": "TNAU Cotton Agronomy & Pest Control Guide",
+      "publisher": "Tamil Nadu Agricultural University (TNAU)",
+      "direct_url": "http://agritech.tnau.ac.in/agriculture/agri_cropproduction_cereals%20index%20new_cotton.html",
+      "publication_date": "2023-01",
+      "language": "ta",
+      "crops_covered": [
+        "Cotton"
+      ],
+      "main_topics": "Crop production, irrigation, disease management",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_hi_001",
+      "source_name": "Vikaspedia Krishi Kranti Package of Practices (Hindi)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://hi.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "hi",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Onion",
+        "Tomato",
+        "Pea",
+        "Chickpea",
+        "Pigeon Pea",
+        "Mustard",
+        "Groundnut",
+        "Soybean",
+        "Sugarcane",
+        "Cotton",
+        "Lentil"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_bn_001",
+      "source_name": "Vikaspedia Krishi Katha Package of Practices (Bengali)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://bn.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "bn",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Potato",
+        "Lentil"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_mr_001",
+      "source_name": "Vikaspedia Sheti Batai Package of Practices (Marathi)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://mr.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "mr",
+      "crops_covered": [
+        "Cotton",
+        "Sugarcane",
+        "Soybean",
+        "Onion",
+        "Chickpea",
+        "Pigeon Pea"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_te_001",
+      "source_name": "Vikaspedia Vyavasayam Package of Practices (Telugu)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://te.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "te",
+      "crops_covered": [
+        "Rice",
+        "Cotton",
+        "Groundnut",
+        "Pigeon Pea",
+        "Chickpea",
+        "Maize"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_gu_001",
+      "source_name": "Vikaspedia Krishi Mahiti Package of Practices (Gujarati)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://gu.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "gu",
+      "crops_covered": [
+        "Groundnut",
+        "Cotton",
+        "Mustard",
+        "Onion"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_vikaspedia_kn_001",
+      "source_name": "Vikaspedia Krishi Mahiti Package of Practices (Kannada)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://kn.vikaspedia.in/agriculture/crop-production",
+      "publication_date": "2023",
+      "language": "kn",
+      "crops_covered": [
+        "Maize",
+        "Sugarcane",
+        "Groundnut",
+        "Tomato",
+        "Pigeon Pea"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_bau_sabour_001",
+      "source_name": "BAU Sabour Bihar Krishi Package (Portal Landing)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://bausabour.ac.in/",
+      "publication_date": "2023",
+      "language": "hi",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Potato",
+        "Chickpea",
+        "Lentil"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_rpcau_pusa_001",
+      "source_name": "RPCAU Adhunik Kisan Patrika (Portal Landing)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://rpcau.ac.in/",
+      "publication_date": "2023",
+      "language": "hi",
+      "crops_covered": [
+        "Rice",
+        "Wheat",
+        "Maize",
+        "Sugarcane"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_pau_ludhiana_001",
+      "source_name": "PAU Ludhiana Package of Practices (Portal Landing)",
+      "publisher": "State Agricultural University / MeitY Multilingual Portal",
+      "direct_url": "https://pau.edu/",
+      "publication_date": "2023",
+      "language": "en",
+      "crops_covered": [
+        "Wheat",
+        "Rice",
+        "Cotton",
+        "Mustard"
+      ],
+      "main_topics": "Regional language crop production and agronomy advisories",
+      "region": "India Regional Zones",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "Public Vernacular Portal",
+        "terms": "Open regional extension",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    }
+  ]
+}
