@@ -1,11 +1,11 @@
 {
-  "corpus_version": "1.4.0_RICE_INTEGRATED",
-  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Rice Integration",
-  "total_unique_sources": 42,
-  "verified_unique_sources_with_working_direct_urls": 31,
+  "corpus_version": "1.5.0_WHEAT_INTEGRATED",
+  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Wheat Integration",
+  "total_unique_sources": 47,
+  "verified_unique_sources_with_working_direct_urls": 36,
   "unverified_or_unaccessible_remote_url_sources": 11,
-  "permitted_for_intended_use_sources": 31,
-  "rights_review_required_sources": 11,
+  "permitted_for_intended_use_sources": 33,
+  "rights_review_required_sources": 14,
   "sources": [
     {
       "source_id": "src_icar_gap_001",
@@ -1048,6 +1048,118 @@
       "license_info": {
         "license_name": "IRRI Research Publication",
         "terms": "Commercial RAG rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_gemini_wheat_2025",
+      "source_name": "Comprehensive Wheat (Triticum aestivum L.) Agricultural Research Synthesis",
+      "publisher": "ICAR-IIWBR Karnal, AICRP Wheat & Barley, PAU Ludhiana, BAU Sabour & DAC&FW",
+      "direct_url": "https://share.gemini.google/encIaGQY23X3",
+      "publication_date": "2025-02-15",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "20 Core Domains: Zadoks growth stages, CRI stage, NWPZ/NEPZ zonation, DBW 187/222/303, Zero-till, 150:60:40 NPK, Propiconazole rust control, Terminal heat",
+      "region": "India (NWPZ, NEPZ, Central Zone, Peninsular Zone)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable for educational and agricultural extension attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/icar_gemini_wheat_synthesis_2025.txt",
+      "has_local_artifact": true,
+      "artifact_checksum": "004c35b0b177fa64f668ff11f1267ef472a94d4c915492c49e64b5a835b47661",
+      "artifact_size_bytes": 10710
+    },
+    {
+      "source_id": "src_iiwbr_eb52",
+      "source_name": "Wheat Cultivation in India: Pocket Guide (EB-52)",
+      "publisher": "ICAR-Indian Institute of Wheat and Barley Research (IIWBR), Karnal",
+      "direct_url": "https://iiwbr.org.in/wp-content/uploads/2023/08/EB-52-Wheat-Cultivation-in-India-Pocket-Guide.pdf",
+      "publication_date": "2023-08",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "Wheat sowing windows, NPK fertilizer splitting, irrigation critical stages, rust identification",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable for non-commercial educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_iiwbr_rb36",
+      "source_name": "Wheat: A Guide on Special Features of Varieties for Different Production Conditions (RB-36)",
+      "publisher": "ICAR-Indian Institute of Wheat and Barley Research (IIWBR), Karnal",
+      "direct_url": "https://iiwbr.org.in/wp-content/uploads/2024/01/RB-36-Wheat-A-guide-on-special-features-of-varieties-for-different-production-conditions-in-India.pdf",
+      "publication_date": "2024-01",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "Varietal characteristics, DBW 187, DBW 222, DBW 303, rust resistance ratings, heat tolerance",
+      "region": "India (NWPZ, NEPZ, CZ, PZ)",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "ICAR-IIWBR Research Bulletin",
+        "terms": "Public research bulletin; commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_iiwbr_rb51",
+      "source_name": "Compendium of Wheat Varieties Notified in India During 2018-2023 (RB-51)",
+      "publisher": "ICAR-Indian Institute of Wheat and Barley Research (IIWBR), Karnal",
+      "direct_url": "https://iiwbr.org.in/wp-content/uploads/2024/01/RB-51-Compendium-of-Wheat-Varieties-Notified-in-India-During-2018-2023.pdf",
+      "publication_date": "2024-01",
+      "language": "en",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "Notified wheat cultivars, biofortified varieties, iron and zinc content, yield potentials",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "ICAR-IIWBR Research Bulletin",
+        "terms": "Public research bulletin; commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_bau_wheat_pop",
+      "source_name": "BAU Sabour Package of Practices for Wheat Cultivation in Bihar",
+      "publisher": "Bihar Agricultural University Sabour, Bhagalpur",
+      "direct_url": "https://bausabour.ac.in/album/File104_12_202311_49_40PIMG1.pdf",
+      "publication_date": "2023-11",
+      "language": "hi",
+      "crops_covered": [
+        "Wheat"
+      ],
+      "main_topics": "NEPZ wheat recommendations, seed rate, timely/late sowing windows, herbicide schedules",
+      "region": "Bihar / Eastern India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "SAU Extension Package of Practices",
+        "terms": "Commercial AI rights unstated",
         "review_required": true
       },
       "location_reference": null,

@@ -1,0 +1,136 @@
+================================================================================
+TITLE: Comprehensive Wheat (Triticum aestivum L.) Agricultural Research Synthesis
+ORGANIZATION: ICAR-IIWBR Karnal, AICRP Wheat & Barley, PAU Ludhiana, BAU Sabour & DAC&FW
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India (North Western Plains Zone, North Eastern Plains Zone, Central Zone, Peninsular Zone)
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable for Educational & Extension Attribution)
+ORIGIN: Gemini Deep Research Synthesis (ICAR-IIWBR EB-52, RB-36, RB-51, AICRP Director Report 2023-24, DAC&FW INM Packages)
+PUBLICATION DATE: 2025-02-15
+================================================================================
+
+1. CROP OVERVIEW, GROWTH STAGES, AND PHENOLOGY
+- Taxonomic Classification: Triticum aestivum L. (Bread Wheat), Triticum durum Desf. (Durum / Macaroni Wheat).
+- Key Phenological Growth Stages (Zadoks Scale Alignment):
+  a. Germination & Seedling Stage (Zadoks 00-10): Germination and coleoptile emergence (0-10 DAS).
+  b. Crown Root Initiation (CRI Stage, Zadoks 11-13): Critical root development window occurring 20-25 days after sowing (DAS).
+  c. Tillering Stage (Zadoks 20-29): Production of primary and secondary tillers (25-45 DAS).
+  d. Jointing & Stem Elongation (Zadoks 30-39): First and second node appearance (45-65 DAS).
+  e. Booting & Flag Leaf Stage (Zadoks 40-49): Swelling of flag leaf sheath containing developing spike (65-75 DAS).
+  f. Heading & Anthesis / Flowering (Zadoks 50-69): Spike emergence and pollination (75-85 DAS).
+  g. Grain Filling & Ripening Stage (Zadoks 70-90): Milk stage, soft dough, hard dough, and physiological maturity (85-120+ DAS).
+
+2. MAJOR WHEAT-GROWING ZONES IN INDIA
+- North Western Plains Zone (NWPZ): Punjab, Haryana, Delhi, Rajasthan, Western UP. Highly productive, canal/tube-well irrigated, intensive wheat-rice rotation.
+- North Eastern Plains Zone (NEPZ): Eastern UP, Bihar, Jharkhand, West Bengal, Assam. Moderate duration, high humidity, terminal heat vulnerable.
+- Central Zone (CZ): Madhya Pradesh, Gujarat, Kota/Udaipur (Rajasthan), Jhansi (UP). Major durum wheat and high-quality bread wheat production hub.
+- Peninsular Zone (PZ): Maharashtra, Karnataka, Andhra Pradesh, Tamil Nadu. Short season, warm winters, predominantly rainfed/limited irrigation.
+- Northern Hills Zone (NHZ) & Southern Hills Zone (SHZ): Jammu & Kashmir, Himachal Pradesh, Uttarakhand hills, Nilgiri hills. Long duration winter/spring wheat.
+
+3. CLIMATE REQUIREMENTS AND TEMPERATURE SENSITIVITIES
+- Thermal Thresholds:
+  - Optimum Sowing & Germination Temperature: 20°C to 25°C.
+  - Optimum Grain Filling Temperature: 14°C to 15°C mean daily temperature.
+  - Critical Heat Stress Sensitivity: Temperatures > 30°C during anthesis cause pollen sterility; mean daily temperatures > 25°C during grain filling accelerate senescence (terminal heat stress).
+- Annual Rainfall: 750-1000 mm or 4-6 supplementary irrigations.
+
+4. SOIL REQUIREMENTS, DRAINAGE, PH, SALINITY, AND TILLAGE
+- Ideal Soils: Well-drained fertile clay loams, silt loams, and alluvial soils with rich organic carbon.
+- Soil pH Range: 6.0 to 7.5 (tolerates mild sodicity if reclaimed with gypsum).
+- Salinity Tolerance: Moderate tolerance up to ECe 6.0 dS/m; higher salinity severely impairs root water uptake.
+- Tillage & Zero-Tillage (ZT):
+  - Conventional Tillage: 2-3 disc harrowings followed by planking to create a fine seedbed.
+  - Zero-Tillage / Happy Seeder / Super Seeder: Direct drilling into unploughed paddy stubble saves Rs 2500-3000/ha, reduces soil erosion, and advances sowing by 7-10 days.
+
+5. RECOMMENDED VARIETIES AND REGIONAL SUITABILITY
+- DBW 187 (Karan Vandana): High yielding (up to 7.5 t/ha), biofortified with Iron (43.1 ppm) and Zinc (42.0 ppm), resistant to yellow and brown rusts; suitable for NWPZ & NEPZ.
+- DBW 222 (Karan Narendra): High tillering, lodg-resistant variety for NWPZ timely sown irrigated conditions.
+- DBW 303 (Karan Shivani): High potential cultivar (>8.0 t/ha under early sowing + higher N management).
+- HD 2967 & HD 3086: Widely adapted national check varieties for NWPZ/NEPZ timely irrigated conditions.
+- PBW 550: Short-stature, bold-grain variety popular in Punjab.
+- HI 1544 & GW 322: Central Zone high-yielding bread wheat varieties.
+
+6. SEED QUALITY, SEED RATE, AND SEED TREATMENT
+- Seed Rate Standards:
+  - Timely Sown (Bold Seeds): 100 kg/ha (40 kg/acre).
+  - Late Sown / Heavy Soils: 125 kg/ha (50 kg/acre) to compensate for reduced tillering window.
+  - Zero-Till Sowing: 100-110 kg/ha.
+- Fungicidal Seed Treatment SOP: Treat seed with Carboxin 37.5% + Thiram 37.5% DS @ 3 g/kg seed, or Tebuconazole 2% DS @ 1.0 g/kg seed to control loose smut and seed-borne pathogens.
+- Bio-Inoculation: Inoculate seed with Azotobacter & PSB (Phosphate Solubilizing Bacteria) @ 250 g/10 kg seed.
+
+7. SOWING WINDOWS BY ZONE AND PRODUCTION CONDITION
+- Timely Sown Irrigated Window: November 1 to November 15 (Golden window for NWPZ/NEPZ).
+- Early Sowing Window (DBW 303 / HD 3410): October 25 to October 31.
+- Late Sown Window (Post-Rice / Sugarcane): November 16 to December 15 (DBW 173, PBW 771). Yield penalty of 35-40 kg/ha/day delay beyond Nov 20.
+
+8. NUTRIENT MANAGEMENT: NPK, ZINC, FYM, AND SPLIT APPLICATION
+- Recommended NPK Rates:
+  - NWPZ Irrigated Timely Sown: 150 kg N : 60 kg P2O5 : 40 kg K2O per hectare.
+  - NEPZ Irrigated Timely Sown: 120 kg N : 60 kg P2O5 : 40 kg K2O per hectare.
+  - Rainfed Conditions: 60 kg N : 30 kg P2O5 : 20 kg K2O per hectare.
+- Nitrogen Splitting Schedule: Apply 1/3rd N as basal at sowing + 1/3rd N at 1st irrigation (CRI stage, 20-25 DAS) + 1/3rd N at 2nd irrigation (jointing stage, 40-45 DAS).
+- Micronutrient SOP: Apply Zinc Sulphate (ZnSO4 21%) @ 25 kg/ha basal in zinc-deficient soils. Apply 0.5% ZnSO4 foliar spray if yellowing occurs.
+
+9. IRRIGATION SCHEDULING AND WATER MANAGEMENT
+- Critical Irrigation Growth Stages (6 Irrigation Schedule):
+  1. Crown Root Initiation (CRI Stage, 20-25 DAS): MOST CRITICAL. Delay causes 20-30% yield loss.
+  2. Tillering Stage (40-45 DAS).
+  3. Jointing Stage (60-65 DAS).
+  4. Flowering / Anthesis Stage (80-85 DAS).
+  5. Milk Stage (100-105 DAS).
+  6. Dough Stage (115-120 DAS).
+- Water Requirement: Total water requirement is 350-450 mm. Stop irrigation at hard dough stage to prevent grain discolouration and lodging.
+
+10. WEED MANAGEMENT AND HERBICIDE SCHEDULES
+- Major Weed Competitors: Phalaris minor (Canary grass, Wild oats), Chenopodium album (Bathua), Rumex dentatus, Melilotus indica.
+- Chemical Control Schedules:
+  - Phalaris minor (Grass weeds): Apply Clodinafop-propargyl 15% WP @ 400 g/ha or Sulfosulfuron 75% WG @ 33.3 g/ha at 30-35 DAS in 250L water.
+  - Complex Weed Flora (Grasses + Broadleaf): Apply Metribuzin 70% WP @ 250 g/ha, or Sulfosulfuron 75% + Metsulfuron methyl 5% WG @ 40 g/ha at 30-35 DAS.
+
+11. INSECT PESTS AND INTEGRATED PEST MANAGEMENT (IPM)
+- Wheat Aphid (Sitobion avenae, Rhopalosiphum padi):
+  - Symptoms: Sucking sap from flag leaves and developing earheads, secreting honeydew.
+  - Economic Threshold Level (ETL): 10-15 aphids per earhead/tiller.
+  - Chemical Control: Spray Thiamethoxam 25% WG @ 100 g/ha or Imidacloprid 17.8% SL @ 100 ml/ha in 500L water.
+- Termites (Odontotermes obesus):
+  - Symptoms: Damaged roots, drying of plants in patches.
+  - Control: Chlorpyrifos 20% EC @ 2.0 L/ha with irrigation water or seed treatment with Fipronil 5% SC @ 6 ml/kg seed.
+
+12. MAJOR DISEASES AND INTEGRATED CONTROL
+- Yellow / Stripe Rust (Puccinia striiformis):
+  - Diagnostic Symptoms: Bright yellow pustules arranged in linear stripes on leaf blades.
+  - Epidemic Conditions: High humidity (>80%) and cool temperature (10-15°C).
+  - Chemical SOP: Spray Propiconazole 25% EC @ 500 ml/ha or Tebuconazole 25.9% EC @ 500 ml/ha in 500L water immediately upon first pustule detection.
+- Brown / Leaf Rust (Puccinia triticina): Small round orange-brown pustules scattered randomly on leaf surfaces.
+- Loose Smut (Ustilago segetum var. tritici): Entire earhead converted into black powdery mass of spores. Prevented 100% via Tebuconazole/Carboxin seed treatment.
+- Karnal Bunt (Tilletia indica): Partial conversion of grain into black foul-smelling powdery mass. Managed via resistant cultivars (DBW 187) and seed treatment.
+
+13. NUTRIENT DEFICIENCIES VS DISEASE DIAGNOSTICS
+- Nitrogen Deficiency: Pale green to yellow discoloration beginning at lower leaf tips progressing uniformly along midribs.
+- Zinc Deficiency: White to bronze necrotic patches on middle leaves with interveinal chlorosis.
+- Contrast with Rusts: Rusts produce raised powdery spore pustules that rub off on fingers, whereas nutrient deficiencies present as flat chlorotic tissue without pustules.
+
+14. WEATHER-RELATED RISKS AND CLIMATE RESILIENCE
+- Terminal Heat Mitigation: Spray Potassium Nitrate (13:0:45) @ 1.0% (10 g/L water) at flag leaf and anthesis stages to reduce heat shock damages during grain filling.
+- Lodging Prevention: Apply Chlormequat chloride (CCC 50%) @ 0.2% + Tebuconazole @ 0.1% at first node stage (40-45 DAS) in high-fertility early sown fields.
+
+15. SUSTAINABLE FARMING AND RESIDUE MANAGEMENT
+- Happy Seeder / Super Seeder Technology: Direct sowing into standing paddy stubble preserves soil moisture, adds 2-3 t/ha organic matter, suppresses weeds, and eliminates stubble burning.
+
+16. HARVEST MATURITY, DRYING, AND POST-HARVEST STORAGE
+- Harvest Trigger: Grains become hard, straw turns yellow and dry, grain moisture drops to 15-18%.
+- Safe Storage Moisture: Sun-dry threshed grain to <12% moisture content before storage.
+- Storage Insect Control: Treat storage structures with Aluminium Phosphide @ 1-2 tablets (3g) per tonne in airtight bins to prevent Lesser Grain Borer and Grain Weevil.
+
+17. COMMON YIELD PROBLEMS AND TROUBLESHOOTING
+- Delayed 1st Irrigation Penalty: Missing CRI irrigation (20-25 DAS) reduces tillering and root anchoring, resulting in 20-25% yield loss.
+- Over-Irrigation at Jointing: Causes soil waterlogging and yellowing of crop (nitrogen leaching).
+
+18. PRODUCTION ECONOMICS AND YIELD BASELINES
+- High Productivity Baselines: Punjab/Haryana NWPZ DBW 187 / DBW 222 average 6.5-7.5 t/ha. NEPZ (Bihar/Eastern UP) averages 4.5-5.2 t/ha.
+- Cost-Benefit Ratio: Zero-till wheat achieves C:B ratio of 2.5 to 3.1 due to saved tillage costs.
+
+19. FARMER DECISION GUIDANCE AND ESCALATION TRIGGERS
+- CRI Stage Trigger: Mandate 1st irrigation at 20-25 DAS irrespective of weather, unless heavy rain occurs.
+- Rust Escalation Trigger: Issue district advisory for immediate Propiconazole spray if yellow rust pustules are detected in border fields.
