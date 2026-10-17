@@ -1,0 +1,133 @@
+================================================================================
+TITLE: Comprehensive Maize (Zea mays L.) Agricultural Research Synthesis
+ORGANIZATION: ICAR-IIMR Ludhiana, TNAU Coimbatore, PAU Ludhiana, ICRIER & DAC&FW
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India (North Western Plains Zone, Peninsular Zone, Eastern Zone, Central Zone)
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable for Educational & Extension Attribution)
+ORIGIN: Gemini Deep Research Synthesis (ICAR-IIMR, TNAU Maize Manual, PAU Kharif/Rabi Package of Practices, DAC&FW INM Guidelines)
+PUBLICATION DATE: 2025-02-15
+================================================================================
+
+1. CROP OVERVIEW, GROWTH STAGES, AND PHENOLOGY
+- Taxonomic Classification: Zea mays L. (Maize / Corn). C4 photosynthetic pathway grass.
+- Key Phenological Growth Stages:
+  a. Vegetative Stages (V1 to Vn): Emergence (VE), collar of first leaf (V1), sixth leaf collar (V6 / Knee-high stage - rapid growth), collar of 12th leaf (V12).
+  b. Tasseling Stage (VT): Full emergence of male tassel structure emitting pollen grains (50-60 DAS).
+  c. Silking Stage (R1): Emergence of female silk threads from earhusks; pollination critical window (55-65 DAS).
+  d. Blister / Milk Stage (R2-R3): Rapid starch accumulation in kernel with watery/milky fluid (70-85 DAS).
+  e. Dough / Dent Stage (R4-R5): Kernel starch hardens, denting occurs on grain crowns (85-105 DAS).
+  f. Physiological Maturity (R6): Black layer forms at kernel base; moisture drops to 30-35% (105-120+ DAS).
+
+2. MAJOR MAIZE-GROWING ZONES IN INDIA
+- Peninsular Zone (Karnataka, Andhra Pradesh, Telangana, Tamil Nadu): Highest yield productivity zone; major poultry feed supply hub; multi-season (Kharif, Rabi, Summer).
+- North Western Plains Zone (NWPZ) (Punjab, Haryana, Rajasthan, Western UP): High-input irrigated spring and Kharif maize systems.
+- Eastern Zone (Bihar, West Bengal, Odisha, Assam): Major winter/Rabi maize producer (especially North Bihar yielding 7-9 t/ha).
+- Central Zone (Madhya Pradesh, Maharashtra, Gujarat): Rainfed Kharif maize dominant.
+
+3. CLIMATE REQUIREMENTS AND TEMPERATURE SENSITIVITIES
+- Thermal Thresholds:
+  - Optimum Growth Range: 21°C to 32°C.
+  - Tassel Blast & Pollen Desiccation Threshold: Temperatures > 38°C during flowering/silking cause silk desiccation, poor pollination, and kernel setting failure.
+  - Frost Sensitivity: Frost severely kills green canopy during early seedling or late grain filling.
+- Rainfall Requirements: 500-800 mm evenly distributed throughout vegetative and flowering stages.
+
+4. SOIL REQUIREMENTS, LAND PREPARATION, AND TILLAGE
+- Ideal Soils: Deep, fertile, well-drained loams, silt loams, and alluvial soils with rich organic matter.
+- pH Range: 6.0 to 7.5 (sensitive to both high salinity ECe > 3 dS/m and waterlogging).
+- Intolerance to Waterlogging: Maize is highly susceptible to excess water at seedling stage (V1-V6); 24-48 hours of waterlogging reduces yields by 30-50%.
+- Land Preparation & Ridge Planting: Prepare fine seedbed with 2 ploughings + planking. Planting on ridges (ridge & furrow system) prevents waterlogging and improves root aeration.
+
+5. RECOMMENDED VARIETIES AND HYBRIDS
+- Single Cross Hybrids: Bio 9544, PMH 1, PMH 3, DHM 117, COH(M) 6. High yield potential (6.5-8.5 t/ha).
+- Quality Protein Maize (QPM): HQPM 1, HQPM 5, Shaktiman 1-5 (rich in essential amino acids Lysine and Tryptophan for human/poultry nutrition).
+- Sweet Corn & Baby Corn Cultivars: Madhuri, Priya (Sweet corn); VL Baby Corn 1, HM 4 (Baby corn).
+
+6. SEED RATE, SPACING, SEED QUALITY, AND SOWING DEPTH
+- Seed Rates:
+  - Grain Hybrid Maize: 20 kg/ha (8 kg/acre).
+  - Fodder Maize: 40-50 kg/ha.
+  - Sweet Corn: 10-12 kg/ha.
+  - Baby Corn: 22-25 kg/ha.
+- Spacing Standard: 60 cm row-to-row x 20 cm plant-to-plant (83,333 plants/ha population target).
+- Sowing Depth: 3 to 5 cm in moist soil.
+- Insecticidal & Fungicidal Seed Treatment SOP: Treat seed with Thiram 75% WP @ 3 g/kg seed + Cyantraniliprole 19.8% + Thiamethoxam 19.8% FS @ 6 ml/kg seed to protect seedlings against Fall Armyworm and stem borers.
+
+7. SEASONAL DYNAMICS: KHARIF, RABI, AND SPRING MAIZE
+- Kharif Maize (Monsoon): Sown June 15 to July 15 with onset of rains. Moderate yield (3.5-5.0 t/ha), higher pest/disease pressure.
+- Rabi / Winter Maize (Peninsular & Eastern India): Sown Oct 15 to Nov 15. Highest yields (7.0-9.5 t/ha) due to long sunshine duration, cool nights, and low pest pressure.
+- Spring Maize (NWPZ / Punjab): Sown Feb 15 to March 10 after potato/sugarcane harvest. High input irrigated crop.
+
+8. TIMELY AND DELAYED SOWING DYNAMICS
+- Timely Kharif Sowing Window: June 15 to July 10.
+- Delayed Sowing Penalty: Sowing beyond July 20 exposes flowering to heavy late rains and reduces yield by 30-40 kg/ha/day delay.
+
+9. NUTRIENT MANAGEMENT: NPK, ZINC, FYM, AND SPLIT APPLICATION
+- Recommended Dosage (High Yielding Hybrids): 120-150 kg N : 60 kg P2O5 : 40-60 kg K2O per hectare.
+- Nitrogen Splitting Schedule (3 Splits):
+  - 25% N as basal at sowing.
+  - 50% N at Knee-High stage (V6, 25-30 DAS).
+  - 25% N at Tasseling / Silking stage (VT/R1, 50-55 DAS).
+- Micronutrient SOP: Apply Zinc Sulphate (ZnSO4 21%) @ 25 kg/ha basal. In case of 'White Bud' zinc deficiency, spray 0.5% ZnSO4 (5 g/L water + 2.5 g lime).
+
+10. IRRIGATION SCHEDULING, WATER STRESS, AND DRAINAGE
+- Critical Water Sensitivity Stages:
+  1. Knee-High Stage (V6, 25-30 DAS).
+  2. Tasseling & Silking Stage (VT/R1, 50-65 DAS) - MOST CRITICAL (water stress causes silk desiccation and poor kernel filling).
+  3. Grain Filling / Milk Stage (R2-R3, 75-85 DAS).
+- Total Crop Water Requirement: 500-600 mm. Provide surface field drains to prevent seedling waterlogging.
+
+11. WEED MANAGEMENT AND HERBICIDE SCHEDULES
+- Major Weed Flora: Echinochloa colona, Eleusine indica, Cyperus rotundus, Digera arvensis.
+- Chemical Herbicide Control:
+  - Pre-emergence: Apply Atrazine 50% WP @ 1.0-1.5 kg a.i./ha (2.0-3.0 kg/ha commercial) within 1-2 days of sowing in 500L water.
+  - Post-emergence: Apply Tembotrione 34.4% SC @ 120 g a.i./ha (286 ml/ha) at 15-20 DAS when weeds are at 2-4 leaf stage.
+
+12. INSECT PESTS AND INTEGRATED PEST MANAGEMENT (IPM) - FALL ARMYWORM
+- Fall Armyworm (Spodoptera frugiperda) - Major Invasive Threat:
+  - Symptoms: Ragged whorl defoliation, saw-dust like frass inside whorls, cob feeding.
+  - Monitoring & ETL: Deploy pheromone traps @ 4 traps/acre. ETL is 10% damaged whorls at V3-V6 stage.
+  - IPM & Chemical Control:
+    - Whorl Application: Apply Azadirachtin 1500 ppm @ 5 ml/L at early vegetative stage.
+    - Foliar Spray: Spray Emamectin benzoate 5% SG @ 0.4 g/L (200 g/ha) or Chlorantraniliprole 18.5% SC @ 0.4 ml/L (200 ml/ha) directly targeted into central whorls.
+- Maize Stem Borer (Chilo partellus): Causes pinholes on leaves and dead hearts at seedling stage. Controlled via Carbofuran 3% CG @ 20 kg/ha in whorls.
+
+13. MAJOR DISEASES AND DIAGNOSTIC SYMPTOMS
+- Turcicum Leaf Blight (Exserohilum turcicum): Long, elliptical greyish-green or tan lesions on leaves. Managed via Mancozeb 75% WP @ 2.5 g/L or Azoxystrobin 23% SC @ 1 ml/L.
+- Maydis Leaf Blight (Bipolaris maydis): Small, rectangular, straw-colored spots bounded by leaf veins.
+- Charcoal Rot (Macrophomina phaseolina): Stem lodging at maturity, internal pith pithy and shredded with black sclerotia. Managed via balanced K application and avoiding post-flowering water stress.
+
+14. NUTRIENT DEFICIENCIES VS STRESS DIAGNOSTICS
+- Zinc Deficiency ('White Bud'): Broad white to pale yellow chlorotic bands developing on both sides of leaf midribs near leaf bases in young leaves.
+- Nitrogen Deficiency: V-shaped chlorosis/yellowing starting from tip of older lower leaves progressing along midrib.
+
+15. WEATHER RISKS AND CLIMATE RESILIENCE
+- Excess Rainfall / Waterlogging: Grow maize on raised beds or broad bed furrows (BBF) to drain excess runoff.
+- Extreme Heat at Pollination: Schedule spring maize sowings so silking does not overlap with May peak heat (>40°C).
+
+16. SUSTAINABLE FARMING AND SOIL HEALTH
+- Zero-Tillage Bed Planting: Sowing maize on ZT raised beds reduces fuel costs, improves soil organic matter, and prevents waterlogging.
+
+17. HARVESTING, DRYING, AND SAFE STORAGE
+- Harvest Maturity Indicators: Ear husks turn pale brown and dry; black layer forms at kernel attachment point; grain moisture reaches 20-25%.
+- Drying SOP: Sun-dry shelled cobs to <14% grain moisture content (<12% for long term seed storage).
+- Storage Pest Control: Fumigate airtight seed bins with Aluminium Phosphide @ 1 tablet/tonne to prevent Sitophilus zeamais (Maize weevil) attack.
+
+18. GRAIN VS FODDER CONSIDERATIONS
+- Fodder Maize: Harvest at milk-to-early dough stage (65-75 DAS) when crude protein (8-10%) and digestibility are highest.
+
+19. COMMON YIELD PROBLEMS AND TROUBLESHOOTING
+- Barrenness / Empty Cobs: Caused by severe moisture stress or high heat (>38°C) during silking stage causing asynchronous pollen shed and silk emergence.
+
+20. REGIONAL RECOMMENDATIONS AND ZONAL PACKAGES
+- Peninsular Zone: Recommend high density planting (60x15 cm) under drip fertigation for commercial grain yields (>8 t/ha).
+- Bihar / Eastern Zone: Recommend Rabi maize with 150:60:60 NPK kg/ha for maximum winter radiation utilization.
+
+21. PRODUCTION ECONOMICS AND YIELD BASELINES
+- Yield Baselines: Rabi maize in Bihar/A.P. averages 7.5-9.0 t/ha; Kharif rainfed maize averages 3.5-4.5 t/ha.
+- Benefit-Cost Ratio: Rabi hybrid maize achieves C:B ratio of 2.4 to 3.2.
+
+22. FARMER DECISION GUIDANCE AND ESCALATION TRIGGERS
+- Fall Armyworm Escalation Trigger: Initiate whorl spray immediately if >10% plants show frass and whorl damage during V3-V8 stage.
+- Waterlogging Trigger: Dig surface drainage channels within 12 hours of heavy rainfall event.

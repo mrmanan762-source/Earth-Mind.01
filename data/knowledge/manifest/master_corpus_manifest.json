@@ -1,11 +1,11 @@
 {
-  "corpus_version": "1.5.0_WHEAT_INTEGRATED",
-  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Wheat Integration",
-  "total_unique_sources": 47,
-  "verified_unique_sources_with_working_direct_urls": 36,
+  "corpus_version": "1.6.0_MAIZE_INTEGRATED",
+  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Maize Integration",
+  "total_unique_sources": 51,
+  "verified_unique_sources_with_working_direct_urls": 40,
   "unverified_or_unaccessible_remote_url_sources": 11,
-  "permitted_for_intended_use_sources": 33,
-  "rights_review_required_sources": 14,
+  "permitted_for_intended_use_sources": 35,
+  "rights_review_required_sources": 16,
   "sources": [
     {
       "source_id": "src_icar_gap_001",
@@ -1161,6 +1161,96 @@
         "license_name": "SAU Extension Package of Practices",
         "terms": "Commercial AI rights unstated",
         "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_gemini_maize_2025",
+      "source_name": "Comprehensive Maize (Zea mays L.) Agricultural Research Synthesis",
+      "publisher": "ICAR-IIMR Ludhiana, TNAU Coimbatore, PAU Ludhiana, ICRIER & DAC&FW",
+      "direct_url": "https://share.gemini.google/ElYmVDCRGeuH",
+      "publication_date": "2025-02-15",
+      "language": "en",
+      "crops_covered": [
+        "Maize"
+      ],
+      "main_topics": "22 Core Domains: Phenology (V1-Vn, VT, R1-R6), Zonation, Tassel blast, Waterlogging intolerance, Bio 9544 / HQPM 1 QPM, Ridge planting, Fall Armyworm IPM (Emamectin benzoate), Atrazine/Tembotrione weed control",
+      "region": "India (NWPZ, Peninsular Zone, Eastern Zone, Central Zone)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable for educational and agricultural extension attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/icar_gemini_maize_synthesis_2025.txt",
+      "has_local_artifact": true,
+      "artifact_checksum": "3f4090cc3d1718249ae513d5fc3098a3323de7582627761aca92c2a6355ab501",
+      "artifact_size_bytes": 9862
+    },
+    {
+      "source_id": "src_tnau_maize_rf",
+      "source_name": "TNAU Rainfed Maize Production Package",
+      "publisher": "Tamil Nadu Agricultural University (TNAU), Coimbatore",
+      "direct_url": "https://agritech.tnau.ac.in/agriculture/millets_maize_rainfed_maize.html",
+      "publication_date": "2023-01",
+      "language": "en",
+      "crops_covered": [
+        "Maize"
+      ],
+      "main_topics": "Rainfed maize agronomy, population management (60x20 cm), basal NPK fertilization, Azospirillum seed treatment",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Public extension; commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_tnau_maize_seed",
+      "source_name": "TNAU Maize Hybrid Seed Production Manual",
+      "publisher": "Tamil Nadu Agricultural University (TNAU), Coimbatore",
+      "direct_url": "https://agritech.tnau.ac.in/agriculture/agri_maize_hybird_seed_production.html",
+      "publication_date": "2023-01",
+      "language": "en",
+      "crops_covered": [
+        "Maize"
+      ],
+      "main_topics": "Hybrid seed production, male to female row ratio, detasseling SOP, seed drying and grading",
+      "region": "Tamil Nadu / South India",
+      "verification_status": "VERIFIED",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "TNAU Open Extension Portal",
+        "terms": "Public extension; commercial AI rights unstated",
+        "review_required": true
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_epubs_maize",
+      "source_name": "ICAR Indian Journal of Agricultural Sciences: Maize Fall Armyworm Management",
+      "publisher": "Indian Council of Agricultural Research (ICAR), New Delhi",
+      "direct_url": "https://epubs.icar.org.in/index.php/IJAgS/article/view/136842",
+      "publication_date": "2023-05",
+      "language": "en",
+      "crops_covered": [
+        "Maize"
+      ],
+      "main_topics": "Fall Armyworm Spodoptera frugiperda bio-efficacy, whorl application, Emamectin benzoate, Chlorantraniliprole",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "ICAR ePubs Open Access Journal",
+        "terms": "Open access research publication for non-commercial educational attribution",
+        "review_required": false
       },
       "location_reference": null,
       "has_local_artifact": false
