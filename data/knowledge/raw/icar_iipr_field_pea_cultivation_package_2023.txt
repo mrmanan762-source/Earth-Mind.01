@@ -1,0 +1,55 @@
+================================================================================
+TITLE: Package of Practices for Field Pea (Pisum sativum L. var. arvense) Production Systems in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR), GBPUAT & PAU
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Technical Bulletin No. IIPR-PEA-2023-07, Kanpur
+PUBLICATION DATE: 2023-10-05
+================================================================================
+
+1. TAXONOMIC CLASSIFICATION, BOTANY & DISTINCTION FROM GARDEN PEA
+Field pea (Pisum sativum L. var. arvense, 2n=14) is a cool-season grain legume cultivated as a dry pulse crop, animal forage, and green manure.
+- Botanical Differentiation: Field pea (var. arvense) is grown for dry mature seeds (split dal, flour), features colored flowers (purplish-violet/pinkish), anthocyanin spots in leaf axils, smooth or wrinkled dull brown/grey seeds, and high pod wall parchment. Garden pea (Pisum sativum L. var. hortense) is grown for fresh tender green pods, features white flowers, unpigmented green leaf axils, translucent seed coats, and low pod parchment.
+- Seed Composition: Dry field pea seeds contain 20.0–25.0% protein (baseline 22.5%), 62.1% carbohydrates, 1.8% lipids, and high seed coat phenolics (78.53 μg/g DW).
+
+2. CLIMATE, SOIL & REGIONAL VARIETIES
+- Climate & Thermal Sensitivity: Requires a cool climate with optimum growing temperatures of 10°C–25°C. Highly sensitive to frost during flowering/pod formation and heat stress (>27°C) during seed filling. Sowing window: mid-October to mid-November across Northern Plains (NWPZ, NEPZ, Central Zone).
+- Soil & Field Preparation: Thrives in well-drained loam to clay loam soils with pH 6.0–7.5. Extremely sensitive to soil waterlogging and salinity.
+- Improved Varieties (ICAR-IIPR / CVRC):
+  * IPFD 10-12 (Central Zone): Maturity 110–115 days, yield potential 22–25 q/ha, er1 gene powdery mildew resistant.
+  * IPFD 13-2 / Anant (UP): Maturity 106–138 days, yield 20–22 q/ha, dwarf habit.
+  * IPFD 16-3 (UP): Maturity 120–125 days, yield 27.3 q/ha.
+  * IPF 4-9 (NEPZ): Yield 20–25 q/ha, powdery mildew resistant.
+  * IPF 5-19 / Aman (NWPZ): Maturity 124–137 days, yield 22–23 q/ha, erect habit, powdery mildew resistant.
+  * IPF 16-13 / Harit (NEPZ): Maturity 115–120 days, green-seeded cultivar, yield 18–20 q/ha.
+  * HFP 1428 (NWPZ): Maturity 120–125 days, yield 25–26 q/ha.
+  * Pant Pea 347 (NWPZ/NEPZ): Yield 25–26 q/ha, powdery mildew resistant.
+
+3. SOWING, SEED TREATMENT & DENSITY MANAGEMENT
+- Seed Rate & Spacing:
+  * Tall/Spreading Cultivars: 70–80 kg/ha at 30–45 cm x 10 cm spacing.
+  * Dwarf/Semi-Dwarf Cultivars: 80–100 kg/ha at narrower spacing of 22.5–30 cm x 5–10 cm (target plant population ~75–80 plants/m²). Sowing depth: 3–5 cm.
+- Seed Treatment & Bio-Inoculation: Fungicidal seed dressing with Thiram (2.0 g/kg) + Carbendazim (1.0 g/kg seed) to prevent seed rot and wilt. Inoculate seeds with Rhizobium leguminosarum bv. viciae culture and Phosphate Solubilizing Bacteria (PSB) @ 20 g/kg seed. On acid soils (pH < 6.0), pellet inoculated seed with 1.5 kg finely ground lime (CaCO3, 300 mesh) per hectare equivalent to ensure bacterial survival.
+
+4. NUTRIENT & IRRIGATION MANAGEMENT
+- Basal Fertilizer Recommendation: Apply basal N:P2O5:K2O:S @ 20–30:40–50:20–30:20 kg/ha at sowing. Fixes 50–100 kg N/ha biologically through root nodulation.
+- Irrigation Scheduling: Requires 1–2 light irrigations (2–3 cm depth). Critical stages: pre-flowering/branching (~30–45 DAS) and pod formation/grain filling (~65–75 DAS). Avoid flooding; waterlogging causes root oxygen deprivation and complete nodule mortality within 24–48 hours.
+
+5. INTEGRATED PEST, DISEASE & WEED MANAGEMENT
+- Weed Control: Pre-emergence Pendimethalin 30% EC @ 0.75–1.0 kg a.i./ha (2.5–3.3 L/ha) within 3 days of sowing, or post-emergence Imazethapyr 10% SL @ 50–75 g a.i./ha or Quizalofop-ethyl 5% EC @ 50 g a.i./ha at 20–25 DAS.
+- Major Diseases:
+  * Powdery Mildew (Erysiphe pisi): White powdery dust on leaves, stems, and pods. ETL: 5% leaf area covered. Deploy er1-resistant varieties (IPFD 10-12, Aman, Harit, Pant Pea 347). Spray Wettable Sulphur 80 WP @ 3.0 g/L, Hexaconazole 5 EC @ 1.0 ml/L, or Dinocap 48 EC @ 1.0 ml/L.
+  * Fusarium Wilt (Fusarium oxysporum f. sp. pisi): Foliar wilting and root vascular browning. Managed via seed dressing with Thiram + Carbendazim and 3–4 year crop rotations.
+  * Pea Rust (Uromyces fabae): Brown pustules on leaves and stems. Spray Mancozeb 75 WP @ 2.0 g/L.
+- Major Insect Pests:
+  * Pea Leaf Miner (Chromatomyia horticola): Serpentine mines in leaf mesophyll. ETL: 10% mined leaves. Spray Dimethoate 30 EC @ 1.25 L/ha or Oxydemeton-methyl 25 EC @ 1.0 L/ha.
+  * Pea Aphid (Acyrthosiphon pisum): Sap sucking on terminals. ETL: 20 aphids/terminal. Spray Neem oil 5% or Dimethoate 30 EC @ 1.25 L/ha.
+  * Pod Borers (Etiella zinckenella / Helicoverpa armigera): Larval damage to seeds inside pods. ETL: 1–2 larvae/meter row or 5% pod damage. Spray Indoxacarb 14.5 SC @ 0.5 ml/L.
+
+6. HARVESTING, POST-HARVEST & ECONOMICS
+- Maturity & Threshing: Harvest when leaves dry and pods turn straw-yellow/brown (seed moisture 15–18%). Dry threshed pulse seeds to 10–12% moisture prior to storage.
+- Storage Protection: Store clean seeds in air-tight bins or double poly-lined bags. Mix dried neem leaf powder @ 1.0–2.0% w/w or apply neem oil @ 10 ml/kg seed to prevent Pulse Beetle (Callosobruchus maculatus) damage.
+- Macro-Economics & Yield Benchmark: Frontline Demonstrations (FLDs) record a mean pulse grain yield of 18.71 q/ha vs traditional farmer practices (14.97 q/ha), achieving a 25.0–31.7% yield advantage. Cultivation cost: ₹22,000–24,000/ha; Gross returns: ₹58,000–65,000/ha; Net profit: ₹35,868/ha; Benefit-Cost (B:C) ratio: 2.61 vs 2.41 local.
