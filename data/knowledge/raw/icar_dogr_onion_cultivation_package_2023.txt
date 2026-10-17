@@ -1,0 +1,45 @@
+================================================================================
+TITLE: Package of Practices for Onion Cultivation, Protection, and Post-Harvest Dynamics in India
+ORGANIZATION: ICAR-Directorate of Onion and Garlic Research (DOGR) & NHRDF
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-DOGR Technical Bulletin No. DOGR-ONION-2023-05, Rajgurunagar, Pune
+PUBLICATION DATE: 2023-08-15
+================================================================================
+
+1. CROP PHYSIOLOGY, GROWTH STAGES & PHOTOPERIOD RESPONSE
+Onion (Allium cepa L.) is a biennial herb grown commercially as an annual bulb crop. Phenological development progresses through seed germination, vegetative leaf establishment, bulb initiation, bulb expansion, and maturity.
+- Germination & Temperature: Optimal seed germination occurs between 12.5°C and 25.0°C. Vegetative leaf growth proceeds best between 12.8°C and 21.0°C.
+- Photoperiod Response: Indian commercial cultivars belong predominantly to short-day types requiring 11.0 to 12.5 hours of daily photoperiod and temperatures of 15.5°C–25.0°C to trigger bulb scale enlargement and photo-assimilate translocation.
+- Maturity & Neck Fall: At complete maturity, structural turgor in the leaf collar declines, causing natural neck collapse ("top-fall"). Exposure to high temperatures (>30°C) or long days during early seedling stages causes premature "buttoning" (undersized bulbs), whereas low temperatures (<10°C) during active vegetative growth trigger premature bolting.
+
+2. SEASONAL WINDOWS & REGIONAL VARIETIES
+India operates three main production cycles for onion:
+- Kharif Cycle (May-Nov): Sown May-June, transplanted July-August, harvested Oct-Nov. Yields 18-22 t/ha. Requires raised beds or broad-bed furrows (BBF) to prevent waterlogging. Recommended varieties: Bhima Super, Bhima Dark Red, Bhima Raj, Agrifound Dark Red.
+- Late Kharif Cycle (Aug-Feb): Sown Aug-Sept, transplanted Oct-Nov, harvested Jan-Feb. Favorable temperatures yield 40-50 t/ha. Recommended varieties: Bhima Shakti, Bhima Red, Bhima Shubhra.
+- Rabi Cycle (Oct-May): Sown Oct-Nov, transplanted Dec-Jan, harvested April-May. Accounts for 60% of national output. High TSS (>12-13°Brix) and 5-6 months storage stability. Recommended varieties: Bhima Kiran, Bhima Shakti, NHRDF Red-4, Agrifound Light Red, Agrifound White (dehydration, 13-14% TSS).
+
+3. SOIL, NURSERY & TRANSPLANTING MANAGEMENT
+- Soil & Land Preparation: Prefers well-drained friable sandy loam to clay loam soils rich in organic matter with pH 6.0–7.5. Plough field to fine tilth and prepare Broad-Bed Furrows (BBF) of 1.2 m width and 15 cm height with 30 cm channels.
+- Seed Rate & Nursery Management: Requires 8–10 kg seed per hectare for transplanting. Raise seedlings in nursery beds for 45–50 days until seedlings reach 15 cm height and 0.6–0.8 cm neck diameter. Seed treatment with Thiram or Captan @ 2.5 g/kg seed before sowing.
+- Transplanting Spacing: Transplant healthy seedlings at a spacing of 15 cm x 10 cm (plant density ~666,000 plants/ha) at shallow depth (2–3 cm).
+
+4. NUTRIENT & IRRIGATION MANAGEMENT
+- Fertilizer Recommendations by Zone:
+  * Zone 1 (Peninsular & Western India - MH, MP, GJ, KA, BR, CG, OD, RJ, TN): Basal FYM @ 15 t/ha + 75:40:40:40 kg/ha NPKS (Kharif) or 110:40:60:30 kg/ha NPKS (Rabi). Top dress Nitrogen in two equal splits at 30 and 45 days after transplanting (DAT).
+  * Zone 2 (Northern Plains - HR, UP, UK, PB): Basal FYM @ 20 t/ha + 100:50:50:50 kg/ha NPKS.
+- Foliar Nutrition: Spray 19:19:19 @ 5 g/L at 45–60 DAT and Multi-K (0:0:50) @ 5–10 g/L at 75–90 DAT to enhance bulb expansion.
+- Irrigation & Water Stress: Drip fertigation saves 35–40% water and increases marketable yield by 15–25%. Critical water stages: seedling establishment, bulb initiation, and rapid bulb development. Stop irrigation 10–15 days prior to harvest to allow neck drying.
+
+5. WEED, PEST & DISEASE MANAGEMENT
+- Weed Control: Pre-transplant spray of Oxyfluorfen 23.5% EC @ 1.0–1.5 ml/L or Pendimethalin 30% EC @ 3.5 ml/L within 3 days of transplanting, followed by one hand weeding at 30–45 DAT.
+- Onion Thrips (Thrips tabaci): Nymphs rasp leaves producing silvery patches and leaf curl. Economic Threshold Level (ETL) is 30 thrips/plant. Spray Carbosulfan 25% EC @ 2.0 ml/L or Fipronil 5% SC @ 1.0–1.5 ml/L with sticker (0.5 ml/L).
+- Fungal Diseases (Purple Blotch & Stemphylium Blight): Purple lesions with yellow halos on leaves and scapes. Spray Mancozeb 75% WP @ 2.5 g/L or Tebuconazole 25.9% EC @ 1.5 ml/L at first appearance.
+
+6. HARVESTING, CURING & STORAGE ARCHITECTURE
+- Harvest Maturity: Harvest when 50% of the crop canopy exhibits natural neck collapse ("top-fall").
+- Curing: Windrow field curing for 3–5 days in shade to dry leaf necks completely and seal bulb tissue against bacterial soft rot. Trim tops leaving 2.5 cm neck length.
+- Storage Structures: Store cured bulbs at 25–30°C and 65–70% relative humidity in naturally ventilated double-row storage structures (25 MT or 50 MT capacity) with bamboo/wire mesh bottoms.
