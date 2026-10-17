@@ -2,8 +2,8 @@
   "corpus_version": "1.0.0",
   "created_at": "2023-10-25T00:00:00Z",
   "description": "Real Agricultural Knowledge Corpus Foundation for EarthMind Prototype RAG System",
-  "total_sources": 11,
-  "total_artifacts": 11,
+  "total_sources": 12,
+  "total_artifacts": 12,
   "sources": [
     {
       "source_id": "src_icar_gap_001",
@@ -400,6 +400,43 @@
         "checksum": "59df3f36f30b08b2558baee472a49e3984045de086bf2d20e75ed67ace79ab65",
         "size_bytes": 6048,
         "version_info": "2023-07"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.92,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official technical manual from ICAR-Indian Institute of Pulses Research"
+      }
+    },
+    {
+      "source_id": "src_icar_iipr_chickpea_001",
+      "source_name": "ICAR-IIPR, ICAR-AICRP & ICAR-IARI Package of Practices for Chickpea Cultivation",
+      "organization": "ICAR-Indian Institute of Pulses Research (IIPR), ICAR-AICRP & ICAR-IARI",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Crop Knowledge",
+      "corpus_category": "Crop Knowledge",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-IIPR Technical Bulletin No. IIPR-CHICKPEA-2023-08, Kanpur",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution",
+        "review_required": false
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_icar_iipr_chickpea_001",
+        "location_reference": "data/knowledge/raw/icar_iipr_chickpea_cultivation_package_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "d975ca78d91b3df9998995e461c50b76327b25dbf89a80fff58c7ab1ec84549a",
+        "size_bytes": 5757,
+        "version_info": "2023-08"
       },
       "assessment": {
         "authority": 0.95,
