@@ -1,10 +1,10 @@
 {
-  "corpus_version": "1.6.0_MAIZE_INTEGRATED",
-  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Maize Integration",
-  "total_unique_sources": 51,
-  "verified_unique_sources_with_working_direct_urls": 40,
+  "corpus_version": "1.7.0_POTATO_INTEGRATED",
+  "description": "Master Real Agricultural Knowledge Corpus Manifest for EarthMind with Gemini Deep Research Potato Integration",
+  "total_unique_sources": 54,
+  "verified_unique_sources_with_working_direct_urls": 43,
   "unverified_or_unaccessible_remote_url_sources": 11,
-  "permitted_for_intended_use_sources": 35,
+  "permitted_for_intended_use_sources": 38,
   "rights_review_required_sources": 16,
   "sources": [
     {
@@ -1244,6 +1244,74 @@
         "Maize"
       ],
       "main_topics": "Fall Armyworm Spodoptera frugiperda bio-efficacy, whorl application, Emamectin benzoate, Chlorantraniliprole",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "ICAR ePubs Open Access Journal",
+        "terms": "Open access research publication for non-commercial educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_gemini_potato_2025",
+      "source_name": "Comprehensive Potato (Solanum tuberosum L.) Agricultural Research Synthesis",
+      "publisher": "ICAR-CPRI Shimla, TNAU Coimbatore, PAU Ludhiana, BAU Sabour & DAC&FW",
+      "direct_url": "https://share.gemini.google/pEQVFv1PMbgm",
+      "publication_date": "2025-02-15",
+      "language": "en",
+      "crops_covered": [
+        "Potato"
+      ],
+      "main_topics": "23 Core Domains: Tuber development stages, Agro-ecological zones, Tuberization night temp threshold (<20C), Kufri Ratan / Chipsona-1 cultivars, Seed Plot Technique, Earthing-up SOP, Late Blight (Cymoxanil+Mancozeb), Dehaulming & CIPC cold storage",
+      "region": "India (North Indian Plains, Peninsular Plateau, Northern & Southern Hills)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable for educational and agricultural extension attribution",
+        "review_required": false
+      },
+      "location_reference": "data/knowledge/raw/icar_gemini_potato_synthesis_2025.txt",
+      "has_local_artifact": true,
+      "artifact_checksum": "d0d43252f7c7ccd4839c32c19cdcd16cbbf99f6ff2b8fb7fb4af7198a66d87bd",
+      "artifact_size_bytes": 10242
+    },
+    {
+      "source_id": "src_vikaspedia_potato_pop",
+      "source_name": "Vikaspedia Potato Cultivation & Package of Practices Guide",
+      "publisher": "MeitY / C-DAC India Development Gateway",
+      "direct_url": "https://vikaspedia.in/agriculture/crop-production/package-of-practices/vegetables/potato-cultivation",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Potato"
+      ],
+      "main_topics": "Potato seed rate (2.5 t/ha), earthing-up, Metribuzin weed control, Late Blight fungicide schedule",
+      "region": "India (National)",
+      "verification_status": "VERIFIED",
+      "rights_status": "PERMITTED_FOR_INTENDED_USE",
+      "license_info": {
+        "license_name": "MeitY Open Public Knowledge Portal",
+        "terms": "Public educational attribution",
+        "review_required": false
+      },
+      "location_reference": null,
+      "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_epubs_potato",
+      "source_name": "ICAR Indian Journal of Agricultural Sciences: Potato Late Blight Management",
+      "publisher": "Indian Council of Agricultural Research (ICAR), New Delhi",
+      "direct_url": "https://epubs.icar.org.in/index.php/IJAgS/article/view/136842",
+      "publication_date": "2023-05",
+      "language": "en",
+      "crops_covered": [
+        "Potato"
+      ],
+      "main_topics": "Phytophthora infestans epidemiology, prophylactic Mancozeb spraying, Cymoxanil/Dimethomorph curative management",
       "region": "India (National)",
       "verification_status": "VERIFIED",
       "rights_status": "PERMITTED_FOR_INTENDED_USE",
