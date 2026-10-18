@@ -1,0 +1,51 @@
+================================================================================
+TITLE: Package of Practices for Pigeon Pea (Cajanus cajan [L.] Millsp.) Production Systems in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR), DAC&FW, TNAU, ANGRAU & PAU
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Technical Bulletin No. IIPR-PIGEONPEA-2023-09, Kanpur
+PUBLICATION DATE: 2023-11-01
+================================================================================
+
+1. CROP IDENTITY, MATURITY GROUPS & REGIONAL ADAPTATION
+Pigeon pea (Cajanus cajan [L.] Millsp., 2n=22), locally known as Arhar or Toor, is the second most vital pulse crop in India after chickpea.
+- Maturity Duration Groups:
+  * Extra-Early Duration (<120 days): Sown June–July, harvested October. Varieties: UPAS 120, Pusa Arhar 16. Allows double cropping with wheat.
+  * Early Duration (120–150 days): Sown June–July, harvested November. Varieties: AL 15, Pusa 992, ICPL 87 (Prabhat).
+  * Medium Duration (150–180 days): Sown June–July, harvested December–January. Primary commercial group in Central & Peninsular India. Varieties: Asha (ICPL 87119, wilt/SMD resistant), BDN 711, BSMR 736 (dual resistant).
+  * Long Duration (>180–300 days): Sown June–July, harvested March–April. Prevalent in Indo-Gangetic Plains (NEPZ). Varieties: IPA 203, IPA 15-2 (Sharada, 230–240 days, wilt/SMD resistant), Bahar.
+
+2. CLIMATE, SOIL & LAND PREPARATION
+- Climate Requirements: Warm humid climate with optimum temperatures of 20°C–35°C during vegetative stage. Optimum flowering temperature: 15°C–18°C. Sensitive to frost (<10°C) during flowering/pod formation and extreme heat (>40°C) causing pod desiccation.
+- Soil & Drainage: Thrives in well-drained loams, clay loams, and deep alluvial/black soils (pH 6.5–7.5). Deep taproot system provides high drought tolerance. Extremely sensitive to root waterlogging/anoxia and soil salinity.
+- Land Layout: Prepare Broad-Bed Furrow (BBF) or ridge-and-furrow system (ridges 60–75 cm apart) to prevent waterlogging and Phytophthora blight.
+
+3. SOWING, SEED DENSITY & INTERCROPPING SYSTEMS
+- Sowing Windows & Seed Rates:
+  * Kharif Season: Sown with onset of monsoon (June 15 to July 15). Seed rate: Extra-early (20–25 kg/ha); Early/Medium (12–15 kg/ha); Long-duration sole crop (10–12 kg/ha).
+  * Transplanting Technique: Raise seedlings in polybags for 3–4 weeks; transplant 1 seedling/hill @ 5–8 kg/ha seed requirement for late monsoon or wider spacing (150 cm x 60 cm).
+- Spacing: Extra-early (45 cm x 10–15 cm); Medium (60–75 cm x 15–20 cm); Long-duration (90–120 cm x 20–25 cm). Sowing depth: 4–5 cm.
+- Seed Treatment & Bio-Inoculation: Fungicidal seed treatment with Trichoderma viride @ 4 g/kg seed or Carbendazim (1 g) + Thiram (2 g/kg seed). Bio-inoculate with Bradyrhizobium (pigeonpea strain) + Phosphate Solubilizing Bacteria (PSB) @ 20 g/kg seed.
+- Intercropping Systems: Recommended rows ratios: Pigeonpea + Soybean (1:2), Pigeonpea + Maize (1:2), Pigeonpea + Groundnut (1:4 or 1:5), Pigeonpea + Sorghum (1:2).
+
+4. NUTRIENT & WATER MANAGEMENT
+- Basal Fertilizer Application: Basal N:P2O5:K2O:S @ 20–25:40–50:20:20 kg/ha at sowing. Fixes 100–200 kg N/ha biologically through root nodulation. Apply Zinc Sulfate @ 25 kg/ha in deficient soils.
+- Protective Irrigation: Primarily grown as rainfed crop. Critical water stages: flower initiation and pod filling stage. Apply 1–2 protective irrigations (3–5 cm depth) if monsoon dry spells coincide with flowering. Avoid water accumulation in fields.
+
+5. INTEGRATED PEST & DISEASE MANAGEMENT (IPDM)
+- Major Diseases:
+  * Fusarium Wilt (Fusarium udum): Soil-borne, brown vascular streaks in stem, plant wilting. Deploy resistant cultivars (BDN 711, BSMR 736, Asha, IPA 203, Sharada); seed treatment; crop rotation with tobacco or sorghum.
+  * Sterility Mosaic Disease (SMD) ("Green Plague"): Transmitted by eriophyid mite (Aceria cajani). Leaves turn pale green with mosaic patterns, bushy stunting, total flower sterility. Deploy dual resistant cultivars (BSMR 736, Asha, BDN 711); spray Fenazaquin 10% EC @ 2.0 ml/L or Wettable Sulphur @ 3.0 g/L to control mite vector.
+  * Phytophthora Blight (Phytophthora cajani): Triggered by waterlogging and high humidity (>80%); dark brown lesions on stem causing plant collapse. Ridge/BBF planting; drench with Metalaxyl 8% + Mancozeb 64% WP @ 2.5 g/L.
+- Major Insect Pests:
+  * Gram Pod Borer (Helicoverpa armigera): Larva bores into pods. ETL: 1–2 larvae/plant. Install pheromone traps @ 12/ha; bird perches @ 50/ha; spray HaNPV @ 250 LE/ha; chemical spray Chlorantraniliprole 18.5% SC @ 0.3 ml/L or Indoxacarb 14.5% SC @ 0.5 ml/L.
+  * Pod Fly (Melanagromyza obtusa): Maggots feed inside seeds without exterior damage holes; window pane symptoms on pod wall. Spray Dimethoate 30% EC @ 1.25 L/ha or Monocrotophos 36% SL @ 1.0 L/ha at 50% podding.
+  * Spotted Pod Borer (Maruca vitrata): Webbing of flowers and pods. Spray Chlorantraniliprole 18.5% SC @ 0.3 ml/L or Novaluron 10% EC @ 1.0 ml/L.
+
+6. HARVESTING, POST-HARVEST & ECONOMICS
+- Harvest Maturity: Harvest when 75–80% of pods turn dry and brown (seed moisture 15–18%). Cut plants near ground level, bundle, and sun-dry for 3–6 days.
+- Processing & Storage: Thresh using mechanical pulse thresher or Mini Dal Mill for dehusking. Dry pulse seeds to 10–12% moisture. Store in airtight structures; protect against Pulse Beetle (Callosobruchus spp.) using neem oil @ 10 ml/kg seed.
+- Economics & Yield Benchmark: Average yield 15.0–20.0 q/ha (potential 25–30 q/ha under transplanting/precision irrigation). Cultivation cost: ₹22,000–25,000/ha; Gross returns: ₹75,000–90,000/ha; Net profit: ₹45,000–60,000/ha; Benefit-Cost (B:C) ratio: 2.5–3.0.
