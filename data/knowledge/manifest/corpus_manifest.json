@@ -2,8 +2,8 @@
   "corpus_version": "1.0.0",
   "created_at": "2023-10-25T00:00:00Z",
   "description": "Real Agricultural Knowledge Corpus Foundation for EarthMind Prototype RAG System",
-  "total_sources": 9,
-  "total_artifacts": 9,
+  "total_sources": 10,
+  "total_artifacts": 10,
   "sources": [
     {
       "source_id": "src_icar_gap_001",
@@ -336,6 +336,43 @@
         "evidence_type": "EXTENSION_GUIDE",
         "review_status": "APPROVED",
         "assessment_basis": "Official manual from ICAR-Central Institute for Cotton Research (CICR) Nagpur"
+      }
+    },
+    {
+      "source_id": "src_icar_iipr_lentil_001",
+      "source_name": "ICAR-IIPR Package of Practices for Lentil Cultivation",
+      "organization": "ICAR-Indian Institute of Pulses Research (IIPR) & AICRP on MULLaRP",
+      "source_type": "RESEARCH_INSTITUTION_MANUAL",
+      "domain": "Crop Knowledge",
+      "corpus_category": "Crop Knowledge",
+      "region": "India",
+      "language": "en",
+      "origin": "ICAR-IIPR Technical Bulletin & MULLaRP Extension Guidelines 2023",
+      "acquisition_date": "2023-10-25T00:00:00Z",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "RIGHTS_REVIEW_REQUIRED: Reusable with proper source attribution for factual research summaries",
+        "review_required": true
+      },
+      "status": "ACTIVE",
+      "review_status": "APPROVED",
+      "artifact": {
+        "artifact_id": "art_icar_iipr_lentil_001",
+        "location_reference": "data/knowledge/raw/icar_iipr_lentil_cultivation_package_2023.txt",
+        "content_type": "text/plain",
+        "checksum": "71e9be67f501ce2ac4b966daadfbdf853cbf6338fc2810828cbadd1379f2718f",
+        "size_bytes": 5718,
+        "version_info": "2023-06"
+      },
+      "assessment": {
+        "authority": 0.95,
+        "reliability": 0.95,
+        "recency": 0.92,
+        "domain_relevance": 1.00,
+        "geographic_relevance": 1.00,
+        "evidence_type": "EXTENSION_GUIDE",
+        "review_status": "APPROVED",
+        "assessment_basis": "Official manual from ICAR-Indian Institute of Pulses Research (IIPR) Kanpur"
       }
     }
   ]

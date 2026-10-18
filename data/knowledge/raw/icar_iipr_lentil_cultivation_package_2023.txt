@@ -1,0 +1,43 @@
+================================================================================
+TITLE: Package of Practices for Lentil (Masoor) Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR) & AICRP on MULLaRP
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Technical Bulletin & MULLaRP Extension Guidelines 2023
+PUBLICATION DATE: 2023-06-25
+================================================================================
+
+1. CROP IDENTITY, AGRO-ECOLOGICAL ZONES & CROPPING SYSTEMS
+Lentil (Lens culinaris Medikus subsp. culinaris, Family: Fabaceae; 2n=14) is a premier Rabi cool-season pulse crop containing 22–26% seed protein.
+- Agro-Ecological Production Zones: Central Zone (Madhya Pradesh, Chhattisgarh, Maharashtra, Bundelkhand UP); North East Plain Zone NEPZ (Eastern UP, Bihar, West Bengal, Jharkhand, Assam); North West Plain Zone NWPZ (Punjab, Haryana, Western UP, Rajasthan); North East Hill NEH region.
+- Cropping Systems & Sowing Windows: Rabi sowing window is Oct 15 – Nov 15 for timely rainfed/irrigated crop; late sowing extends to Dec 5 in rice fallows. Zero-tillage direct seeding and Paira/Utera relay cropping (broadcasting into standing paddy 10–15 days before harvest) utilize residual moisture across Eastern India.
+- Soil Requirements: Thrives in well-drained alluvial loams, clay loams, and black soils (pH 6.0–7.5). Sensitive to severe waterlogging, high soil salinity, and extreme acidity (pH < 5.5).
+
+2. CULTIVARS, SEED RATE, SPACING & SEED PREPARATION
+- Varietal Classes & Varieties: Classified into Macrosperma (large-seeded >3.0 g/100 seeds, e.g., Kota Masoor-4, Pant L 11, IPL 329) and Microsperma (small-seeded <3.0 g/100 seeds, e.g., IPL 225, L 4717, PDL-1, Moitree WBL 58, DPL 62 Sheri).
+- Seed Rate & Spacing: Small-seeded varieties require 30–40 kg/ha; bold-seeded varieties require 50–60 kg/ha. Maintain 30 cm row spacing and 5 cm plant-to-plant spacing for timely sown crop; 22.5 cm row spacing for late sown or relay crop. Sowing depth: 3–4 cm.
+- Seed Hydro-priming & Seed Treatment: Pre-sowing seed hydro-priming in water for 4–6 hours improves field emergence under moisture stress. Treat seed with Carbendazim 50% WP @ 1 g + Thiram 75% WP @ 2 g per kg seed or Trichoderma asperellum @ 4–5 g/kg seed against wilt and root rot.
+- Bio-Inoculation: Inoculate with Rhizobium leguminosarum bv. viciae @ 200 g/10 kg seed + PSB (Phosphate Solubilizing Bacteria) @ 200 g/10 kg seed to fix 20–80 kg N/ha.
+
+3. SOIL-TEST NUTRIENT MANAGEMENT & WATER MANAGEMENT
+- Soil-Test Nutrient Management: Apply basal starter NPK @ 20:40:20 kg/ha. Nitrogen is kept low to encourage natural Rhizobium biological nodulation.
+- Secondary & Micronutrients: Apply elemental Sulphur @ 20 kg/ha via Single Super Phosphate (SSP) as P source. Apply Zinc sulphate @ 25 kg/ha in zinc-deficient soils.
+- Water Management: Primarily grown under rainfed conditions on residual soil profile moisture. Critical moisture stress stages are flowering (35–40 DAS) and pod formation (65–70 DAS). One or two supplemental irrigations via sprinkler boost yields by 30–40%. Surface field drainage is mandatory to prevent collar rot and root asphyxiation during excessive winter rains.
+
+4. INTEGRATED WEED MANAGEMENT
+- Weed Spectrum: Chenopodium album, Melilotus indica, Anagallis arvensis, Vicia sativa, Cyperus rotundus, and Phalaris minor.
+- Cultural Control: Perform one hand weeding or inter-cultivation at 25–30 DAS before canopy closure.
+- Chemical Control: Apply Pendimethalin 30% EC @ 1.0–1.25 kg a.i./ha in 500 L water or Pendimethalin 38.7% CS @ 0.75–1.0 kg a.i./ha within 48 hours of sowing as pre-emergence spray. Post-emergence weed control with Imazethapyr 10% SL @ 30–40 g a.i./ha or Quizalofop-p-ethyl 5% EC @ 37.5 g a.i./ha at 20–25 DAS.
+
+5. INTEGRATED PEST & DISEASE MANAGEMENT
+- Major Insect Pests: Black Aphid (Aphis craccivora, sap sucker and virus vector; ETL: 20 aphids per 10 cm apical shoot) and Pod borer (Helicoverpa armigera).
+- Major Diseases: Vascular Wilt (Fusarium oxysporum f. sp. lentis), Rust (Uromyces viciae-fabae), Stemphylium Blight (Stemphylium botryosum), Collar rot (Sclerotium rolfsii), and Root rot complex.
+- IPDM & Chemical Guidance: Install yellow sticky traps @ 25/ha for aphids. Spray Neem oil (1500 ppm) @ 5 ml/L at early aphid appearance; spray Thiamethoxam 25% WG @ 100 g/ha or Imidacloprid 17.8% SL @ 125 ml/ha for severe aphid infestation. Spray Indoxacarb 14.5% SC @ 300 ml/ha for pod borer. Plant resistant varieties (IPL 329, IPL 225, DPL 62) against wilt and rust. Spray Propiconazole 25% EC @ 1 ml/L or Mancozeb 75% WP @ 2 g/L at first rust or Stemphylium blight symptom appearance.
+
+6. HARVESTING, THRESHING, STORAGE & TROUBLESHOOTING
+- Harvest Maturity & Threshing: Harvest when 80–85% of pods turn golden brown/straw-colored and seeds rattle inside pods. Harvest in early morning hours to minimize pod shattering losses. Sun-dry harvested plants for 4–5 days before threshing at 10–12% seed moisture.
+- Storage Protection: Sun-dry threshed seed to 8–9% moisture content. Store in airtight HDPE bags treated with neem oil @ 3 ml/kg seed or inert activated clay @ 10 g/kg seed against Pulse Beetle (Callosobruchus chinensis).
+- Farmer Troubleshooting: Slow growth / yellowing: check root nodulation vs iron chlorosis vs N deficit; Sudden patch wilting: inspect roots for dark brown Fusarium vascular discoloration vs Sclerotium collar rot bark shredding; Flower drop: evaluate for heat stress (>30°C) or severe moisture deficit during flowering.
