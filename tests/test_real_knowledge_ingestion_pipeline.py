@@ -37,22 +37,22 @@ from modules.knowledge_base.assessment import SourceAssessment
 
 
 def test_r2_corpus_full_ingestion_execution():
-    """Verify executing full R2/R3 corpus ingestion processes all sources into canonical structures."""
+    """Verify executing full R2 corpus ingestion processes all 8 sources into canonical structures."""
     engine = CorpusIngestionEngine()
     summary = engine.ingest_corpus()
 
     assert isinstance(summary, IngestionPipelineSummary)
     assert summary.status == "COMPLETED"
-    assert summary.total_sources_discovered >= 8
-    assert summary.total_artifacts_discovered >= 8
-    assert summary.sources_registered >= 8
-    assert summary.artifacts_registered >= 8
-    assert summary.documents_created >= 8
-    assert summary.versions_created >= 8
+    assert summary.total_sources_discovered == 8
+    assert summary.total_artifacts_discovered == 8
+    assert summary.sources_registered == 8
+    assert summary.artifacts_registered == 8
+    assert summary.documents_created == 8
+    assert summary.versions_created == 8
     assert summary.sections_created >= 5
     assert summary.knowledge_units_created > 20
     assert summary.chunks_created > 20
-    assert summary.ready_for_embedding_count >= 8
+    assert summary.ready_for_embedding_count == 8
     assert summary.idempotent_skips == 0
     assert summary.failed_count == 0
 
@@ -65,8 +65,8 @@ def test_source_and_artifact_registration():
     sources = engine.get_ingested_sources()
     artifacts = engine.get_ingested_artifacts()
 
-    assert len(sources) >= 8
-    assert len(artifacts) >= 8
+    assert len(sources) == 8
+    assert len(artifacts) == 8
 
     for src in sources:
         assert isinstance(src, Source)
@@ -100,8 +100,8 @@ def test_document_and_version_creation():
     documents = engine.get_ingested_documents()
     versions = engine.get_ingested_versions()
 
-    assert len(documents) >= 8
-    assert len(versions) >= 8
+    assert len(documents) == 8
+    assert len(versions) == 8
 
     for doc in documents:
         assert isinstance(doc, Document)
@@ -194,7 +194,7 @@ def test_lifecycle_and_publication_eligibility_state():
     engine = CorpusIngestionEngine()
     summary = engine.ingest_corpus()
 
-    assert summary.ready_for_embedding_count >= 8
+    assert summary.ready_for_embedding_count == 8
 
     results = engine.get_processing_results()
     for res in results:
@@ -211,14 +211,14 @@ def test_duplicate_and_idempotency_handling():
     engine = CorpusIngestionEngine()
 
     summary1 = engine.ingest_corpus()
-    total_sources = summary1.sources_registered
-    assert summary1.ready_for_embedding_count == total_sources
+    assert summary1.sources_registered == 8
+    assert summary1.ready_for_embedding_count == 8
     assert summary1.idempotent_skips == 0
 
     summary2 = engine.ingest_corpus()
-    assert summary2.idempotent_skips == total_sources
-    assert len(engine.get_ingested_sources()) == total_sources
-    assert len(engine.get_ingested_documents()) == total_sources
+    assert summary2.idempotent_skips == 8
+    assert len(engine.get_ingested_sources()) == 8
+    assert len(engine.get_ingested_documents()) == 8
 
 
 def test_failure_handling_checksum_mismatch(tmp_path):
@@ -282,7 +282,7 @@ def test_five_earthmind_principles_adherence():
     assert summary.embedding_status == "NOT_IMPLEMENTED_IN_R3"
 
     # 4. Controlled Dependencies: Uses standard C.2 canonical domain models
-    assert len(engine.get_ingested_sources()) >= 8
+    assert len(engine.get_ingested_sources()) == 8
 
     # 5. Replaceability: Processors/chunkers passed via constructor remain fully replaceable
     assert engine.catalog_manager is not None
@@ -293,7 +293,7 @@ def test_ready_for_embedding_output_state_no_embeddings_or_retrieval():
     engine = CorpusIngestionEngine()
     summary = engine.ingest_corpus()
 
-    assert summary.ready_for_embedding_count >= 8
+    assert summary.ready_for_embedding_count == 8
     assert summary.embedding_status == "NOT_IMPLEMENTED_IN_R3"
     assert summary.qdrant_status == "NOT_IMPLEMENTED_IN_R3"
     assert summary.retrieval_status == "NOT_IMPLEMENTED_IN_R3"
