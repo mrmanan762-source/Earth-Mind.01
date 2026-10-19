@@ -1,0 +1,43 @@
+================================================================================
+TITLE: Package of Practices for Cotton Cultivation in Northern, Central and Southern India
+ORGANIZATION: ICAR-Central Institute for Cotton Research (CICR) & ICAR-AICRP on Cotton
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-CICR Technical Bulletin & AICRP Cotton Package of Practices 2023
+PUBLICATION DATE: 2023-06-15
+================================================================================
+
+1. CROP IDENTITY, SPECIES & REGIONAL AGRO-CLIMATIC ZONES
+Cotton (Gossypium spp., Family: Malvaceae) is India's principal commercial fiber crop, cultivated across three major agro-climatic zones:
+- Four Cultivated Species: Gossypium hirsutum (American cotton, >90% acreage, mostly Bt hybrids), G. arboreum (desi tree cotton, indigenous, drought-hardy), G. herbaceum (Asian desi cotton), and G. barbadense (extra-long staple / ELS cotton).
+- Northern Irrigated Zone (Punjab, Haryana, Rajasthan): Canal/tubewell irrigated (>95%); early sowing window (April 15 – May 15); Cotton-Wheat rotation. Major threat: Cotton Leaf Curl Virus (CLCuD) and Whitefly.
+- Central Rainfed Zone (Gujarat, Maharashtra, Madhya Pradesh, Odisha): Accounts for >60% national acreage; predominantly rainfed Vertisols (black clay soils); monsoon sowing window (June 10 – June 30) after receiving 70 mm cumulative rainfall over 3 days.
+- Southern Zone (Telangana, Andhra Pradesh, Karnataka, Tamil Nadu): Mixed rainfed/irrigated; Kharif sowing (June–July) and winter/summer cotton in Tamil Nadu.
+
+2. CULTIVARS, SOWING GEOMETRY, SEED RATE & HDPS
+- Cultivars & Adaptability: Dual-gene Bt hybrids (Cry1Ac + Cry2Ab, e.g., Bollgard II), non-Bt hirsutum varieties, short-duration compact cultivars (PKV 081, Suraj, CSH 3075, Phule Yamuna) for High Density Planting System (HDPS).
+- Sowing Geometry & Seed Rate: Conventional Bt hybrid spacing: 90 cm x 60 cm or 120 cm x 45 cm (seed rate: 1.5–2.25 kg/ha). HDPS geometry: 90 cm x 15 cm (74,074 plants/ha or ~29,629 plants/acre) or 90 cm x 30 cm (37,037 plants/ha); HDPS seed rate: 6.0–7.5 kg/ha.
+- Seed Treatment: Seed treatment with Carboxin 37.5% + Thiram 37.5% DS @ 3.5 g/kg seed or Trichoderma viride @ 5–10 g/kg seed against soil-borne damping-off and root rot. Bio-inoculation with Azotobacter + PSB culture @ 25 g/kg seed.
+
+3. SOIL-TEST NUTRIENT & WATER MANAGEMENT
+- Soil-Test Nutrient Management: Rainfed Vertisols NPK schedule: 60:30:30 kg/ha; Irrigated NPK schedule: 100:50:50 kg/ha; HDPS NPK schedule: 90:45:45 kg/ha (36:18:18 kg/acre). Apply full P & K and 25% N as basal at sowing; top-dress remaining N in two equal splits at squaring (35–45 DAS) and peak flowering (60–75 DAS).
+- Micronutrients & Foliar Spray: Apply Zinc sulphate @ 25 kg/ha and Magnesium sulphate @ 20 kg/ha in deficient soils. Foliar spray of 1% MgSO4 + 1% Urea at 60 and 80 DAS remedies red leaf disease; spray 13:00:45 (Multi-K) @ 1–2% at 100–110 DAS during late boll filling.
+- Water Management: Critical moisture stages are squaring, flowering, and boll development. In rainfed black soils, adopt ridge-and-furrow or Broad Bed Furrow (BBF) land configuration for in-situ moisture conservation and surface drainage.
+
+4. INTEGRATED WEED MANAGEMENT
+- Weed Spectrum: Echinochloa crus-galli, Cyperus rotundus, Digitaria sanguinalis, Trianthema portulacastrum, Amaranthus viridis, and Commelina benghalensis.
+- Cultural & Mechanical Control: Perform two manual weedings/inter-cultivations at 20–25 DAS and 45–50 DAS.
+- Chemical Weed Control: Pre-emergence spray of Pendimethalin 30% EC @ 1.0–1.25 kg a.i./ha in 500 L water within 48 hours of sowing. Post-emergence spray of Pyrithiobac-sodium 10% EC @ 62.5 g a.i./ha or Quizalofop-p-ethyl 5% EC @ 37.5 g a.i./ha at 20–25 DAS for broadleaf and grassy weeds.
+
+5. INTEGRATED PEST & DISEASE MANAGEMENT
+- Major Insect Pests: Pink Bollworm (Pectinophora gossypiella), Jassid / Leafhopper (Amrasca biguttula biguttula), Whitefly (Bemisia tabaci), Thrips (Thrips tabaci), Stem Weevil (Pempherulus affinis), and Spodoptera litura.
+- Major Diseases: Bacterial Leaf Blight (Xanthomonas citri pv. malvacearum), Target Spot (Corynespora cassiicola / Alternaria spp.), Root Rot (Rhizoctonia solani), Fusarium Wilt, and Boll Rot complex.
+- IPDM & Chemical Guidance: Monitor Pink Bollworm using pheromone traps @ 2 per acre; action threshold is >8 moths/trap/night for 3 consecutive nights or >10% rosette flowers/green bolls infested. Install PB-Rope L @ 100–200 ropes/acre at 60–90 DAS for mating disruption. Deploy yellow sticky traps @ 10/acre for whiteflies. Spray Neem oil (1500 ppm) @ 5 ml/L at 50–60 DAS; spray Chlorantraniliprole 18.5% SC @ 150 ml/ha or Flubendiamide 39.35% SC @ 150 ml/ha for caterpillars; spray Diafenthiuron 50% WP @ 600 g/ha for whiteflies; spray Copper Oxychloride 50% WP @ 1.25 kg/ha + Streptocycline @ 50 g/ha for Bacterial Blight.
+
+6. BT REFUGE, HARVESTING, FIBRE QUALITY & RESIDUE MANAGEMENT
+- Bt Cotton & Refuge Policy: Dual-gene Bt cotton (Bollgard II) provides Cry1Ac + Cry2Ab toxin expression. Compliance with Refuge-in-Bag (RIB) policy (5% non-Bt seed mixed with 95% Bt seed) is mandatory to delay PBW resistance development.
+- Harvesting & Clean Picking: Perform clean picking of fully opened, dry bolls during morning hours (after dew dries) when lint moisture is below 8%. Avoid picking immature, pest-damaged, or wet bolls to preserve fibre length, strength, and micronaire.
+- Storage & Residue Shredding: Store picked seed cotton in dry, well-ventilated godowns away from moisture. Post-harvest stalk shredding using tractor-operated slasher/shredder or deep ploughing is mandatory to destroy over-wintering Pink Bollworm larvae in leftover diapause bolls.
