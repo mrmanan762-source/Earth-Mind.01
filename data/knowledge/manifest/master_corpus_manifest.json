@@ -1,11 +1,11 @@
 {
   "corpus_version": "1.3.0_RIGOROUS",
   "description": "Strictly Verified Master Real Agricultural Knowledge Corpus Manifest for EarthMind",
-  "total_unique_sources": 37,
+  "total_unique_sources": 39,
   "verified_unique_sources_with_working_direct_urls": 26,
-  "unverified_or_unaccessible_remote_url_sources": 11,
+  "unverified_or_unaccessible_remote_url_sources": 13,
   "permitted_for_intended_use_sources": 29,
-  "rights_review_required_sources": 8,
+  "rights_review_required_sources": 10,
   "language_distribution_unique_sources": {
     "en": 24,
     "ta": 5,
@@ -967,6 +967,50 @@
       },
       "location_reference": null,
       "has_local_artifact": false
+    },
+    {
+      "source_id": "src_icar_cicr_cotton_001",
+      "source_name": "ICAR-CICR Package of Practices for Cotton Cultivation",
+      "publisher": "ICAR-Central Institute for Cotton Research (CICR) & ICAR-AICRP on Cotton",
+      "direct_url": "https://cicr.icar.gov.in/technical-bulletins/cotton-package-2023.pdf",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Cotton"
+      ],
+      "main_topics": "HDPS geometry, Pink bollworm PB-Rope L, Bt refuge-in-bag, Bacterial blight",
+      "region": "India (Northern, Central & Southern Cotton Zones)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution for factual research summaries",
+        "review_required": true
+      },
+      "location_reference": "data/knowledge/raw/icar_cicr_cotton_cultivation_package_2023.txt",
+      "has_local_artifact": true
+    },
+    {
+      "source_id": "src_icar_iipr_lentil_001",
+      "source_name": "ICAR-IIPR Package of Practices for Lentil Cultivation",
+      "publisher": "ICAR-Indian Institute of Pulses Research (IIPR) & AICRP on MULLaRP",
+      "direct_url": "https://iipr.icar.gov.in/bulletins/lentil-cultivation-package-2023.pdf",
+      "publication_date": "2023-06",
+      "language": "en",
+      "crops_covered": [
+        "Lentil"
+      ],
+      "main_topics": "Paira/Utera relay cropping, seed hydro-priming, dual inoculation, Stemphylium blight",
+      "region": "India (Indo-Gangetic & Central Pulse Zones)",
+      "verification_status": "UNACCESSIBLE_DIRECT_URL",
+      "rights_status": "RIGHTS_REVIEW_REQUIRED",
+      "license_info": {
+        "license_name": "Public Sector Information / Open Government Knowledge",
+        "terms": "Reusable with proper source attribution for factual research summaries",
+        "review_required": true
+      },
+      "location_reference": "data/knowledge/raw/icar_iipr_lentil_cultivation_package_2023.txt",
+      "has_local_artifact": true
     }
   ]
 }
