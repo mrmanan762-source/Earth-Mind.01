@@ -45,6 +45,30 @@ class EmbeddingConfig(BaseModel):
     license: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_LICENSE", "Apache-2.0"), description="Embedding model license")
     provenance: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_EMBEDDING_PROVENANCE", "EarthMind Prototype Vector Standard"), description="Model provenance information")
 
+    @classmethod
+    def bge_m3(
+        cls,
+        provider: str = "self_hosted",
+        device: str = "cpu",
+        allow_download: bool = False,
+        execution_mode: str = "self_hosted",
+    ) -> "EmbeddingConfig":
+        """Factory method returning a standard 1024-dimensional BAAI/bge-m3 EmbeddingConfig profile."""
+        return cls(
+            provider=provider,
+            model="BAAI/bge-m3",
+            model_version="1.0.0",
+            dimension=1024,
+            batch_size=32,
+            max_length=8192,
+            device=device,
+            normalize=True,
+            allow_download=allow_download,
+            execution_mode=execution_mode,
+            license="MIT",
+            provenance="https://huggingface.co/BAAI/bge-m3",
+        )
+
 
 class QdrantConfig(BaseModel):
     """Configuration settings for Qdrant Index Adapter."""

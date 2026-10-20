@@ -54,6 +54,10 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
     DEFAULT_LICENSE = "Apache-2.0"
     DEFAULT_PROVENANCE = "https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
+    BGE_M3_MODEL_NAME = "BAAI/bge-m3"
+    BGE_M3_DIMENSION = 1024
+    BGE_M3_MAX_LENGTH = 8192
+
     def __init__(
         self,
         provider_name: str = "self_hosted",
@@ -73,10 +77,18 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
         self.provider_name = provider_name
         self.model_name_or_path = model_name_or_path
         self.model_version = model_version
-        self.dimension = dimension
         self.license = license
         self.provenance = provenance
-        self.device = device
+
+        # Auto-resolve BGE-M3 model specs if default parameter values were passed
+        if "bge-m3" in model_name_or_path.lower():
+            if dimension == self.DEFAULT_DIMENSION:
+                dimension = self.BGE_M3_DIMENSION
+            if max_length == 512:
+                max_length = self.BGE_M3_MAX_LENGTH
+
+        self.dimension = dimension
+        self.device = self._resolve_safe_device(device)
         self.batch_size = max(1, batch_size)
         self.max_length = max(1, max_length)
         self.normalize_embeddings = normalize_embeddings
@@ -86,6 +98,27 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
 
         self._model: Optional[Any] = None
         self._model_loaded: bool = False
+
+    def _resolve_safe_device(self, requested_device: str) -> str:
+        """Safely resolves requested execution device (cpu, cuda, mps, auto) based on availability."""
+        req = (requested_device or "cpu").lower().strip()
+        if not SENTENCE_TRANSFORMERS_AVAILABLE:
+            return "cpu"
+        try:
+            import torch
+            if req == "cuda" and not torch.cuda.is_available():
+                return "cpu"
+            if req == "mps" and not (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()):
+                return "cpu"
+            if req == "auto":
+                if torch.cuda.is_available():
+                    return "cuda"
+                if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+                    return "mps"
+                return "cpu"
+        except ImportError:
+            return "cpu"
+        return req
 
     def is_available(self) -> bool:
         return self._available
@@ -114,6 +147,7 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
                 "execution_mode": self.execution_mode,
                 "supports_multimodal": False,
                 "model_loaded": self._model_loaded,
+                "is_fallback_vector": not self._model_loaded,
             },
         )
 
