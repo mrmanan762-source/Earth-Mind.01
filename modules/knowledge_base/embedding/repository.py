@@ -51,13 +51,23 @@ class IEmbeddingRepository(ABC):
         ...
 
     @abstractmethod
-    def has_active_chunk_embedding(self, chunk_id: str) -> bool:
-        """Returns True if an active EmbeddingRecord already exists for chunk_id."""
+    def has_active_chunk_embedding(
+        self,
+        chunk_id: str,
+        model_name: Optional[str] = None,
+        model_version: Optional[str] = None,
+    ) -> bool:
+        """Returns True if an active EmbeddingRecord already exists for chunk_id (optionally matching model)."""
         ...
 
     @abstractmethod
-    def has_active_unit_embedding(self, knowledge_unit_id: str) -> bool:
-        """Returns True if an active EmbeddingRecord already exists for knowledge_unit_id."""
+    def has_active_unit_embedding(
+        self,
+        knowledge_unit_id: str,
+        model_name: Optional[str] = None,
+        model_version: Optional[str] = None,
+    ) -> bool:
+        """Returns True if an active EmbeddingRecord already exists for knowledge_unit_id (optionally matching model)."""
         ...
 
     @abstractmethod
@@ -133,15 +143,41 @@ class CanonicalEmbeddingRepository(IEmbeddingRepository):
             ids = self._version_index.get(version_id, [])
             return [self._records[eid] for eid in ids if eid in self._records]
 
-    def has_active_chunk_embedding(self, chunk_id: str) -> bool:
+    def has_active_chunk_embedding(
+        self,
+        chunk_id: str,
+        model_name: Optional[str] = None,
+        model_version: Optional[str] = None,
+    ) -> bool:
         with self._lock:
             recs = self.get_by_chunk_id(chunk_id)
-            return any(r.status == "ACTIVE" for r in recs)
+            for r in recs:
+                if r.status != "ACTIVE":
+                    continue
+                if model_name and r.model != model_name:
+                    continue
+                if model_version and r.model_version != model_version:
+                    continue
+                return True
+            return False
 
-    def has_active_unit_embedding(self, knowledge_unit_id: str) -> bool:
+    def has_active_unit_embedding(
+        self,
+        knowledge_unit_id: str,
+        model_name: Optional[str] = None,
+        model_version: Optional[str] = None,
+    ) -> bool:
         with self._lock:
             recs = self.get_by_unit_id(knowledge_unit_id)
-            return any(r.status == "ACTIVE" for r in recs)
+            for r in recs:
+                if r.status != "ACTIVE":
+                    continue
+                if model_name and r.model != model_name:
+                    continue
+                if model_version and r.model_version != model_version:
+                    continue
+                return True
+            return False
 
     def list_active(self) -> List[EmbeddingRecord]:
         with self._lock:

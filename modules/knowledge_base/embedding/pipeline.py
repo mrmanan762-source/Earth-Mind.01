@@ -106,15 +106,27 @@ class R4EmbeddingPipeline:
         raw_chunks = chunks or []
         raw_units = knowledge_units or []
 
-        # Filter out items that already have active embeddings if skip_existing is enabled
+        prov_meta = self.engine.adapter.get_provider_metadata()
+        model_meta = self.engine.adapter.get_model_metadata()
+        active_dimension = self.engine.adapter.get_dimension()
+
+        # Filter out items that already have active embeddings from target model if skip_existing is enabled
         if skip_existing:
             chunks = [
                 chk for chk in raw_chunks
-                if not self.repository.has_active_chunk_embedding(chk.chunk_id)
+                if not self.repository.has_active_chunk_embedding(
+                    chk.chunk_id,
+                    model_name=model_meta.model_name,
+                    model_version=model_meta.model_version,
+                )
             ]
             knowledge_units = [
                 ku for ku in raw_units
-                if not self.repository.has_active_unit_embedding(ku.knowledge_unit_id)
+                if not self.repository.has_active_unit_embedding(
+                    ku.knowledge_unit_id,
+                    model_name=model_meta.model_name,
+                    model_version=model_meta.model_version,
+                )
             ]
         else:
             chunks = raw_chunks
