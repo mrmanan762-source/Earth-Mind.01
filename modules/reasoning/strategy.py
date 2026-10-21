@@ -152,6 +152,10 @@ class ReasoningStrategyController(IReasoningStrategy):
                 "iteration": current_iteration,
             })
 
+            # Ensure extracted evidence items from prepared_context are populated on input_data
+            if evidence_items:
+                input_data.evidence_items = evidence_items
+
             # If capability is attached, invoke reasoning capability
             if self._capability:
                 cap_res = self._capability.reason(input_data)

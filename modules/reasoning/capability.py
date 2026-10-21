@@ -60,14 +60,69 @@ class ModelLayerReasoningCapability(IReasoningCapability):
             logger.error(f"Reasoning model invocation failed: {str(e)}")
             raise ReasoningCapabilityUnavailableError(self.capability_name, str(e)) from e
 
-        # Format model response into structured findings
-        response_text = str(gen_response.response or "No reasoning content generated")
+        # Format model response into structured findings with grounding and source attribution
+        raw_response = str(gen_response.response or "No reasoning content generated")
         evidence_ids = [e.evidence_id for e in input_data.evidence_items]
+
+        # Extract unique source IDs from evidence
+        sources = sorted(list({e.source_id for e in input_data.evidence_items if e.source_id}))
+        source_citation = f" [Sources: {', '.join(sources)}]" if sources else ""
+
+        # Evaluate dynamic relevance between task query tokens and retrieved evidence content
+        stop_words = {"what", "is", "the", "and", "who", "for", "of", "in", "to", "how", "a", "can", "before", "or", "under", "with", "on", "at", "by"}
+        task_tokens = [w.strip("?,.!").lower() for w in input_data.task.split() if w.strip("?,.!").lower() not in stop_words and len(w) > 2]
+
+        corpus_text_combined = ""
+        if input_data.evidence_items:
+            for e in input_data.evidence_items:
+                if isinstance(e.content, dict):
+                    txt = e.content.get("text") or e.content.get("content") or str(e.content)
+                else:
+                    txt = str(e.content)
+                corpus_text_combined += " " + txt.lower()
+
+        matching_tokens = [t for t in task_tokens if t in corpus_text_combined] if corpus_text_combined else []
+        is_relevant = len(matching_tokens) > 0 if task_tokens else True
+
+        if not raw_response.startswith("Processed task:"):
+            # Model generated custom non-generic content directly
+            response_text = f"{raw_response}{source_citation}"
+            confidence = gen_response.confidence_level if gen_response.confidence_level is not None else 0.8
+        elif not is_relevant and input_data.evidence_items:
+            response_text = (
+                f"No relevant agricultural evidence found in the frozen corpus for the query: '{input_data.task}'. "
+                f"The EarthMind Knowledge Base contains verified agricultural evidence and does not fabricate answers for out-of-scope non-agricultural topics."
+            )
+            confidence = 0.0
+            evidence_ids = []
+        elif input_data.evidence_items:
+            # Construct grounded synthesis from top retrieved evidence items
+            evidence_snippets = []
+            for e in input_data.evidence_items[:3]:
+                txt = ""
+                if isinstance(e.content, dict):
+                    txt = e.content.get("text") or e.content.get("content") or str(e.content)
+                else:
+                    txt = str(e.content)
+                clean_snippet = " ".join(txt.split())
+                if clean_snippet:
+                    evidence_snippets.append(f"• ({e.source_id}): {clean_snippet[:220]}...")
+
+            snippets_text = "\n".join(evidence_snippets)
+            response_text = (
+                f"Based on retrieved corpus evidence for '{input_data.task}':\n"
+                f"{snippets_text}\n"
+                f"Supporting Sources: {', '.join(sources)}"
+            )
+            confidence = gen_response.confidence_level if gen_response.confidence_level is not None else 0.85
+        else:
+            response_text = f"{raw_response}{source_citation}"
+            confidence = gen_response.confidence_level if gen_response.confidence_level is not None else 0.8
 
         finding = ReasoningFinding(
             finding_id=f"finding_{input_data.request_id}_1",
             statement=response_text,
-            confidence_score=gen_response.confidence_level if gen_response.confidence_level is not None else 0.8,
+            confidence_score=confidence,
             evidence_ids=evidence_ids,
             trace_id=input_data.trace_id,
             metadata={"model_version": gen_response.model_version}
