@@ -446,6 +446,46 @@ def test_25_r4_readiness_for_indexing_contract():
     assert summary.b2_compatibility_status == "B2_CONTEXT_FIELDS_VERIFIED"
 
 
+# BGE-M3 Preparation Tests (Step 1 Environment & Configuration Preparation)
+def test_bge_m3_config_profile():
+    """Validates EmbeddingConfig.bge_m3() factory method."""
+    cfg = EmbeddingConfig.bge_m3(device="cpu", allow_download=False)
+    assert cfg.model == "BAAI/bge-m3"
+    assert cfg.dimension == 1024
+    assert cfg.max_length == 8192
+    assert cfg.license == "MIT"
+    assert cfg.provenance == "https://huggingface.co/BAAI/bge-m3"
+
+
+def test_bge_m3_auto_dimension_and_metadata_resolution():
+    """Validates SelfHostedEmbeddingProvider auto-dimension, max_length, and fallback metadata when initialized with BAAI/bge-m3."""
+    provider = SelfHostedEmbeddingProvider(
+        model_name_or_path="BAAI/bge-m3",
+        allow_download=False,
+    )
+    assert provider.get_dimension() == 1024
+    assert provider.max_length == 8192
+
+    meta = provider.get_provider_metadata()
+    assert meta.extra["is_fallback_vector"] is True
+    assert meta.extra["model_loaded"] is False
+
+    req = EmbeddingRequest(texts=["Rice crop nitrogen fertilizer dosage schedule."])
+    resp = provider.embed(req)
+    assert resp.dimension == 1024
+    assert len(resp.embeddings[0]) == 1024
+
+
+def test_bge_m3_safe_device_resolution():
+    """Validates that requested device falls back safely to 'cpu' when PyTorch is not available."""
+    provider = SelfHostedEmbeddingProvider(
+        model_name_or_path="BAAI/bge-m3",
+        device="cuda",
+    )
+    # Since torch/cuda is unavailable in test sandbox, device resolves safely to cpu
+    assert provider.device == "cpu"
+
+
 # Real Model Execution Path Verification (if environment permits)
 @pytest.mark.skipif(
     not SENTENCE_TRANSFORMERS_AVAILABLE,
