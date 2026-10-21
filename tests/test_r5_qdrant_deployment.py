@@ -246,3 +246,25 @@ def test_qdrant_sdk_non_leakage():
     for mod in [engine_mod, record_mod, strat_mod]:
         src = inspect.getsource(mod)
         assert "qdrant_client" not in src, f"qdrant_client SDK leaked in module {mod.__name__}"
+
+
+def test_r5_qdrant_indexing_execution():
+    """Verify full R5 BGE-M3 1024D Qdrant indexing pipeline and retrieval smoke test."""
+    from modules.knowledge_base.integration.r5_execution import R5QdrantIndexingEngine
+
+    indexing_engine = R5QdrantIndexingEngine(qdrant_location=":memory:")
+    result = indexing_engine.execute_pipeline()
+
+    assert result.status == "COMPLETED"
+    assert result.total_canonical_chunks == 53
+    assert result.total_canonical_units == 53
+    assert result.total_embedding_records == 106
+    assert result.embedding_dimension == 1024
+    assert result.is_fallback_vector is False
+    assert result.model_name == "BAAI/bge-m3"
+    assert result.total_indexed_chunks == 53
+    assert result.failed_records == 0
+    assert result.collection_name == "earthmind_knowledge"
+    assert result.distance_metric == "COSINE"
+    assert len(result.smoke_test_hits) == 5
+    assert all(hit["score"] > 0.0 for hit in result.smoke_test_hits)
