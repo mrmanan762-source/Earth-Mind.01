@@ -99,11 +99,26 @@ class R4EmbeddingPipeline:
         chunks: Optional[List[Chunk]] = None,
         knowledge_units: Optional[List[KnowledgeUnit]] = None,
         include_sparse: bool = False,
+        skip_existing: bool = False,
     ) -> R4PipelineSummary:
         """Processes and embeds explicit lists of Chunk and/or KnowledgeUnit canonical objects incrementally."""
         start_time = time.time()
-        chunks = chunks or []
-        knowledge_units = knowledge_units or []
+        raw_chunks = chunks or []
+        raw_units = knowledge_units or []
+
+        # Filter out items that already have active embeddings if skip_existing is enabled
+        if skip_existing:
+            chunks = [
+                chk for chk in raw_chunks
+                if not self.repository.has_active_chunk_embedding(chk.chunk_id)
+            ]
+            knowledge_units = [
+                ku for ku in raw_units
+                if not self.repository.has_active_unit_embedding(ku.knowledge_unit_id)
+            ]
+        else:
+            chunks = raw_chunks
+            knowledge_units = raw_units
 
         prov_meta = self.engine.adapter.get_provider_metadata()
         model_meta = self.engine.adapter.get_model_metadata()

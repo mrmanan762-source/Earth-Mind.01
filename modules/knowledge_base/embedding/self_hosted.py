@@ -256,14 +256,24 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
         sparse_vectors: Optional[List[SparseVector]] = [] if request.include_sparse else None
 
         if self._model_loaded and self._model is not None:
-            # Real model inference path
+            # Real model inference path with optimized PyTorch CPU settings
             try:
-                raw_outputs = self._model.encode(
-                    request.texts,
-                    batch_size=self.batch_size,
-                    normalize_embeddings=self.normalize_embeddings,
-                    show_progress_bar=False,
-                )
+                import torch
+                # Allocate optimal CPU threads if not explicitly constrained
+                if self.device == "cpu" and hasattr(torch, "set_num_threads"):
+                    num_threads = min(8, max(1, torch.get_num_threads()))
+                    torch.set_num_threads(num_threads)
+
+                # Use inference_mode / no_grad to disable autograd overhead
+                inference_ctx = getattr(torch, "inference_mode", torch.no_grad)
+                with inference_ctx():
+                    raw_outputs = self._model.encode(
+                        request.texts,
+                        batch_size=self.batch_size,
+                        normalize_embeddings=self.normalize_embeddings,
+                        show_progress_bar=False,
+                    )
+
                 for idx, vec in enumerate(raw_outputs):
                     float_vec = [float(v) for v in vec]
                     self._validate_vector_numeric_integrity(float_vec, idx)

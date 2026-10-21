@@ -51,6 +51,16 @@ class IEmbeddingRepository(ABC):
         ...
 
     @abstractmethod
+    def has_active_chunk_embedding(self, chunk_id: str) -> bool:
+        """Returns True if an active EmbeddingRecord already exists for chunk_id."""
+        ...
+
+    @abstractmethod
+    def has_active_unit_embedding(self, knowledge_unit_id: str) -> bool:
+        """Returns True if an active EmbeddingRecord already exists for knowledge_unit_id."""
+        ...
+
+    @abstractmethod
     def list_active(self) -> List[EmbeddingRecord]:
         """Lists all active (status='ACTIVE') EmbeddingRecords."""
         ...
@@ -122,6 +132,16 @@ class CanonicalEmbeddingRepository(IEmbeddingRepository):
         with self._lock:
             ids = self._version_index.get(version_id, [])
             return [self._records[eid] for eid in ids if eid in self._records]
+
+    def has_active_chunk_embedding(self, chunk_id: str) -> bool:
+        with self._lock:
+            recs = self.get_by_chunk_id(chunk_id)
+            return any(r.status == "ACTIVE" for r in recs)
+
+    def has_active_unit_embedding(self, knowledge_unit_id: str) -> bool:
+        with self._lock:
+            recs = self.get_by_unit_id(knowledge_unit_id)
+            return any(r.status == "ACTIVE" for r in recs)
 
     def list_active(self) -> List[EmbeddingRecord]:
         with self._lock:
