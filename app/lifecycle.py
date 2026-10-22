@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from core.config.settings import settings
 from core.interfaces.module import ModuleInterface
 from core.logging.logger import get_logger
 from core.errors.exceptions import ModuleNotFoundError
@@ -25,6 +26,8 @@ class LifecycleManager:
     def initialize_all(self) -> None:
         """Initialize all registered modules."""
         logger.info("Initializing EarthMind System Skeleton...")
+        # Validate startup configuration
+        settings.validate_config()
         for name, module in self._modules.items():
             logger.info(f"Initializing module: {name}")
             if hasattr(module, "initialize") and callable(module.initialize):

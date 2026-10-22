@@ -562,6 +562,20 @@ class ContextConfigurationError(ContextError):
         )
 
 
+class ConfigurationError(EarthMindException):
+    """Exception raised for top-level application or module configuration errors."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+        super().__init__(
+            message=message,
+            error_code="CONFIGURATION_ERROR",
+            module="config",
+            operation="validate_config",
+            retryable=False,
+            metadata=details or {},
+        )
+
+
 class ContextTimeoutError(ContextError):
     def __init__(self, request_id: str, timeout: float):
         super().__init__(

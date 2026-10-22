@@ -61,16 +61,28 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
             self.client = self._init_client(self.config)
 
     def _init_client(self, cfg: QdrantConfig) -> Any:
-        """Initialize QdrantClient based on configuration."""
+        """Initialize QdrantClient based on mode and configuration."""
         try:
-            if cfg.location:
+            mode = cfg.get_mode()
+            if mode in ("memory", "local_persistent") and cfg.location:
                 return qdrant_client.QdrantClient(location=cfg.location)
-            elif cfg.url:
+            elif mode == "remote" and cfg.url:
                 return qdrant_client.QdrantClient(
                     url=cfg.url,
                     api_key=cfg.api_key,
                     timeout=cfg.timeout,
                 )
+            elif mode == "remote":
+                return qdrant_client.QdrantClient(
+                    host=cfg.host,
+                    port=cfg.port,
+                    grpc_port=cfg.grpc_port,
+                    api_key=cfg.api_key,
+                    prefer_grpc=cfg.prefer_grpc,
+                    timeout=cfg.timeout,
+                )
+            elif cfg.location:
+                return qdrant_client.QdrantClient(location=cfg.location)
             else:
                 return qdrant_client.QdrantClient(
                     host=cfg.host,
@@ -123,7 +135,7 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
 
         name = collection_name.strip()
         cfg = config or {}
-        dense_dim = cfg.get("dense_dimension", 384)
+        dense_dim = cfg.get("dense_dimension", getattr(settings.embedding, "dimension", 1024))
         distance_str = cfg.get("distance_metric", self.config.distance_metric)
         distance = self._get_distance_metric(distance_str)
 
@@ -181,6 +193,12 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
         name = collection_name.strip()
         try:
             if not self.client.collection_exists(name):
+                if not getattr(self.config, "auto_create_collection", True):
+                    raise CollectionOperationError(
+                        name,
+                        "ensure_collection_exists",
+                        f"Collection '{name}' does not exist and automatic creation is disabled (auto_create_collection=False)."
+                    )
                 cfg = dict(config or {})
                 cfg["dense_dimension"] = dense_dim
                 return self.create_collection(name, cfg)
