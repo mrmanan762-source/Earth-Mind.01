@@ -139,7 +139,7 @@ def ingest_and_index_real_corpus(
         )
         index_records.append(record)
 
-    # 6. Initialize Dense Qdrant Index Adapter
+    # 6. Initialize Dense & Sparse Qdrant Index Adapter
     q_config = QdrantConfig(location=qdrant_location)
     dense_adapter = QdrantIndexAdapter(config=q_config)
     dense_adapter.ensure_collection_exists(
@@ -148,10 +148,8 @@ def ingest_and_index_real_corpus(
     )
     dense_batch_res = dense_adapter.index_batch(collection_name=collection_name, records=index_records)
 
-    # 7. Initialize Sparse Inverted Index Adapter
-    sparse_adapter = InvertedSparseIndexAdapter()
-    sparse_adapter.create_collection(collection_name=collection_name)
-    sparse_batch_res = sparse_adapter.index_batch(collection_name=collection_name, records=index_records)
+    # 7. Qdrant adapter handles both dense and named sparse vector search directly against Qdrant
+    sparse_adapter = dense_adapter
 
     indexed_count = len(dense_batch_res.successful_records)
 

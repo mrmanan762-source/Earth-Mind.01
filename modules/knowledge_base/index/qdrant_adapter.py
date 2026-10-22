@@ -94,10 +94,16 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
 
     def is_available(self) -> bool:
         """Return operational status of Qdrant connection."""
+        if hasattr(self, "_override_available") and self._override_available is not None:
+            return self._override_available
         try:
             return self.health_check()
         except Exception:
             return False
+
+    def set_availability(self, available: bool) -> None:
+        """Set availability override status for testing and branch isolation."""
+        self._override_available = available
 
     def health_check(self) -> bool:
         """Check operational health of Qdrant backend."""

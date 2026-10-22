@@ -291,11 +291,13 @@ def test_16_backend_failure_handling(real_container):
 # 17. Partial Retrieval Branch Failure
 # -----------------------------------------------------------------------------
 def test_17_partial_retrieval_branch_failure(real_container):
-    real_container.sparse_adapter.set_availability(False)
+    from modules.knowledge_base.index.sparse_index import InvertedSparseIndexAdapter
+
+    unavailable_sparse = InvertedSparseIndexAdapter(is_available=False)
 
     hybrid_engine = HybridRetrievalEngine(
         dense_adapter=real_container.dense_adapter,
-        sparse_adapter=real_container.sparse_adapter,
+        sparse_adapter=unavailable_sparse,
     )
     provider = RAGContextProvider(
         hybrid_retriever=hybrid_engine,
@@ -305,8 +307,6 @@ def test_17_partial_retrieval_branch_failure(real_container):
 
     harness = R14RealRetrievalHarness(index_container=real_container, rag_provider=provider)
     res = harness.execute_query("fertilizer application guidelines", request_id="req_partial_17")
-
-    real_container.sparse_adapter.set_availability(True)
 
     assert res.query_processing_status == "SUCCESS"
     assert res.context_items_count > 0
