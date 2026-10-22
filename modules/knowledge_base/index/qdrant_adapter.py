@@ -16,7 +16,7 @@ from core.errors.exceptions import (
     InvalidIndexRecordError,
     QdrantAdapterError,
 )
-from core.interfaces.index import DenseSearchResult, IKnowledgeIndexAdapter
+from core.interfaces.index import DenseSearchResult, SparseSearchResult, IKnowledgeIndexAdapter
 from core.schemas.embedding import SparseVector
 from modules.knowledge_base.enums import IndexStatus, KnowledgeContentType, KnowledgeLifecycleState
 from modules.knowledge_base.index.record import IndexBatchResult, IndexRecord
@@ -470,6 +470,66 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
             return results
         except Exception as e:
             raise QdrantAdapterError(f"Dense search failed in '{name}': {str(e)}")
+
+    def search_sparse(
+        self,
+        collection_name: str,
+        query_indices: List[int],
+        query_values: List[float],
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
+        with_record: bool = True,
+    ) -> List[SparseSearchResult]:
+        """Perform sparse vector search in Qdrant against the 'sparse' vector index."""
+        name = collection_name.strip()
+        try:
+            sparse_query = models.SparseVector(indices=query_indices, values=query_values)
+            filter_conditions = None
+            if filters:
+                must_clauses = [
+                    models.FieldCondition(key=k, match=models.MatchValue(value=v))
+                    for k, v in filters.items()
+                ]
+                filter_conditions = models.Filter(must=must_clauses)
+
+            if hasattr(self.client, "query_points"):
+                q_res = self.client.query_points(
+                    collection_name=name,
+                    query=sparse_query,
+                    using="sparse",
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
+                hits = q_res.points
+            else:
+                hits = self.client.search(
+                    collection_name=name,
+                    query_vector=models.NamedSparseVector(name="sparse", vector=sparse_query),
+                    limit=top_k,
+                    query_filter=filter_conditions,
+                    with_payload=True,
+                )
+
+            results: List[SparseSearchResult] = []
+            for hit in hits:
+                payload = hit.payload or {}
+                rec_id = payload.get("_index_record_id", str(hit.id))
+                rec = None
+                if with_record:
+                    rec = self.get_record(name, rec_id)
+
+                results.append(
+                    SparseSearchResult(
+                        record_id=rec_id,
+                        score=hit.score,
+                        record=rec,
+                        payload={k: v for k, v in payload.items() if not k.startswith("_")},
+                    )
+                )
+            return results
+        except Exception as e:
+            raise QdrantAdapterError(f"Sparse search failed in '{name}': {str(e)}")
 
     def get_status(self, collection_name: str) -> Dict[str, Any]:
         """Return collection status and count metrics."""

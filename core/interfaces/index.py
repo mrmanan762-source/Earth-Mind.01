@@ -13,6 +13,15 @@ class DenseSearchResult(BaseModel):
     payload: Dict[str, Any] = Field(default_factory=dict, description="Filterable payload metadata")
 
 
+class SparseSearchResult(BaseModel):
+    """Result structure for sparse vector retrieval lookup primitives."""
+
+    record_id: str = Field(..., description="IndexRecord identifier")
+    score: float = Field(..., description="Sparse matching score (e.g., BM25 / Dot product)")
+    record: Optional[Any] = Field(None, description="Full IndexRecord payload if requested")
+    payload: Dict[str, Any] = Field(default_factory=dict, description="Filterable payload metadata")
+
+
 @runtime_checkable
 class IKnowledgeIndexAdapter(Protocol):
     """Generic, provider-agnostic interface for physical/derived index persistence and management."""
@@ -58,6 +67,18 @@ class IKnowledgeIndexAdapter(Protocol):
         with_record: bool = True,
     ) -> List[DenseSearchResult]:
         """Perform dense vector lookup primitive given a dense query vector."""
+        ...
+
+    def search_sparse(
+        self,
+        collection_name: str,
+        query_indices: List[int],
+        query_values: List[float],
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
+        with_record: bool = True,
+    ) -> List[SparseSearchResult]:
+        """Perform sparse vector lookup primitive given query indices and values."""
         ...
 
     def get_status(self, collection_name: str) -> Dict[str, Any]:
