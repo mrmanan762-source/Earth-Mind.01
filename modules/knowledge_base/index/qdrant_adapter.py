@@ -64,7 +64,12 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
         """Initialize QdrantClient based on configuration."""
         try:
             if cfg.location:
-                return qdrant_client.QdrantClient(location=cfg.location)
+                if cfg.location == ":memory:":
+                    return qdrant_client.QdrantClient(location=":memory:")
+                elif cfg.location.startswith("http://") or cfg.location.startswith("https://"):
+                    return qdrant_client.QdrantClient(url=cfg.location, api_key=cfg.api_key, timeout=cfg.timeout)
+                else:
+                    return qdrant_client.QdrantClient(path=cfg.location)
             elif cfg.url:
                 return qdrant_client.QdrantClient(
                     url=cfg.url,
@@ -104,6 +109,15 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
     def set_availability(self, available: bool) -> None:
         """Set availability override status for testing and branch isolation."""
         self._override_available = available
+
+    def close(self) -> None:
+        """Close underlying client connection and release file locks."""
+        if hasattr(self, "client") and self.client is not None:
+            try:
+                if hasattr(self.client, "close"):
+                    self.client.close()
+            except Exception:
+                pass
 
     def health_check(self) -> bool:
         """Check operational health of Qdrant backend."""

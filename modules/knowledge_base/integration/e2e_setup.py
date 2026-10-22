@@ -7,6 +7,7 @@ IndexRecord objects into QdrantIndexAdapter and InvertedSparseIndexAdapter with 
 provenance, lineage, and metadata preservation.
 """
 
+import os
 from typing import Any, Dict, List, Optional, NamedTuple
 from pydantic import BaseModel, Field
 
@@ -41,7 +42,7 @@ class RealIndexContainer(BaseModel):
 
 def ingest_and_index_real_corpus(
     collection_name: str = "earthmind_knowledge",
-    qdrant_location: Optional[str] = ":memory:",
+    qdrant_location: Optional[str] = None,
     batch_size: int = 32,
 ) -> RealIndexContainer:
     """
@@ -60,8 +61,12 @@ def ingest_and_index_real_corpus(
 
     # 2. Instantiate Real Embedding & Sparse Providers
     embedding_provider = SelfHostedEmbeddingProvider(
-        execution_mode="self_hosted",
+        provider_name="self_hosted",
+        model_name_or_path="BAAI/bge-m3",
+        model_version="1.0.0",
+        dimension=1024,
         allow_download=False,
+        execution_mode="self_hosted",
     )
     sparse_provider = BM25SparseProvider()
 
@@ -140,7 +145,8 @@ def ingest_and_index_real_corpus(
         index_records.append(record)
 
     # 6. Initialize Dense & Sparse Qdrant Index Adapter
-    q_config = QdrantConfig(location=qdrant_location)
+    loc = qdrant_location if qdrant_location is not None else os.getenv("EARTHMIND_QDRANT_LOCATION", ":memory:")
+    q_config = QdrantConfig(location=loc)
     dense_adapter = QdrantIndexAdapter(config=q_config)
     dense_adapter.ensure_collection_exists(
         collection_name=collection_name,
