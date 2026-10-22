@@ -22,6 +22,7 @@ from modules.knowledge_base.index.qdrant_adapter import QdrantIndexAdapter, _to_
 from modules.knowledge_base.index.record import IndexRecord, IndexBatchResult
 from modules.knowledge_base.ingestion import CorpusIngestionEngine, IngestionPipelineSummary
 from modules.knowledge_base.query_processing.metadata_extractor import AgriculturalMetadataExtractor
+from modules.knowledge_base.sparse.bm25_provider import BM25SparseProvider
 
 
 class R5ExecutionResult(BaseModel):
@@ -41,6 +42,7 @@ class R5ExecutionResult(BaseModel):
     distance_metric: str = Field("COSINE", description="Configured distance metric")
     smoke_test_query: str = Field(..., description="Smoke test query string")
     smoke_test_hits: List[Dict[str, Any]] = Field(default_factory=list, description="Top retrieval hits from smoke test")
+    sparse_smoke_test_hits: List[Dict[str, Any]] = Field(default_factory=list, description="Top sparse retrieval hits from smoke test")
 
     model_config = {"arbitrary_types_allowed": True}
 
@@ -105,12 +107,14 @@ class R5QdrantIndexingEngine:
             assert len(vec) == 1024, f"Vector length mismatch: expected 1024, got {len(vec)}"
             assert all(isinstance(v, float) and not (v != v) for v in vec), "Vector contains NaN or non-float"
 
-        # 3. Build Searchable Chunk-Level IndexRecords (53 chunks)
+        # 3. Build Searchable Chunk-Level IndexRecords (53 chunks) with dual Dense + Sparse vectors
         ag_extractor = AgriculturalMetadataExtractor()
+        sparse_provider = BM25SparseProvider()
         index_records: List[IndexRecord] = []
 
         for idx, chunk in enumerate(chunks):
             dense_vec = chunk_vectors[idx]
+            sparse_vec = sparse_provider.generate_sparse_vector(str(chunk.content))
 
             payload = dict(chunk.metadata or {})
             if chunk.provenance:
@@ -156,6 +160,10 @@ class R5QdrantIndexingEngine:
                 dense_model_version="1.0.0",
                 dense_dimension=1024,
                 dense_vector=dense_vec,
+                sparse_provider="bm25_sparse",
+                sparse_model="earthmind-bm25-agri-v1",
+                sparse_model_version="1.0.0",
+                sparse_vector=sparse_vec,
                 payload_metadata=payload,
                 knowledge_collection=self.collection_name,
                 content_type=KnowledgeContentType.TEXT,
@@ -205,6 +213,29 @@ class R5QdrantIndexingEngine:
                 "content_snippet": (hit_payload.get("content") or "")[:120] + "...",
             })
 
+        # Real Sparse Retrieval Smoke Test
+        sparse_query_vec = sparse_provider.generate_sparse_vector(smoke_query)
+        sparse_search_hits = self.adapter.search_sparse(
+            collection_name=self.collection_name,
+            query_indices=sparse_query_vec.indices,
+            query_values=sparse_query_vec.values,
+            top_k=5,
+            with_record=True,
+        )
+
+        sparse_hit_reports = []
+        for hit in sparse_search_hits:
+            hit_payload = hit.payload or {}
+            sparse_hit_reports.append({
+                "record_id": hit.record_id,
+                "score": round(hit.score, 4),
+                "chunk_id": hit_payload.get("chunk_id"),
+                "document_id": hit_payload.get("document_id"),
+                "crop": hit_payload.get("crop"),
+                "title": hit_payload.get("title"),
+                "content_snippet": (hit_payload.get("content") or "")[:120] + "...",
+            })
+
         return R5ExecutionResult(
             status="COMPLETED" if failed_count == 0 else "COMPLETED_WITH_ERRORS",
             total_canonical_chunks=len(chunks),
@@ -220,4 +251,5 @@ class R5QdrantIndexingEngine:
             distance_metric="COSINE",
             smoke_test_query=smoke_query,
             smoke_test_hits=hit_reports,
+            sparse_smoke_test_hits=sparse_hit_reports,
         )

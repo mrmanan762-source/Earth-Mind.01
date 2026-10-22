@@ -268,3 +268,92 @@ def test_r5_qdrant_indexing_execution():
     assert result.distance_metric == "COSINE"
     assert len(result.smoke_test_hits) == 5
     assert all(hit["score"] > 0.0 for hit in result.smoke_test_hits)
+    # Real sparse retrieval smoke test verification
+    assert len(result.sparse_smoke_test_hits) == 5
+    assert all(hit["score"] > 0.0 for hit in result.sparse_smoke_test_hits)
+
+
+def test_real_sparse_vector_features_and_retrieval_coexistence():
+    """Verify that sparse vectors contain real features and sparse search coexists with dense search."""
+    from modules.knowledge_base.sparse.bm25_provider import BM25SparseProvider
+
+    sparse_provider = BM25SparseProvider()
+
+    # Generate real sparse vector
+    sample_text = "Wheat yellow rust caused by Puccinia striiformis requires propiconazole fungicide spray."
+    sp_vec = sparse_provider.generate_sparse_vector(sample_text)
+
+    # 1. Sparse vectors contain real, non-empty, non-zero, deterministic features
+    assert len(sp_vec.indices) > 0
+    assert len(sp_vec.values) == len(sp_vec.indices)
+    assert all(isinstance(idx, int) and idx >= 0 for idx in sp_vec.indices)
+    assert all(isinstance(val, float) and val > 0.0 for val in sp_vec.values)
+    assert sp_vec.indices == sorted(sp_vec.indices), "Sparse indices must be strictly sorted"
+
+    # 2. Setup Qdrant dual index
+    config = QdrantConfig(location=":memory:")
+    adapter = QdrantIndexAdapter(config=config)
+    collection_name = "test_dual_vector_col"
+
+    adapter.ensure_collection_exists(
+        collection_name=collection_name,
+        dense_dim=4,
+        config={"distance_metric": "COSINE"},
+    )
+
+    rec = IndexRecord(
+        index_record_id="idx_wheat_rust_test_01",
+        source_id="src_wheat_rust",
+        document_id="doc_wheat_01",
+        version_id="1.0.0",
+        chunk_id="chk_wheat_rust_01",
+        dense_provider="self_hosted",
+        dense_model="test_model",
+        dense_dimension=4,
+        dense_vector=[0.5, 0.5, 0.5, 0.5],
+        sparse_provider="bm25_sparse",
+        sparse_model="earthmind-bm25-agri-v1",
+        sparse_vector=sp_vec,
+        payload_metadata={"crop": "Wheat", "disease": "Yellow Rust"},
+        knowledge_collection=collection_name,
+        content_type=KnowledgeContentType.TEXT,
+        lifecycle_state=KnowledgeLifecycleState.INDEXED,
+        status=IndexStatus.INDEXED,
+    )
+
+    adapter.index_record(collection_name, rec)
+
+    # Verify point in Qdrant can be retrieved with both dense and sparse vectors intact
+    retrieved_rec = adapter.get_record(collection_name, "idx_wheat_rust_test_01")
+    assert retrieved_rec is not None
+    assert retrieved_rec.dense_vector == [0.5, 0.5, 0.5, 0.5]
+    assert retrieved_rec.sparse_vector is not None
+    assert retrieved_rec.sparse_vector.indices == sp_vec.indices
+    assert retrieved_rec.sparse_vector.values == pytest.approx(sp_vec.values, abs=1e-3)
+
+    # 3. Perform real sparse query search
+    query_sp_vec = sparse_provider.generate_sparse_vector("yellow rust propiconazole")
+    sparse_hits = adapter.search_sparse(
+        collection_name=collection_name,
+        query_indices=query_sp_vec.indices,
+        query_values=query_sp_vec.values,
+        top_k=5,
+        with_record=True,
+    )
+
+    assert len(sparse_hits) == 1
+    assert sparse_hits[0].record_id == "idx_wheat_rust_test_01"
+    assert sparse_hits[0].score > 0.0
+    assert sparse_hits[0].payload["crop"] == "Wheat"
+
+    # 4. Perform dense query search to verify co-existence
+    dense_hits = adapter.search_dense(
+        collection_name=collection_name,
+        query_vector=[0.5, 0.5, 0.5, 0.5],
+        top_k=5,
+        with_record=True,
+    )
+
+    assert len(dense_hits) == 1
+    assert dense_hits[0].record_id == "idx_wheat_rust_test_01"
+    assert dense_hits[0].score == pytest.approx(1.0, abs=1e-3)
