@@ -473,6 +473,24 @@ class QdrantSparseIndexAdapter(ISparseIndexAdapter):
                 p = res[0]
                 payload = p.payload or {}
                 rec_id = payload.get("_index_record_id", str(p.id))
+                vectors = getattr(p, "vector", None) or {}
+
+                dense_vec = None
+                if isinstance(vectors, dict) and "dense" in vectors:
+                    dense_vec = vectors["dense"]
+
+                sparse_vec = None
+                if isinstance(vectors, dict) and "sparse" in vectors:
+                    sp = vectors["sparse"]
+                    if hasattr(sp, "indices") and hasattr(sp, "values"):
+                        from core.schemas.embedding import SparseVector
+                        sparse_vec = SparseVector(indices=list(sp.indices), values=list(sp.values))
+
+                # Fallback dummy sparse_vector if vectors not returned by store
+                if dense_vec is None and sparse_vec is None:
+                    from core.schemas.embedding import SparseVector
+                    sparse_vec = SparseVector(indices=[0], values=[1.0])
+
                 return IndexRecord(
                     index_record_id=rec_id,
                     source_id=payload.get("_source_id", "unknown"),
@@ -481,6 +499,8 @@ class QdrantSparseIndexAdapter(ISparseIndexAdapter):
                     chunk_id=payload.get("_chunk_id"),
                     knowledge_unit_id=payload.get("_knowledge_unit_id"),
                     sparse_representation_id=payload.get("_sparse_representation_id"),
+                    dense_vector=dense_vec,
+                    sparse_vector=sparse_vec,
                     payload_metadata={k: v for k, v in payload.items() if not k.startswith("_")},
                     status=IndexStatus.INDEXED,
                 )
