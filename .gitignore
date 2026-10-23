@@ -6,4 +6,18 @@ __pycache__/
 build/
 dist/
 *.db
+*.sqlite3
 .pytest_cache/
+
+# Environment and Secret Files
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.secret
+
+# Logs and Local Storage Caches
+*.log
+model_cache/
+qdrant_storage/

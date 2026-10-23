@@ -103,7 +103,8 @@ class R14RealRetrievalHarness:
         warnings: List[str] = []
         errors: List[str] = []
 
-        logger.info(f"R14 Harness executing query for request_id={req_id}: '{query_text}'")
+        q_preview = (query_text[:50] + "...") if len(query_text) > 50 else query_text
+        logger.info(f"R14 Harness executing query (len={len(query_text)}) for request_id={req_id}: '{q_preview}'")
 
         rag_request = RAGContextRequest(
             query_text=query_text,

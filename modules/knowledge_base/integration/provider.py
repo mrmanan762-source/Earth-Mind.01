@@ -105,7 +105,8 @@ class RAGContextProvider(IRAGContextProvider):
         # Parse request fields
         query_text, request_id, trace_id, max_results, user_context = self._parse_request(request)
 
-        logger.info(f"RAGContextProvider '{self.provider_name}' processing query for request_id={request_id}")
+        q_len = len(query_text) if query_text else 0
+        logger.info(f"RAGContextProvider '{self.provider_name}' processing query (len={q_len}) for request_id={request_id}")
 
         if not query_text or not query_text.strip():
             logger.warning(f"Empty query text received in RAGContextProvider for request_id={request_id}")
@@ -197,7 +198,7 @@ class RAGContextProvider(IRAGContextProvider):
         qp_request = QueryProcessingRequest(
             query_text=query_text,
             request_id=request_id,
-            user_context=user_context,
+            user_context=user_context or {},
         )
         qp_response = self.query_processor.process_query(qp_request)
 
