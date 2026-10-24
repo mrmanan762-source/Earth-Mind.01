@@ -7,6 +7,7 @@ Stage R12 Evidence Validator → Stage R13 RAG Context Provider → B2 Context M
 
 Captures step-by-step trace metrics, candidate counts, evidence packages, and B2 context items
 without exposing credentials or replacing real components with fakes in the primary path.
+Enforces privacy guarantees by excluding raw query content and previews from logs.
 """
 
 import time
@@ -15,6 +16,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
 from core.logging.logger import get_logger
+from core.observability.metrics import metrics_collector
 from modules.context.boundary.models import RAGContextContract, RAGContextRequest
 from modules.context.builder import ContextBuilder
 from modules.context.collector import ContextCollector
@@ -103,8 +105,7 @@ class R14RealRetrievalHarness:
         warnings: List[str] = []
         errors: List[str] = []
 
-        q_preview = (query_text[:50] + "...") if len(query_text) > 50 else query_text
-        logger.info(f"R14 Harness executing query (len={len(query_text)}) for request_id={req_id}: '{q_preview}'")
+        logger.info(f"R14 Harness executing query (len={len(query_text)}) for request_id={req_id}")
 
         rag_request = RAGContextRequest(
             query_text=query_text,

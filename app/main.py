@@ -55,6 +55,10 @@ def main():
     # Initialize all modules
     lifecycle.initialize_all()
 
+    # Evaluate system health
+    health_report = lifecycle.get_system_health()
+    logger.info(f"System Health Status: readiness={health_report.readiness_status}, ready_e2e={health_report.is_ready_e2e}")
+
     # Execute sample request through workflow
     sample_request = ApplicationRequest(
         request_id=str(uuid.uuid4()),
@@ -68,6 +72,9 @@ def main():
     logger.info("Executing sample workflow request...")
     response = workflow.dispatch(sample_request)
     logger.info(f"Workflow Response: {response}")
+
+    metrics_summary = lifecycle.get_metrics()
+    logger.info(f"Telemetry Metrics Summary: {metrics_summary.get('counters', {})}")
 
     # Shutdown
     lifecycle.shutdown_all()

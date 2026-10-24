@@ -1,13 +1,15 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from core.config.settings import settings
 from core.interfaces.module import ModuleInterface
 from core.logging.logger import get_logger
 from core.errors.exceptions import ModuleNotFoundError
+from core.observability.health import HealthDiagnostics, SystemHealthReport
+from core.observability.metrics import metrics_collector
 
 logger = get_logger("app.lifecycle")
 
 class LifecycleManager:
-    """Manages system startup, module registration, and shutdown lifecycle."""
+    """Manages system startup, module registration, shutdown lifecycle, health diagnostics, and metrics."""
 
     def __init__(self):
         self._modules: Dict[str, ModuleInterface] = {}
@@ -48,3 +50,37 @@ class LifecycleManager:
     @property
     def is_running(self) -> bool:
         return self._is_running
+
+    def get_system_health(self) -> SystemHealthReport:
+        """Evaluate system health and readiness across registered modules."""
+        qdrant_adapter = None
+        emb_provider = None
+        sparse_provider = None
+        reranker_provider = None
+        reasoning_model = None
+
+        if "context" in self._modules and hasattr(self._modules["context"], "rag_provider"):
+            rag_p = getattr(self._modules["context"], "rag_provider")
+            if hasattr(rag_p, "embedding_provider"):
+                emb_provider = rag_p.embedding_provider
+            if hasattr(rag_p, "sparse_provider"):
+                sparse_provider = rag_p.sparse_provider
+            if hasattr(rag_p, "reranker"):
+                reranker_provider = rag_p.reranker
+            if hasattr(rag_p, "hybrid_retriever") and hasattr(rag_p.hybrid_retriever, "dense_adapter"):
+                qdrant_adapter = rag_p.hybrid_retriever.dense_adapter
+
+        if "ai" in self._modules and hasattr(self._modules["ai"], "sarvam_adapter"):
+            reasoning_model = self._modules["ai"].sarvam_adapter
+
+        return HealthDiagnostics.evaluate_system_health(
+            qdrant_adapter=qdrant_adapter,
+            embedding_provider=emb_provider,
+            sparse_provider=sparse_provider,
+            reranker_provider=reranker_provider,
+            reasoning_model=reasoning_model,
+        )
+
+    def get_metrics(self) -> Dict[str, Any]:
+        """Return system telemetry metric summary."""
+        return metrics_collector.get_summary()
