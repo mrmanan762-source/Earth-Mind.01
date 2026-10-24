@@ -10,6 +10,7 @@ Enforces:
 - B2 context compatibility without performing agricultural reasoning or direct storage/Qdrant access
 - Traceability (request_id, correlation_id, trace_id, evidence_id)
 - Zero memory writes or direct reasoning engine invocations
+- Structured telemetry and observability instrumentation
 """
 
 import time
@@ -28,9 +29,9 @@ from core.interfaces.evidence_validator import IEvidenceValidatorEngine
 from core.interfaces.query_processor import IQueryProcessorEngine
 from core.interfaces.sparse import ISparseRepresentationProvider
 from core.interfaces.web_search import IWebSearchProvider
-from core.schemas.embedding import EmbeddingRequest
-from core.schemas.sparse import SparseRepresentationRequest
 from core.logging.logger import get_logger
+from core.observability.metrics import metrics_collector
+from core.schemas.embedding import EmbeddingRequest
 from core.schemas.evidence import EvidenceBuildRequest, EvidenceBuildResponse, EvidencePackage
 from core.schemas.evidence_validator import (
     EvidenceValidationRequest,
@@ -39,6 +40,7 @@ from core.schemas.evidence_validator import (
 )
 from core.schemas.query import QueryProcessingRequest, QueryProcessingStatus, RetrievalQuery
 from core.schemas.rerank import RerankRequest, RerankResponse, RerankStatus
+from core.schemas.sparse import SparseRepresentationRequest
 from core.schemas.web_search import WebSearchRequest, WebSearchResponse, WebSearchStatus
 from modules.context.boundary.models import RAGContextContract, RAGContextRequest
 from modules.context.schemas import ContextRequest
@@ -101,6 +103,7 @@ class RAGContextProvider(IRAGContextProvider):
             List of validated RAGContextContract objects.
         """
         start_time = time.time()
+        metrics_collector.record_request_start()
 
         # Parse request fields
         query_text, request_id, trace_id, max_results, user_context = self._parse_request(request)
@@ -110,6 +113,12 @@ class RAGContextProvider(IRAGContextProvider):
 
         if not query_text or not query_text.strip():
             logger.warning(f"Empty query text received in RAGContextProvider for request_id={request_id}")
+            metrics_collector.record_request_completion(
+                latency_ms=(time.time() - start_time) * 1000.0,
+                status="CONTROLLED_ABSTENTION",
+                citation_present=False,
+                has_evidence=False,
+            )
             return []
 
         try:
@@ -117,15 +126,40 @@ class RAGContextProvider(IRAGContextProvider):
             retrieval_query = self._execute_query_processing(query_text, request_id, user_context)
 
             # Step 2: Stage R7 Hybrid Retrieval
+            hybrid_start = time.time()
             hybrid_response = self._execute_hybrid_retrieval(retrieval_query, max_results, request_id)
+            hybrid_lat_ms = (time.time() - hybrid_start) * 1000.0
+
+            fused_candidates_count = len(getattr(hybrid_response, "candidates", [])) if hybrid_response else 0
+            is_hybrid_degraded = getattr(hybrid_response, "status", None) == "PARTIAL"
+            metrics_collector.record_retrieval_stage(
+                "hybrid",
+                latency_ms=hybrid_lat_ms,
+                candidate_count=fused_candidates_count,
+                success=getattr(hybrid_response, "status", None) != "FAILED",
+                degraded=is_hybrid_degraded,
+            )
 
             # Step 3: Stage R8 Reranking
+            rerank_start = time.time()
             rerank_response = self._execute_reranking(hybrid_response, max_results, request_id)
+            rerank_lat_ms = (time.time() - rerank_start) * 1000.0
+
+            rerank_candidates_count = len(getattr(rerank_response, "candidates", [])) if rerank_response else 0
+            is_rerank_degraded = getattr(rerank_response, "fallback_used", False)
+            metrics_collector.record_retrieval_stage(
+                "rerank",
+                latency_ms=rerank_lat_ms,
+                candidate_count=rerank_candidates_count,
+                success=getattr(rerank_response, "status", None) in (RerankStatus.SUCCESS, "SUCCESS"),
+                degraded=is_rerank_degraded,
+            )
 
             # Step 4: Stage R10 Web Search (Optional / Configurable)
             web_search_response = self._execute_web_search(retrieval_query, max_results, request_id)
 
             # Step 5: Stage R11 Evidence Builder
+            assembly_start = time.time()
             evidence_package = self._execute_evidence_builder(
                 query_text=query_text,
                 request_id=request_id,
@@ -140,18 +174,56 @@ class RAGContextProvider(IRAGContextProvider):
                 request_id=request_id,
                 trace_id=trace_id,
             )
+            assembly_lat_ms = (time.time() - assembly_start) * 1000.0
 
-            exec_time_ms = (time.time() - start_time) * 1000.0
+            evidence_items_count = len(getattr(evidence_package, "items", []))
+            metrics_collector.record_evidence_context(
+                assembly_latency_ms=assembly_lat_ms,
+                evidence_count=evidence_items_count,
+                context_count=len(validated_contracts),
+            )
+
+            has_citations = any(bool(c.citation) for c in validated_contracts if hasattr(c, "citation") and c.citation)
+
+            # Determine request outcome status
+            if not validated_contracts:
+                final_status = "CONTROLLED_ABSTENTION"
+            elif is_hybrid_degraded or is_rerank_degraded:
+                final_status = "DEGRADED"
+            else:
+                final_status = "SUCCESS"
+
+            total_exec_time_ms = (time.time() - start_time) * 1000.0
+            metrics_collector.record_request_completion(
+                latency_ms=total_exec_time_ms,
+                status=final_status,
+                citation_present=has_citations,
+                has_evidence=len(validated_contracts) > 0,
+            )
+
             logger.info(
                 f"RAGContextProvider '{self.provider_name}' completed request_id={request_id} "
-                f"returning {len(validated_contracts)} RAGContextContracts in {exec_time_ms:.2f}ms"
+                f"returning {len(validated_contracts)} RAGContextContracts in {total_exec_time_ms:.2f}ms "
+                f"(status={final_status})"
             )
 
             return validated_contracts
 
         except RAGIntegrationError:
+            metrics_collector.record_request_completion(
+                latency_ms=(time.time() - start_time) * 1000.0,
+                status="FAILED",
+                citation_present=False,
+                has_evidence=False,
+            )
             raise
         except Exception as e:
+            metrics_collector.record_request_completion(
+                latency_ms=(time.time() - start_time) * 1000.0,
+                status="FAILED",
+                citation_present=False,
+                has_evidence=False,
+            )
             msg = f"RAG integration pipeline failed for request_id={request_id}: {str(e)}"
             logger.error(msg)
             raise RAGPipelineExecutionError("pipeline", str(e), request_id=request_id) from e
@@ -212,11 +284,13 @@ class RAGContextProvider(IRAGContextProvider):
     def _execute_hybrid_retrieval(
         self, retrieval_query: RetrievalQuery, max_results: int, request_id: Optional[str]
     ) -> Any:
-        """Stage R7: Execute hybrid dense + sparse vector retrieval."""
+        """Stage R7: Execute hybrid dense + sparse vector retrieval with channel timing."""
         if max_results:
             retrieval_query.top_k = max_results
 
-        # Ensure query representations (dense vector and sparse vector) are populated if missing
+        # Dense representation generation & metric tracking
+        dense_start = time.time()
+        dense_success = True
         q_text = retrieval_query.normalized_query or retrieval_query.original_query
         if retrieval_query.dense_query.dense_vector is None and self.embedding_provider and self.embedding_provider.is_available():
             try:
@@ -224,8 +298,15 @@ class RAGContextProvider(IRAGContextProvider):
                 if emb_res and emb_res.dense_vectors:
                     retrieval_query.dense_query.dense_vector = emb_res.dense_vectors[0].vector
             except Exception as e:
+                dense_success = False
                 logger.warning(f"Dense query embedding generation failed: {str(e)}")
+                metrics_collector.record_dependency_event("embedding", operation_success=False)
 
+        dense_lat_ms = (time.time() - dense_start) * 1000.0
+
+        # Sparse representation generation & metric tracking
+        sparse_start = time.time()
+        sparse_success = True
         if (
             (retrieval_query.sparse_query.sparse_indices is None or retrieval_query.sparse_query.sparse_values is None)
             and self.sparse_provider
@@ -237,13 +318,24 @@ class RAGContextProvider(IRAGContextProvider):
                     retrieval_query.sparse_query.sparse_indices = sp_res.sparse_vectors[0].indices
                     retrieval_query.sparse_query.sparse_values = sp_res.sparse_vectors[0].values
             except Exception as e:
+                sparse_success = False
                 logger.warning(f"Sparse query representation generation failed: {str(e)}")
+                metrics_collector.record_dependency_event("sparse", operation_success=False)
+
+        sparse_lat_ms = (time.time() - sparse_start) * 1000.0
 
         hybrid_request = retrieval_query.to_hybrid_retrieval_request(timeout=self.config.timeout)
         if request_id:
             hybrid_request.request_id = request_id
 
         hybrid_response = self.hybrid_retriever.search(hybrid_request)
+
+        # Record branch specific retrieval metrics
+        dense_cand_count = getattr(hybrid_response, "total_dense_candidates", 0)
+        sparse_cand_count = getattr(hybrid_response, "total_sparse_candidates", 0)
+
+        metrics_collector.record_retrieval_stage("dense", dense_lat_ms, dense_cand_count, success=dense_success)
+        metrics_collector.record_retrieval_stage("sparse", sparse_lat_ms, sparse_cand_count, success=sparse_success)
 
         # Fallback to search without hard filters if strict metadata filters produced 0 candidates
         if (not hybrid_response or not getattr(hybrid_response, "candidates", None)) and hybrid_request.filters:
@@ -274,7 +366,13 @@ class RAGContextProvider(IRAGContextProvider):
         if request_id:
             rerank_request.request_id = request_id
 
-        return self.reranker.rerank(rerank_request)
+        try:
+            return self.reranker.rerank(rerank_request)
+        except Exception as e:
+            logger.warning(f"Reranker invocation failed for request_id={request_id}: {str(e)}")
+            metrics_collector.record_dependency_event("reranker", operation_success=False)
+            metrics_collector.set_degraded_status("reranker", True)
+            raise
 
     def _execute_web_search(
         self, retrieval_query: RetrievalQuery, max_results: int, request_id: Optional[str]
@@ -283,6 +381,7 @@ class RAGContextProvider(IRAGContextProvider):
         if not self.config.enable_web_search or not self.web_search_provider:
             return None
 
+        ws_start = time.time()
         try:
             ws_request = WebSearchRequest.from_retrieval_query(
                 retrieval_query=retrieval_query,
@@ -292,9 +391,12 @@ class RAGContextProvider(IRAGContextProvider):
             if request_id:
                 ws_request.request_id = request_id
 
-            return self.web_search_provider.search(ws_request)
+            res = self.web_search_provider.search(ws_request)
+            metrics_collector.record_dependency_event("web_search", operation_success=True)
+            return res
         except Exception as e:
             logger.warning(f"Stage R10 Web Search failed for request_id={request_id}: {str(e)}. Continuing without web evidence.")
+            metrics_collector.record_dependency_event("web_search", operation_success=False)
             return WebSearchResponse(
                 request_id=request_id,
                 status=WebSearchStatus.PROVIDER_ERROR,
