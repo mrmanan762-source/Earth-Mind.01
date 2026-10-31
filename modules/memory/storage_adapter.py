@@ -1,7 +1,8 @@
 """In-memory reference storage adapter implementation of IMemoryStorageAdapter.
 
 Used for testing, interface verification, and local development.
-Enforces optimistic locking, record cloning, and explicit failure simulation.
+Enforces optimistic locking, record isolation (deep copy on read/write),
+deterministic sorting & pagination, and explicit failure simulation.
 """
 
 from datetime import datetime, timezone
@@ -46,7 +47,7 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
                 f"Record '{record.record_id}' already exists in storage.",
                 operation="store_record"
             )
-        # Deep copy to ensure storage isolation
+        # Deep copy to guarantee complete storage isolation
         stored = copy.deepcopy(record)
         self._records[record.record_id] = stored
         return copy.deepcopy(stored)
@@ -61,7 +62,7 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
     def search_records(self, criteria: MemorySearchCriteria) -> List[MemoryRecord]:
         self._ensure_available()
         now = datetime.now(timezone.utc)
-        results: List[MemoryRecord] = []
+        matched: List[MemoryRecord] = []
 
         for record in self._records.values():
             # Domain filter
@@ -92,10 +93,13 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
             if not criteria.include_expired and record.expires_at and record.expires_at <= now:
                 continue
 
-            results.append(copy.deepcopy(record))
+            matched.append(copy.deepcopy(record))
+
+        # Deterministic sorting: order by created_at descending, then record_id ascending
+        matched.sort(key=lambda r: (r.created_at, r.record_id), reverse=True)
 
         # Pagination: offset & limit
-        return results[criteria.offset : criteria.offset + criteria.limit]
+        return matched[criteria.offset : criteria.offset + criteria.limit]
 
     def update_record(
         self,
@@ -107,11 +111,20 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
         if not existing:
             raise MemoryNotFoundError(record.record_id, operation="update_record")
 
-        # Concurrency check
+        # Concurrency / optimistic locking check
         if expected_version is not None and existing.record_version != expected_version:
             raise MemoryConflictError(
                 record.record_id,
                 f"Version mismatch: expected {expected_version}, found {existing.record_version}.",
+                operation="update_record"
+            )
+
+        # Stale version check: incoming record_version must be strictly greater than existing
+        if record.record_version <= existing.record_version:
+            raise MemoryConflictError(
+                record.record_id,
+                f"Stale version update rejected: incoming version {record.record_version} "
+                f"is not greater than existing version {existing.record_version}.",
                 operation="update_record"
             )
 
@@ -126,7 +139,9 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
             return False
 
         if soft:
+            # Soft delete: update status and timestamp, increment version
             existing.status = MemoryRecordStatus.DELETED
+            existing.record_version += 1
             existing.updated_at = datetime.now(timezone.utc)
         else:
             del self._records[record_id]

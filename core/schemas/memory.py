@@ -6,15 +6,17 @@ Defines foundational schemas for the EarthMind Memory Module:
 - MemoryRecordStatus (ACTIVE, ARCHIVED, DELETED, EXPIRED, PENDING)
 - MemoryErrorCode (Approved error categories)
 - MemoryOperation (CREATE, READ, UPDATE, DELETE, SEARCH)
+- PrincipalType (USER, SERVICE, SYSTEM, ANONYMOUS)
 - MemoryRecord (Core record model with 17 approved fields and strict validation)
 - AuthorizationContext (Contract for trusted identity/authorization from Auth boundary)
 - MemorySearchCriteria (Structured search query contract)
 - StorageHealthResult (Storage health and capability status)
+- PayloadSchemaRegistry (Extensible record-type payload validator registry)
 """
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Type
 from pydantic import BaseModel, Field, model_validator
 import uuid
 
@@ -71,18 +73,91 @@ class MemoryOperation(str, Enum):
     SEARCH = "SEARCH"
 
 
+class PrincipalType(str, Enum):
+    """Type of acting principal for authorization context."""
+    USER = "USER"
+    SERVICE = "SERVICE"
+    SYSTEM = "SYSTEM"
+    ANONYMOUS = "ANONYMOUS"
+
+
+class PayloadSchemaRegistry:
+    """Extensible registry for record-type payload schemas and validation functions."""
+
+    _validators: Dict[str, Callable[[Dict[str, Any]], None]] = {}
+    _allow_unregistered: bool = True
+
+    @classmethod
+    def register_schema(
+        cls,
+        record_type: str,
+        validator_or_model: Any,
+    ) -> None:
+        """Register a validation callable or Pydantic model for a given record_type."""
+        if hasattr(validator_or_model, "model_validate"):
+            def _validate_pydantic(payload: Dict[str, Any]) -> None:
+                validator_or_model.model_validate(payload)
+            cls._validators[record_type] = _validate_pydantic
+        elif callable(validator_or_model):
+            cls._validators[record_type] = validator_or_model
+        else:
+            raise ValueError("Validator must be a callable or Pydantic model class.")
+
+    @classmethod
+    def set_allow_unregistered(cls, allow: bool) -> None:
+        """Configure whether unregistered record types are accepted or rejected."""
+        cls._allow_unregistered = allow
+
+    @classmethod
+    def validate_payload(cls, record_type: str, payload: Dict[str, Any]) -> None:
+        """Validate payload against registered schema for record_type.
+
+        Raises:
+            ValueError: If payload fails validation or if unregistered types are disallowed.
+        """
+        if not isinstance(payload, dict):
+            raise ValueError(f"Payload must be a dictionary, got {type(payload).__name__}.")
+
+        validator = cls._validators.get(record_type)
+        if validator is not None:
+            try:
+                validator(payload)
+            except Exception as e:
+                raise ValueError(f"Payload failed validation for record_type '{record_type}': {str(e)}") from e
+        elif not cls._allow_unregistered:
+            raise ValueError(f"No schema registered for record_type '{record_type}' and unregistered schemas are disallowed.")
+
+    @classmethod
+    def clear(cls) -> None:
+        """Reset registry state."""
+        cls._validators.clear()
+        cls._allow_unregistered = True
+
+
 class AuthorizationContext(BaseModel):
-    """Trusted identity and authorization contract supplied by separate authentication/identity boundary.
+    """Safe, provider-independent authorization context supplied by separate authentication/identity boundary.
 
     Memory Module does not perform authentication. This contract represents verified credentials
     and permissions passed into memory operations.
+
+    Security rules enforced:
+    - Distinguishes UNAUTHORIZED (missing or anonymous principal) from FORBIDDEN (lacking required permission).
+    - Fails closed when trusted authorization information is missing.
+    - Never grants unrestricted access merely because a role is named 'admin' or 'system' without explicit permission.
+    - Does not trust user-supplied owner IDs as authenticated identity.
+    - Scopes alone never confer ownership or permissions.
     """
-    principal_id: str = Field(..., description="Unique trusted identity identifier of the acting subject")
+    principal_id: str = Field(..., min_length=1, description="Unique trusted identity identifier of the acting subject")
+    principal_type: PrincipalType = Field(PrincipalType.USER, description="Type of principal")
     roles: List[str] = Field(default_factory=list, description="Assigned roles for the subject")
-    owner_id: Optional[str] = Field(None, description="Owner entity identifier if subject is acting on behalf of owner")
+    owner_id: Optional[str] = Field(None, description="Owner entity identifier if subject is authorized to act on behalf of owner")
     accessible_scopes: Dict[str, List[str]] = Field(
         default_factory=dict,
         description="Map of scope type to allowed scope IDs, e.g. {'FARM': ['farm_123']}"
+    )
+    allowed_operations: List[MemoryOperation] = Field(
+        default_factory=lambda: [MemoryOperation.READ, MemoryOperation.SEARCH],
+        description="Explicit operations permitted for this authorization context"
     )
     requested_operation: MemoryOperation = Field(
         MemoryOperation.READ,
@@ -93,13 +168,68 @@ class AuthorizationContext(BaseModel):
         description="Additional policy or governance metadata evaluated by authorization engine"
     )
 
-    def can_access_owner(self, record_owner_id: Optional[str]) -> bool:
-        """Check whether principal matches record owner or has elevated access."""
-        if "admin" in self.roles or "system" in self.roles:
+    def is_authenticated(self) -> bool:
+        """Verify principal identity is authenticated (not anonymous or empty)."""
+        if self.principal_type == PrincipalType.ANONYMOUS:
+            return False
+        if not self.principal_id or not self.principal_id.strip():
+            return False
+        return True
+
+    def is_operation_permitted(self, operation: Optional[MemoryOperation] = None) -> bool:
+        """Check if requested operation is explicitly permitted."""
+        op = operation or self.requested_operation
+        return op in self.allowed_operations
+
+    def can_access_record(
+        self,
+        domain: MemoryDomain,
+        record_owner_id: Optional[str],
+        scope_type: MemoryScope,
+        scope_id: str,
+        operation: Optional[MemoryOperation] = None,
+    ) -> bool:
+        """Evaluate access authorization for a target record under fail-closed security.
+
+        Returns True only if:
+        1. Context is authenticated.
+        2. Operation is permitted in allowed_operations.
+        3. For GENERAL domain: read/search are allowed, modifications require explicit policy context flag.
+        4. For USER domain: principal matches record_owner_id, or owner_id delegation matches,
+           or scope access is explicitly granted in accessible_scopes for the specific scope_id.
+        """
+        if not self.is_authenticated():
+            return False
+
+        op = operation or self.requested_operation
+        if not self.is_operation_permitted(op):
+            return False
+
+        if domain == MemoryDomain.GENERAL:
+            # General memory records are shared readable; modifications require explicit manage_general_memory permission
+            if op in (MemoryOperation.READ, MemoryOperation.SEARCH):
+                return True
+            return bool(self.policy_context.get("can_manage_general_memory", False))
+
+        # USER domain records
+        if not record_owner_id:
+            return False
+
+        # Direct ownership match
+        if self.principal_id == record_owner_id:
             return True
-        if self.owner_id and record_owner_id and self.owner_id == record_owner_id:
+
+        # Authorized delegation for owner
+        if self.owner_id and self.owner_id == record_owner_id:
             return True
-        return self.principal_id == record_owner_id
+
+        # Scope-based access check (if acting on a shared farm/field with explicit grant)
+        scope_key = scope_type.value
+        allowed_ids = self.accessible_scopes.get(scope_key, [])
+        if scope_id in allowed_ids and op in (MemoryOperation.READ, MemoryOperation.SEARCH):
+            return True
+
+        return False
 
 
 class MemoryRecord(BaseModel):
@@ -170,14 +300,16 @@ class MemoryRecord(BaseModel):
         if not self.record_id or not self.record_id.strip():
             raise ValueError("'record_id' must be a non-empty string.")
 
+        # 5. Payload validation via registry
+        PayloadSchemaRegistry.validate_payload(self.record_type, self.payload)
+
         return self
 
     def to_context_contract(self) -> Any:
-        """Convert this MemoryRecord into a B2 / C.3 MemoryContextContract."""
+        """Convert this MemoryRecord into a B2 / C.3 MemoryContextContract preserving all scopes and entity IDs."""
         from modules.context.boundary.models import MemoryContextContract
         from modules.context.boundary.enums import ContextScope as C3ContextScope
 
-        # Map MemoryScope to C3ContextScope
         scope_map = {
             MemoryScope.USER: C3ContextScope.FARMER,
             MemoryScope.CONVERSATION: C3ContextScope.SESSION,
@@ -188,12 +320,23 @@ class MemoryRecord(BaseModel):
         }
         c3_scope = scope_map.get(self.scope_type, C3ContextScope.FARMER)
 
+        # Populate scope entity references accurately
+        farmer_id = self.owner_id
+        session_id = self.scope_id if self.scope_type == MemoryScope.CONVERSATION else None
+        farm_id = self.scope_id if self.scope_type == MemoryScope.FARM else None
+        field_id = self.scope_id if self.scope_type == MemoryScope.FIELD else None
+        crop_cycle_id = self.scope_id if self.scope_type == MemoryScope.CROP_CYCLE else None
+
         return MemoryContextContract(
             memory_id=self.record_id,
             classification=self.classification,
             scope=c3_scope,
             content=self.payload,
-            farmer_id=self.owner_id,
+            farmer_id=farmer_id,
+            farm_id=farm_id,
+            field_id=field_id,
+            crop_cycle_id=crop_cycle_id,
+            session_id=session_id,
             provenance={
                 "source": self.source,
                 "domain": self.domain.value,
@@ -221,19 +364,53 @@ class MemoryRecord(BaseModel):
         owner_id: Optional[str] = None,
         source: Optional[str] = None,
     ) -> "MemoryRecord":
-        """Factory creating a MemoryRecord from an existing MemoryContextContract."""
+        """Factory creating a MemoryRecord from an existing MemoryContextContract.
+
+        Never fabricates ownership identities; raises ValueError if required ownership is missing.
+        """
+        from modules.context.boundary.enums import ContextScope as C3ContextScope
+
         resolved_owner = owner_id or getattr(contract, "farmer_id", None)
         if domain == MemoryDomain.USER and not resolved_owner:
-            resolved_owner = "system_unspecified_user"
+            raise ValueError(
+                "Cannot convert MemoryContextContract to USER domain MemoryRecord: "
+                "missing required owner identity (farmer_id)."
+            )
+
+        # Map C3ContextScope back to MemoryScope
+        c3_scope = getattr(contract, "scope", C3ContextScope.FARMER)
+        scope_map = {
+            C3ContextScope.FARMER: MemoryScope.USER,
+            C3ContextScope.SESSION: MemoryScope.CONVERSATION,
+            C3ContextScope.FARM: MemoryScope.FARM,
+            C3ContextScope.FIELD: MemoryScope.FIELD,
+            C3ContextScope.CROP_CYCLE: MemoryScope.CROP_CYCLE,
+            C3ContextScope.GLOBAL: MemoryScope.GENERAL,
+            C3ContextScope.REGIONAL: MemoryScope.GENERAL,
+        }
+        mem_scope = scope_map.get(c3_scope, MemoryScope.USER if domain == MemoryDomain.USER else MemoryScope.GENERAL)
+
+        # Resolve scope_id from specific contract field
+        scope_id = (
+            getattr(contract, "field_id", None)
+            or getattr(contract, "farm_id", None)
+            or getattr(contract, "crop_cycle_id", None)
+            or getattr(contract, "session_id", None)
+            or resolved_owner
+            or "general_scope"
+        )
+
+        content = getattr(contract, "content", {})
+        payload = {"content": content} if not isinstance(content, dict) else content
 
         return cls(
             record_id=contract.memory_id,
             domain=domain,
             record_type=record_type,
             owner_id=resolved_owner if domain == MemoryDomain.USER else None,
-            scope_type=MemoryScope.USER if domain == MemoryDomain.USER else MemoryScope.GENERAL,
-            scope_id=getattr(contract, "farmer_id", None) or "general",
-            payload={"content": contract.content} if not isinstance(contract.content, dict) else contract.content,
+            scope_type=mem_scope,
+            scope_id=scope_id,
+            payload=payload,
             source=source or (contract.provenance.get("source") if hasattr(contract, "provenance") else "b2_context"),
             classification=getattr(contract, "classification", KnowledgeClassification.FARMER_KNOWLEDGE),
             correlation_id=getattr(contract, "trace_id", None),

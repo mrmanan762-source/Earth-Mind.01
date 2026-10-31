@@ -19,10 +19,12 @@ from core.schemas.memory import (
     MemoryRecordStatus,
     MemoryErrorCode,
     MemoryOperation,
+    PrincipalType,
     MemoryRecord,
     AuthorizationContext,
     MemorySearchCriteria,
     StorageHealthResult,
+    PayloadSchemaRegistry,
 )
 from core.interfaces.memory_storage import IMemoryStorageAdapter
 from modules.memory.storage_adapter import InMemoryMemoryStorageAdapter
@@ -57,10 +59,12 @@ __all__ = [
     "MemoryRecordStatus",
     "MemoryErrorCode",
     "MemoryOperation",
+    "PrincipalType",
     "MemoryRecord",
     "AuthorizationContext",
     "MemorySearchCriteria",
     "StorageHealthResult",
+    "PayloadSchemaRegistry",
     "IMemoryStorageAdapter",
     "InMemoryMemoryStorageAdapter",
     # Level 1 Exceptions
