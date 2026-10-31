@@ -1,6 +1,7 @@
 """EarthMind Memory Module.
 
-Provides memory services, record models, storage abstractions, and boundary integration.
+Provides memory services, record models, storage abstractions, domain security,
+and boundary integration conforming to Memory Module Architecture Specification v1.0.
 """
 
 from core.interfaces.services import MemoryInterface
@@ -41,6 +42,17 @@ from modules.memory.errors import (
     MemoryInternalError,
 )
 
+# Level 2 Security & Domains
+from core.schemas.memory_security import (
+    SecurityDecision,
+    SecurityAuditAction,
+    MemorySecurityAuditEvent,
+)
+from modules.memory.security import (
+    MemorySecurityAuditor,
+    MemorySecurityEnforcer,
+)
+
 __all__ = [
     # Legacy interfaces & components
     "MemoryInterface",
@@ -76,4 +88,10 @@ __all__ = [
     "MemoryRetentionPolicyViolationError",
     "MemoryIntegrityError",
     "MemoryInternalError",
+    # Level 2 Security & Domains
+    "SecurityDecision",
+    "SecurityAuditAction",
+    "MemorySecurityAuditEvent",
+    "MemorySecurityAuditor",
+    "MemorySecurityEnforcer",
 ]
