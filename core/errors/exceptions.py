@@ -562,6 +562,138 @@ class ContextConfigurationError(ContextError):
         )
 
 
+class MemoryError(EarthMindException):
+    """Base exception for all Memory Module errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "MEMORY_ERROR",
+        operation: str = "memory_operation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="memory",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {}
+        )
+
+
+class MemoryInvalidArgumentError(MemoryError):
+    def __init__(self, details: str, operation: str = "validate_argument"):
+        super().__init__(
+            message=f"Invalid argument in memory operation: {details}",
+            error_code="INVALID_ARGUMENT",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryInvalidRecordSchemaError(MemoryError):
+    def __init__(self, details: str, operation: str = "validate_schema"):
+        super().__init__(
+            message=f"Invalid memory record schema: {details}",
+            error_code="INVALID_RECORD_SCHEMA",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryUnauthorizedError(MemoryError):
+    def __init__(self, details: str = "Authentication required or credentials missing.", operation: str = "authorize"):
+        super().__init__(
+            message=f"Unauthorized memory access: {details}",
+            error_code="UNAUTHORIZED",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryForbiddenError(MemoryError):
+    def __init__(self, details: str = "Action forbidden by access control policy.", operation: str = "authorize"):
+        super().__init__(
+            message=f"Forbidden memory access: {details}",
+            error_code="FORBIDDEN",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryNotFoundError(MemoryError):
+    def __init__(self, record_id: str, operation: str = "retrieve_record"):
+        super().__init__(
+            message=f"Memory record '{record_id}' not found.",
+            error_code="NOT_FOUND",
+            operation=operation,
+            metadata={"record_id": record_id}
+        )
+
+
+class MemoryConflictError(MemoryError):
+    def __init__(self, record_id: str, details: str, operation: str = "update_record"):
+        super().__init__(
+            message=f"Version conflict on memory record '{record_id}': {details}",
+            error_code="CONFLICT",
+            operation=operation,
+            metadata={"record_id": record_id, "details": details}
+        )
+
+
+class MemoryStorageUnavailableError(MemoryError):
+    def __init__(self, provider_name: str, details: str = "Storage provider is unavailable.", operation: str = "storage_access"):
+        super().__init__(
+            message=f"Memory storage '{provider_name}' unavailable: {details}",
+            error_code="STORAGE_UNAVAILABLE",
+            operation=operation,
+            retryable=True,
+            metadata={"provider_name": provider_name, "details": details}
+        )
+
+
+class MemoryStorageError(MemoryError):
+    def __init__(self, details: str, operation: str = "storage_execute", retryable: bool = False):
+        super().__init__(
+            message=f"Memory storage error: {details}",
+            error_code="STORAGE_ERROR",
+            operation=operation,
+            retryable=retryable,
+            metadata={"details": details}
+        )
+
+
+class MemoryRetentionPolicyViolationError(MemoryError):
+    def __init__(self, details: str, operation: str = "apply_retention"):
+        super().__init__(
+            message=f"Retention policy violation: {details}",
+            error_code="RETENTION_POLICY_VIOLATION",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryIntegrityError(MemoryError):
+    def __init__(self, details: str, operation: str = "verify_integrity"):
+        super().__init__(
+            message=f"Memory integrity error: {details}",
+            error_code="INTEGRITY_ERROR",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
+class MemoryInternalError(MemoryError):
+    def __init__(self, details: str, operation: str = "execute"):
+        super().__init__(
+            message=f"Internal memory module failure: {details}",
+            error_code="INTERNAL_ERROR",
+            operation=operation,
+            metadata={"details": details}
+        )
+
+
 class ConfigurationError(EarthMindException):
     """Exception raised for top-level application or module configuration errors."""
 
