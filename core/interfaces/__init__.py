@@ -30,4 +30,7 @@ __all__ = [
     "IQueryMetadataExtractor",
     "IQueryExpansionStrategy",
     "IQueryProcessorEngine",
+    "IMemoryStorageAdapter",
 ]
+
+from core.interfaces.memory_storage import IMemoryStorageAdapter
