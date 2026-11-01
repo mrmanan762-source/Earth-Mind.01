@@ -1,6 +1,7 @@
 """EarthMind Memory Module.
 
-Provides memory services, record models, storage abstractions, and boundary integration.
+Provides memory services, record models, storage abstractions, domain security,
+and boundary integration conforming to Memory Module Architecture Specification v1.0.
 """
 
 from core.interfaces.services import MemoryInterface
@@ -26,6 +27,7 @@ from core.schemas.memory import (
 )
 from core.interfaces.memory_storage import IMemoryStorageAdapter
 from modules.memory.storage_adapter import InMemoryMemoryStorageAdapter
+from modules.memory.supabase_adapter import SupabasePostgresMemoryStorageAdapter
 from modules.memory.errors import (
     MemoryError,
     MemoryInvalidArgumentError,
@@ -39,6 +41,17 @@ from modules.memory.errors import (
     MemoryRetentionPolicyViolationError,
     MemoryIntegrityError,
     MemoryInternalError,
+)
+
+# Level 2 Security & Domains
+from core.schemas.memory_security import (
+    SecurityDecision,
+    SecurityAuditAction,
+    MemorySecurityAuditEvent,
+)
+from modules.memory.security import (
+    MemorySecurityAuditor,
+    MemorySecurityEnforcer,
 )
 
 __all__ = [
@@ -63,6 +76,7 @@ __all__ = [
     "StorageHealthResult",
     "IMemoryStorageAdapter",
     "InMemoryMemoryStorageAdapter",
+    "SupabasePostgresMemoryStorageAdapter",
     # Level 1 Exceptions
     "MemoryError",
     "MemoryInvalidArgumentError",
@@ -76,4 +90,10 @@ __all__ = [
     "MemoryRetentionPolicyViolationError",
     "MemoryIntegrityError",
     "MemoryInternalError",
+    # Level 2 Security & Domains
+    "SecurityDecision",
+    "SecurityAuditAction",
+    "MemorySecurityAuditEvent",
+    "MemorySecurityAuditor",
+    "MemorySecurityEnforcer",
 ]
