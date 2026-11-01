@@ -1,10 +1,12 @@
-"""Secure Memory Domain Service Layer for EarthMind Memory Module Level 2.
+"""Secure Memory Domain Service Layer for EarthMind Memory Module Level 4.
 
 Wraps an IMemoryStorageAdapter with MemorySecurityEnforcer and MemorySecurityAuditor,
 enforcing centralized domain separation, user ownership, scope boundaries,
-General Memory governance, and anti-promotion rules across all operations.
+General Memory governance, anti-promotion rules, version management,
+and lifecycle operations across all operations.
 """
 
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from core.interfaces.memory_storage import IMemoryStorageAdapter
 from core.schemas.memory import (
@@ -15,6 +17,9 @@ from core.schemas.memory import (
     MemoryRecordStatus,
     MemoryScope,
     MemorySearchCriteria,
+    PurgeCriteria,
+    PurgeResult,
+    RetentionPolicy,
     StorageHealthResult,
 )
 from modules.memory.errors import (
@@ -23,6 +28,8 @@ from modules.memory.errors import (
     MemoryNotFoundError,
     MemoryUnauthorizedError,
 )
+from modules.memory.memory_lifecycle import MemoryLifecycleManager
+from modules.memory.memory_validator import MemoryRecordValidator
 from modules.memory.security import (
     MemorySecurityAuditor,
     MemorySecurityEnforcer,
@@ -30,7 +37,7 @@ from modules.memory.security import (
 
 
 class MemoryService:
-    """Secure memory service managing User and General memory domains.
+    """Complete and secure memory service managing User and General memory domains.
 
     Enforces:
     - Mandatory, trusted AuthorizationContext on all operations.
@@ -40,6 +47,9 @@ class MemoryService:
     - Prevention of private User Memory leaking into General Memory.
     - Centralized audit events without sensitive payload leakage.
     - Fail-closed behavior for all unauthorized access attempts.
+    - Level 4 record-type payload schema validation and immutable field enforcement.
+    - Version progression and optimistic locking.
+    - Lifecycle, retention, expiry evaluation, logical deletion vs physical purge.
     """
 
     def __init__(
@@ -47,27 +57,31 @@ class MemoryService:
         storage_adapter: IMemoryStorageAdapter,
         enforcer: Optional[MemorySecurityEnforcer] = None,
         auditor: Optional[MemorySecurityAuditor] = None,
+        lifecycle_manager: Optional[MemoryLifecycleManager] = None,
     ):
         self.storage = storage_adapter
         self.auditor = auditor or (enforcer.auditor if enforcer else MemorySecurityAuditor())
         self.enforcer = enforcer or MemorySecurityEnforcer(auditor=self.auditor)
+        self.lifecycle = lifecycle_manager or MemoryLifecycleManager(
+            storage_adapter=self.storage,
+            enforcer=self.enforcer,
+        )
+
+    # -------------------------------------------------------------------------
+    # Core Memory Operations: store, retrieve, search, update, delete, get_metadata, check_health
+    # -------------------------------------------------------------------------
 
     def store_record(
         self,
         context: Optional[AuthorizationContext],
         record: MemoryRecord,
     ) -> MemoryRecord:
-        """Store a new memory record under security governance.
-
-        Raises:
-            MemoryUnauthorizedError: If context is missing or invalid.
-            MemoryForbiddenError: If unauthorized, cross-user write, or invalid General write.
-            MemoryInvalidArgumentError: If domain or scope combinations are invalid.
-            MemoryConflictError: If record_id already exists in storage.
-        """
-        # Validate record structure
+        """Store a new memory record under security governance and record validation."""
         if not isinstance(record, MemoryRecord):
             raise MemoryInvalidArgumentError("Record must be a valid MemoryRecord instance.", operation="store_record")
+
+        # Validate schema and payload rules
+        MemoryRecordValidator.validate_new_record(record)
 
         # Enforce security authorization
         self.enforcer.enforce_authorization(
@@ -82,21 +96,26 @@ class MemoryService:
             record=record,
         )
 
+        # Apply retention policy if record has retention_policy_id
+        if record.retention_policy_id:
+            record = self.lifecycle.apply_retention_policy(record)
+
         return self.storage.store_record(record)
+
+    def store(
+        self,
+        context: Optional[AuthorizationContext],
+        record: MemoryRecord,
+    ) -> MemoryRecord:
+        """Alias for store_record satisfying Level 4 API specifications."""
+        return self.store_record(context=context, record=record)
 
     def get_record(
         self,
         context: Optional[AuthorizationContext],
         record_id: str,
     ) -> MemoryRecord:
-        """Retrieve a single record by record_id subject to authorization.
-
-        Raises:
-            MemoryUnauthorizedError: If context is missing or invalid.
-            MemoryNotFoundError: If record does not exist.
-            MemoryForbiddenError: If principal lacks access to record's domain, scope, or owner.
-        """
-        # Validate context presence first to fail closed
+        """Retrieve a single record by record_id subject to authorization."""
         if context is None or not getattr(context, "principal_id", None) or not context.principal_id.strip():
             self.enforcer.enforce_authorization(
                 context=context,
@@ -109,12 +128,10 @@ class MemoryService:
         if not record_id or not str(record_id).strip():
             raise MemoryInvalidArgumentError("Record ID cannot be empty.", operation="get_record")
 
-        # Fetch record from storage
         record = self.storage.get_record(record_id)
         if record is None:
             raise MemoryNotFoundError(record_id, operation="get_record")
 
-        # Enforce security authorization against retrieved record
         self.enforcer.enforce_authorization(
             context=context,
             operation=MemoryOperation.READ,
@@ -129,22 +146,23 @@ class MemoryService:
 
         return record
 
+    def retrieve(
+        self,
+        context: Optional[AuthorizationContext],
+        record_id: str,
+    ) -> MemoryRecord:
+        """Alias for get_record satisfying Level 4 API specifications."""
+        return self.get_record(context=context, record_id=record_id)
+
     def search_records(
         self,
         context: Optional[AuthorizationContext],
         criteria: MemorySearchCriteria,
     ) -> List[MemoryRecord]:
-        """Search records subject to authorization.
-
-        Ensures that:
-        - For USER domain: criteria is bound to authorized owner and scope boundaries.
-        - For GENERAL domain: read authorization is enforced.
-        - Unfiltered broad searches across other users are rejected fail-closed.
-        """
+        """Search records subject to authorization and bounded pagination."""
         if not isinstance(criteria, MemorySearchCriteria):
             raise MemoryInvalidArgumentError("Criteria must be a MemorySearchCriteria instance.", operation="search_records")
 
-        # Check missing or invalid auth context immediately
         if context is None or not getattr(context, "principal_id", None) or not context.principal_id.strip():
             self.enforcer.enforce_authorization(
                 context=context,
@@ -153,18 +171,12 @@ class MemoryService:
                 scope_type=criteria.scope_type or MemoryScope.USER,
             )
 
-        # If domain is not specified, evaluate based on owner_id or fail-closed
-        effective_domain = criteria.domain
-        if effective_domain is None:
-            # If search specifies no domain, default to USER domain bound to the authenticated principal
-            effective_domain = MemoryDomain.USER
+        effective_domain = criteria.domain or MemoryDomain.USER
 
         if effective_domain == MemoryDomain.USER:
-            # The search must be restricted to the authenticated principal or context owner
             principal = context.principal_id.strip()
             claimed_owner = criteria.owner_id or principal
 
-            # Authorize scope and owner
             self.enforcer.enforce_authorization(
                 context=context,
                 operation=MemoryOperation.SEARCH,
@@ -174,12 +186,9 @@ class MemoryService:
                 owner_id=claimed_owner,
                 correlation_id=criteria.correlation_id,
             )
-
-            # Restrict search criteria strictly to the authorized owner
             criteria = criteria.model_copy(update={"domain": MemoryDomain.USER, "owner_id": claimed_owner})
 
         elif effective_domain == MemoryDomain.GENERAL:
-            # Authorize General search
             self.enforcer.enforce_authorization(
                 context=context,
                 operation=MemoryOperation.SEARCH,
@@ -191,10 +200,8 @@ class MemoryService:
             )
             criteria = criteria.model_copy(update={"domain": MemoryDomain.GENERAL, "owner_id": None})
 
-        # Execute search on storage adapter
         records = self.storage.search_records(criteria)
 
-        # Secondary filtering to guarantee zero information leakage
         authorized_records: List[MemoryRecord] = []
         for rec in records:
             try:
@@ -215,13 +222,21 @@ class MemoryService:
 
         return authorized_records
 
+    def search(
+        self,
+        context: Optional[AuthorizationContext],
+        criteria: MemorySearchCriteria,
+    ) -> List[MemoryRecord]:
+        """Alias for search_records satisfying Level 4 API specifications."""
+        return self.search_records(context=context, criteria=criteria)
+
     def update_record(
         self,
         context: Optional[AuthorizationContext],
         record: MemoryRecord,
         expected_version: Optional[int] = None,
     ) -> MemoryRecord:
-        """Update an existing record with security enforcement and concurrency control."""
+        """Update an existing record with security enforcement, validation, and optimistic locking."""
         if context is None or not getattr(context, "principal_id", None) or not context.principal_id.strip():
             self.enforcer.enforce_authorization(
                 context=context,
@@ -234,10 +249,12 @@ class MemoryService:
         if not isinstance(record, MemoryRecord):
             raise MemoryInvalidArgumentError("Record must be a valid MemoryRecord instance.", operation="update_record")
 
-        # Verify existing record first to prevent spoofing record identity/owner
         existing = self.storage.get_record(record.record_id)
         if existing is None:
             raise MemoryNotFoundError(record.record_id, operation="update_record")
+
+        # Validate update against existing state and schemas
+        MemoryRecordValidator.validate_update(existing, record)
 
         # Enforce authorization against the existing record state
         self.enforcer.enforce_authorization(
@@ -252,15 +269,7 @@ class MemoryService:
             record=existing,
         )
 
-        # Enforce that updated record cannot change domain or ownership
-        if record.domain != existing.domain:
-            raise MemoryForbiddenError("Cannot change domain of an existing record.", operation="update_record")
-        if record.owner_id != existing.owner_id:
-            raise MemoryForbiddenError("Cannot reassign ownership of an existing record.", operation="update_record")
-        if record.scope_type != existing.scope_type:
-            raise MemoryForbiddenError("Cannot change scope_type of an existing record.", operation="update_record")
-
-        # Enforce authorization against the new updated record
+        # Enforce authorization against the updated record
         self.enforcer.enforce_authorization(
             context=context,
             operation=MemoryOperation.UPDATE,
@@ -273,7 +282,21 @@ class MemoryService:
             record=record,
         )
 
+        # Ensure updated_at is UTC now if not updated
+        now = datetime.now(timezone.utc)
+        if record.updated_at <= existing.updated_at:
+            record = record.model_copy(update={"updated_at": now})
+
         return self.storage.update_record(record, expected_version=expected_version)
+
+    def update(
+        self,
+        context: Optional[AuthorizationContext],
+        record: MemoryRecord,
+        expected_version: Optional[int] = None,
+    ) -> MemoryRecord:
+        """Alias for update_record satisfying Level 4 API specifications."""
+        return self.update_record(context=context, record=record, expected_version=expected_version)
 
     def delete_record(
         self,
@@ -281,7 +304,7 @@ class MemoryService:
         record_id: str,
         soft: bool = True,
     ) -> bool:
-        """Delete a record subject to authorization."""
+        """Delete a record subject to authorization (supports soft deletion and hard purge)."""
         if context is None or not getattr(context, "principal_id", None) or not context.principal_id.strip():
             self.enforcer.enforce_authorization(
                 context=context,
@@ -298,7 +321,6 @@ class MemoryService:
         if existing is None:
             return False
 
-        # Enforce delete permission
         self.enforcer.enforce_authorization(
             context=context,
             operation=MemoryOperation.DELETE,
@@ -312,6 +334,15 @@ class MemoryService:
         )
 
         return self.storage.delete_record(record_id, soft=soft)
+
+    def delete(
+        self,
+        context: Optional[AuthorizationContext],
+        record_id: str,
+        soft: bool = True,
+    ) -> bool:
+        """Alias for delete_record satisfying Level 4 API specifications."""
+        return self.delete_record(context=context, record_id=record_id, soft=soft)
 
     def get_record_metadata(
         self,
@@ -335,7 +366,6 @@ class MemoryService:
         if existing is None:
             raise MemoryNotFoundError(record_id, operation="get_record_metadata")
 
-        # Enforce authorization
         self.enforcer.enforce_authorization(
             context=context,
             operation=MemoryOperation.READ,
@@ -353,6 +383,57 @@ class MemoryService:
             raise MemoryNotFoundError(record_id, operation="get_record_metadata")
         return meta
 
+    def get_metadata(
+        self,
+        context: Optional[AuthorizationContext],
+        record_id: str,
+    ) -> Dict[str, Any]:
+        """Alias for get_record_metadata satisfying Level 4 API specifications."""
+        return self.get_record_metadata(context=context, record_id=record_id)
+
     def check_health(self) -> StorageHealthResult:
         """Evaluate storage connectivity and status."""
         return self.storage.check_health()
+
+    def health_check(self) -> StorageHealthResult:
+        """Alias for check_health satisfying Level 4 API specifications."""
+        return self.check_health()
+
+    # -------------------------------------------------------------------------
+    # Lifecycle & Retention Operations
+    # -------------------------------------------------------------------------
+
+    def register_retention_policy(self, policy: RetentionPolicy) -> None:
+        """Register a retention policy in the lifecycle manager."""
+        self.lifecycle.register_policy(policy)
+
+    def enforce_retention(
+        self,
+        context: Optional[AuthorizationContext],
+        domain: Optional[MemoryDomain] = None,
+        owner_id: Optional[str] = None,
+        as_of: Optional[datetime] = None,
+    ) -> Dict[str, Any]:
+        """Mark eligible expired records with status EXPIRED under security context."""
+        return self.lifecycle.enforce_retention(
+            context=context,
+            domain=domain,
+            owner_id=owner_id,
+            as_of=as_of,
+        )
+
+    def purge_records(
+        self,
+        context: Optional[AuthorizationContext],
+        criteria: PurgeCriteria,
+    ) -> PurgeResult:
+        """Permanently erase eligible records under security governance."""
+        return self.lifecycle.purge_records(context=context, criteria=criteria)
+
+    def verify_deletion(
+        self,
+        context: Optional[AuthorizationContext],
+        record_id: str,
+    ) -> Dict[str, Any]:
+        """Verify whether a record is active, logically deleted, or physically purged."""
+        return self.lifecycle.verify_deletion(context=context, record_id=record_id)

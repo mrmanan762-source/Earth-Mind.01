@@ -1,20 +1,24 @@
-"""Memory Module Level 1 Contracts and Record Models.
+"""Memory Module Level 1 & Level 4 Contracts, Record Models, and Lifecycle Schemas.
 
 Defines foundational schemas for the EarthMind Memory Module:
 - MemoryDomain (USER, GENERAL)
 - MemoryScope (USER, CONVERSATION, FARM, FIELD, CROP_CYCLE, GENERAL)
 - MemoryRecordStatus (ACTIVE, ARCHIVED, DELETED, EXPIRED, PENDING)
 - MemoryErrorCode (Approved error categories)
-- MemoryOperation (CREATE, READ, UPDATE, DELETE, SEARCH)
+- MemoryOperation (CREATE, READ, UPDATE, DELETE, SEARCH, PURGE)
+- PrincipalType (USER, SERVICE, SYSTEM, ANONYMOUS)
 - MemoryRecord (Core record model with 17 approved fields and strict validation)
 - AuthorizationContext (Contract for trusted identity/authorization from Auth boundary)
-- MemorySearchCriteria (Structured search query contract)
+- MemorySearchCriteria (Structured search query contract with deterministic sorting)
 - StorageHealthResult (Storage health and capability status)
+- PayloadSchemaRegistry (Extensible record-type payload validator registry)
+- RetentionPolicy & RetentionCategory (Record retention and lifecycle governance)
+- PurgeCriteria & PurgeResult (Authorized physical purge models)
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Type
 from pydantic import BaseModel, Field, model_validator
 import uuid
 
@@ -69,6 +73,98 @@ class MemoryOperation(str, Enum):
     UPDATE = "UPDATE"
     DELETE = "DELETE"
     SEARCH = "SEARCH"
+    PURGE = "PURGE"
+
+
+class PrincipalType(str, Enum):
+    """Approved principal types representing acting subjects."""
+    USER = "USER"
+    SERVICE = "SERVICE"
+    SYSTEM = "SYSTEM"
+    ANONYMOUS = "ANONYMOUS"
+
+
+class PayloadSchemaRegistry:
+    """Extensible registry for record-type payload schemas and validation functions."""
+
+    _validators: Dict[str, Callable[[Dict[str, Any]], None]] = {}
+    _allow_unregistered: bool = True
+
+    @classmethod
+    def register_schema(
+        cls,
+        record_type: str,
+        validator_or_model: Any,
+    ) -> None:
+        """Register a validation callable or Pydantic model for a given record_type."""
+        if hasattr(validator_or_model, "model_validate"):
+            def _validate_pydantic(payload: Dict[str, Any]) -> None:
+                validator_or_model.model_validate(payload)
+            cls._validators[record_type] = _validate_pydantic
+        elif callable(validator_or_model):
+            cls._validators[record_type] = validator_or_model
+        else:
+            raise ValueError("Validator must be a callable or Pydantic model class.")
+
+    @classmethod
+    def set_allow_unregistered(cls, allow: bool) -> None:
+        """Configure whether unregistered record types are accepted or rejected."""
+        cls._allow_unregistered = allow
+
+    @classmethod
+    def is_unregistered_allowed(cls) -> bool:
+        """Return whether unregistered record types are accepted."""
+        return cls._allow_unregistered
+
+    @classmethod
+    def clear_registry(cls) -> None:
+        """Clear all registered payload validators and reset defaults."""
+        cls._validators.clear()
+        cls._allow_unregistered = True
+
+    @classmethod
+    def validate_payload(cls, record_type: str, payload: Dict[str, Any]) -> None:
+        """Validate payload against registered schema for record_type.
+
+        Raises:
+            ValueError: If payload fails validation or if unregistered types are disallowed.
+        """
+        if not isinstance(payload, dict):
+            raise ValueError(f"Payload must be a dictionary, got {type(payload).__name__}.")
+
+        validator = cls._validators.get(record_type)
+        if validator is not None:
+            validator(payload)
+        elif not cls._allow_unregistered:
+            raise ValueError(f"Unregistered record_type '{record_type}' is not allowed by PayloadSchemaRegistry.")
+
+
+class RetentionCategory(str, Enum):
+    """Category classification for record retention policies."""
+    TRANSIENT_SESSION = "TRANSIENT_SESSION"
+    OPERATIONAL_SEASONAL = "OPERATIONAL_SEASONAL"
+    LONG_TERM_FARM = "LONG_TERM_FARM"
+    LEGAL_AUDIT = "LEGAL_AUDIT"
+    GENERAL_REGULATORY = "GENERAL_REGULATORY"
+    CUSTOM = "CUSTOM"
+
+
+class RetentionPolicy(BaseModel):
+    """Specification of retention rules for a record category."""
+    policy_id: str = Field(..., min_length=1, description="Unique policy identifier")
+    category: RetentionCategory = Field(RetentionCategory.OPERATIONAL_SEASONAL, description="Retention category")
+    description: str = Field("", description="Human-readable explanation of retention purpose")
+    ttl_seconds: Optional[int] = Field(None, ge=1, description="Optional time-to-live duration in seconds")
+    auto_purge_on_expiry: bool = Field(False, description="Whether expired records may be automatically physically purged")
+    allow_extension: bool = Field(True, description="Whether expiry timestamp can be renewed on update")
+    require_governance_for_purge: bool = Field(True, description="Whether purge requires elevated governance context")
+
+    def calculate_expiration(self, from_time: Optional[datetime] = None) -> Optional[datetime]:
+        """Compute expiration timestamp based on TTL policy."""
+        if self.ttl_seconds is None:
+            return None
+        base = from_time or datetime.now(timezone.utc)
+        return base + timedelta(seconds=self.ttl_seconds)
 
 
 class AuthorizationContext(BaseModel):
@@ -77,7 +173,8 @@ class AuthorizationContext(BaseModel):
     Memory Module does not perform authentication. This contract represents verified credentials
     and permissions passed into memory operations.
     """
-    principal_id: str = Field(..., description="Unique trusted identity identifier of the acting subject")
+    principal_id: str = Field(..., min_length=1, description="Unique trusted identity identifier of the acting subject")
+    principal_type: PrincipalType = Field(PrincipalType.USER, description="Type of principal")
     roles: List[str] = Field(default_factory=list, description="Assigned roles for the subject")
     owner_id: Optional[str] = Field(None, description="Owner entity identifier if subject is acting on behalf of owner")
     accessible_scopes: Dict[str, List[str]] = Field(
@@ -100,6 +197,14 @@ class AuthorizationContext(BaseModel):
         if self.owner_id and record_owner_id and self.owner_id == record_owner_id:
             return True
         return self.principal_id == record_owner_id
+
+    def is_authenticated(self) -> bool:
+        """Verify principal identity is authenticated."""
+        if self.principal_type == PrincipalType.ANONYMOUS:
+            return False
+        if not self.principal_id or not self.principal_id.strip():
+            return False
+        return True
 
 
 class MemoryRecord(BaseModel):
@@ -170,7 +275,17 @@ class MemoryRecord(BaseModel):
         if not self.record_id or not self.record_id.strip():
             raise ValueError("'record_id' must be a non-empty string.")
 
+        # 5. Payload validation via registry
+        PayloadSchemaRegistry.validate_payload(self.record_type, self.payload)
+
         return self
+
+    def is_expired(self, current_time: Optional[datetime] = None) -> bool:
+        """Evaluate if record is past its expiration timestamp."""
+        if self.expires_at is None:
+            return False
+        now = current_time or datetime.now(timezone.utc)
+        return self.expires_at <= now
 
     def to_context_contract(self) -> Any:
         """Convert this MemoryRecord into a B2 / C.3 MemoryContextContract."""
@@ -240,8 +355,21 @@ class MemoryRecord(BaseModel):
         )
 
 
+class MemorySortField(str, Enum):
+    """Approved sort fields for deterministic memory searches."""
+    CREATED_AT = "created_at"
+    UPDATED_AT = "updated_at"
+    RECORD_ID = "record_id"
+
+
+class SortOrder(str, Enum):
+    """Sort direction."""
+    ASC = "ASC"
+    DESC = "DESC"
+
+
 class MemorySearchCriteria(BaseModel):
-    """Structured query criteria for provider-independent record search."""
+    """Structured query criteria for provider-independent record search with deterministic ordering."""
     domain: Optional[MemoryDomain] = Field(None, description="Target domain filter")
     owner_id: Optional[str] = Field(None, description="Owner ID filter")
     scope_type: Optional[MemoryScope] = Field(None, description="Scope type filter")
@@ -250,9 +378,35 @@ class MemorySearchCriteria(BaseModel):
     status: Optional[MemoryRecordStatus] = Field(MemoryRecordStatus.ACTIVE, description="Record status filter")
     classification: Optional[KnowledgeClassification] = Field(None, description="Classification filter")
     correlation_id: Optional[str] = Field(None, description="Correlation ID filter")
+    retention_policy_id: Optional[str] = Field(None, description="Retention policy ID filter")
     include_expired: bool = Field(False, description="Whether to include expired records")
+    sort_by: MemorySortField = Field(MemorySortField.CREATED_AT, description="Primary field to sort by")
+    sort_order: SortOrder = Field(SortOrder.DESC, description="Sort direction")
     limit: int = Field(50, ge=1, le=1000, description="Maximum number of records to return")
     offset: int = Field(0, ge=0, description="Offset for pagination")
+
+
+class PurgeCriteria(BaseModel):
+    """Criteria for authorized physical deletion / purge."""
+    domain: Optional[MemoryDomain] = Field(None, description="Domain filter for purge")
+    owner_id: Optional[str] = Field(None, description="Owner filter for purge")
+    status: Optional[MemoryRecordStatus] = Field(None, description="Target status, e.g. DELETED or EXPIRED")
+    retention_policy_id: Optional[str] = Field(None, description="Target policy filter")
+    purge_expired_only: bool = Field(False, description="Whether to purge only expired records")
+    older_than: Optional[datetime] = Field(None, description="Purge records updated/deleted before this timestamp")
+    dry_run: bool = Field(False, description="Preview count without deleting")
+
+
+class PurgeResult(BaseModel):
+    """Outcome of physical purge operation."""
+    purged_count: int = Field(..., ge=0, description="Number of records physically erased")
+    eligible_count: int = Field(..., ge=0, description="Number of records matching purge criteria")
+    is_dry_run: bool = Field(False, description="Whether this was a dry-run preview")
+    executed_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="Timestamp of purge execution"
+    )
+    details: Dict[str, Any] = Field(default_factory=dict, description="Diagnostic details")
 
 
 class StorageHealthResult(BaseModel):
