@@ -31,7 +31,9 @@ def create_app():
     drone_module = DroneModule()
     data_training_module = DataTrainingModule()
     external_services_module = ExternalServicesModule()
-    context_module = ContextModule()
+
+    # Create ContextModule connected to memory_module's MemoryContextProvider
+    context_module = ContextModule(memory_provider=memory_module.context_provider)
 
     # Attach modules to lifecycle
     lifecycle.register_module("database", db_module)
