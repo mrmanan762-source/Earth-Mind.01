@@ -13,6 +13,8 @@ from core.schemas.memory import (
     MemoryRecord,
     MemoryRecordStatus,
     MemorySearchCriteria,
+    MemorySortField,
+    SortOrder,
     StorageHealthResult,
 )
 from modules.memory.errors import (
@@ -88,11 +90,23 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
             # Correlation ID filter
             if criteria.correlation_id and record.correlation_id != criteria.correlation_id:
                 continue
+            # Retention policy filter
+            if criteria.retention_policy_id and record.retention_policy_id != criteria.retention_policy_id:
+                continue
             # Expiration filter
             if not criteria.include_expired and record.expires_at and record.expires_at <= now:
                 continue
 
             results.append(copy.deepcopy(record))
+
+        # Deterministic sorting
+        reverse = (criteria.sort_order == SortOrder.DESC)
+        if criteria.sort_by == MemorySortField.CREATED_AT:
+            results.sort(key=lambda r: (r.created_at, r.record_id), reverse=reverse)
+        elif criteria.sort_by == MemorySortField.UPDATED_AT:
+            results.sort(key=lambda r: (r.updated_at, r.record_id), reverse=reverse)
+        elif criteria.sort_by == MemorySortField.RECORD_ID:
+            results.sort(key=lambda r: r.record_id, reverse=reverse)
 
         # Pagination: offset & limit
         return results[criteria.offset : criteria.offset + criteria.limit]
@@ -128,6 +142,7 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
         if soft:
             existing.status = MemoryRecordStatus.DELETED
             existing.updated_at = datetime.now(timezone.utc)
+            existing.record_version += 1
         else:
             del self._records[record_id]
         return True
@@ -151,6 +166,8 @@ class InMemoryMemoryStorageAdapter(IMemoryStorageAdapter):
             "status": record.status.value,
             "classification": record.classification.value,
             "correlation_id": record.correlation_id,
+            "retention_policy_id": record.retention_policy_id,
+            "expires_at": record.expires_at.isoformat() if record.expires_at else None,
         }
 
     def check_health(self) -> StorageHealthResult:

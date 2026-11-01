@@ -1,32 +1,28 @@
-"""EarthMind Memory Module.
+"""Top-level EarthMind Memory Module namespace and API exports."""
 
-Provides memory services, record models, storage abstractions, domain security,
-and boundary integration conforming to Memory Module Architecture Specification v1.0.
-"""
-
-from core.interfaces.services import MemoryInterface
-from modules.memory.memory_module import MemoryModule
-from modules.memory.memory_service import MemoryService
-from modules.memory.memory_retriever import MemoryRetriever
-from modules.memory.memory_lifecycle import MemoryLifecycle
-from modules.memory.memory_validator import MemoryValidator
-from modules.memory.memory_extractor import MemoryExtractor
-from modules.memory.memory_ranker import MemoryRanker
-
-# Level 1 Foundation & Contracts
 from core.schemas.memory import (
+    AuthorizationContext,
+    KnowledgeClassification,
     MemoryDomain,
-    MemoryScope,
-    MemoryRecordStatus,
     MemoryErrorCode,
     MemoryOperation,
     MemoryRecord,
-    AuthorizationContext,
+    MemoryRecordStatus,
+    MemoryScope,
     MemorySearchCriteria,
+    MemorySortField,
+    PayloadSchemaRegistry,
+    PrincipalType,
+    PurgeCriteria,
+    PurgeResult,
+    RetentionCategory,
+    RetentionPolicy,
+    SortOrder,
     StorageHealthResult,
 )
 from core.interfaces.memory_storage import IMemoryStorageAdapter
 from modules.memory.storage_adapter import InMemoryMemoryStorageAdapter
+from modules.memory.supabase_adapter import SupabasePostgresMemoryStorageAdapter
 from modules.memory.errors import (
     MemoryError,
     MemoryInvalidArgumentError,
@@ -41,40 +37,39 @@ from modules.memory.errors import (
     MemoryIntegrityError,
     MemoryInternalError,
 )
-
-# Level 2 Security & Domains
-from core.schemas.memory_security import (
-    SecurityDecision,
-    SecurityAuditAction,
-    MemorySecurityAuditEvent,
-)
 from modules.memory.security import (
     MemorySecurityAuditor,
     MemorySecurityEnforcer,
 )
+from modules.memory.memory_service import MemoryService
+from modules.memory.memory_validator import MemoryRecordValidator, MemoryValidator
+from modules.memory.memory_lifecycle import MemoryLifecycleManager, MemoryLifecycle
+from modules.memory.memory_retriever import StructuredMemoryRetriever, MemoryRetriever
+from core.interfaces.services import MemoryInterface
+from modules.memory.memory_module import MemoryModule
 
 __all__ = [
-    # Legacy interfaces & components
-    "MemoryInterface",
-    "MemoryModule",
-    "MemoryService",
-    "MemoryRetriever",
-    "MemoryLifecycle",
-    "MemoryValidator",
-    "MemoryExtractor",
-    "MemoryRanker",
-    # Level 1 Contracts
+    # Schemas & Contracts
     "MemoryDomain",
     "MemoryScope",
     "MemoryRecordStatus",
     "MemoryErrorCode",
     "MemoryOperation",
+    "PrincipalType",
     "MemoryRecord",
     "AuthorizationContext",
     "MemorySearchCriteria",
+    "MemorySortField",
+    "SortOrder",
     "StorageHealthResult",
+    "PayloadSchemaRegistry",
+    "RetentionPolicy",
+    "RetentionCategory",
+    "PurgeCriteria",
+    "PurgeResult",
     "IMemoryStorageAdapter",
     "InMemoryMemoryStorageAdapter",
+    "SupabasePostgresMemoryStorageAdapter",
     # Level 1 Exceptions
     "MemoryError",
     "MemoryInvalidArgumentError",
@@ -88,10 +83,18 @@ __all__ = [
     "MemoryRetentionPolicyViolationError",
     "MemoryIntegrityError",
     "MemoryInternalError",
-    # Level 2 Security & Domains
-    "SecurityDecision",
-    "SecurityAuditAction",
-    "MemorySecurityAuditEvent",
+    # Level 2 Security & Service
     "MemorySecurityAuditor",
     "MemorySecurityEnforcer",
+    "MemoryService",
+    # Level 4 Operations & Lifecycle
+    "MemoryRecordValidator",
+    "MemoryValidator",
+    "MemoryLifecycleManager",
+    "MemoryLifecycle",
+    "StructuredMemoryRetriever",
+    "MemoryRetriever",
+    # Legacy Module
+    "MemoryInterface",
+    "MemoryModule",
 ]
