@@ -27,6 +27,7 @@ from core.schemas.memory import (
 )
 from core.interfaces.memory_storage import IMemoryStorageAdapter
 from modules.memory.storage_adapter import InMemoryMemoryStorageAdapter
+from modules.memory.supabase_adapter import SupabasePostgresMemoryStorageAdapter
 from modules.memory.errors import (
     MemoryError,
     MemoryInvalidArgumentError,
@@ -75,6 +76,7 @@ __all__ = [
     "StorageHealthResult",
     "IMemoryStorageAdapter",
     "InMemoryMemoryStorageAdapter",
+    "SupabasePostgresMemoryStorageAdapter",
     # Level 1 Exceptions
     "MemoryError",
     "MemoryInvalidArgumentError",
