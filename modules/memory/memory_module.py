@@ -57,6 +57,18 @@ class MemoryModule(MemoryInterface):
     def shutdown(self) -> None:
         """Cleanly shutdown the memory module and release resources."""
         self._is_initialized = False
+        # If an underlying PostgreSQL database service was attached, disconnect cleanly
+        if hasattr(self, "_pg_service") and self._pg_service is not None:
+            try:
+                self._pg_service.disconnect()
+            except Exception as e:
+                logger.warning(f"Error disconnecting PostgreSQL service during MemoryModule shutdown: {e}")
+        elif hasattr(self.storage, "db") and hasattr(self.storage.db, "disconnect"):
+            try:
+                self.storage.db.disconnect()
+            except Exception as e:
+                logger.warning(f"Error disconnecting storage.db during MemoryModule shutdown: {e}")
+
         logger.info("Memory module shut down cleanly.")
 
     def store_memory(self, key: str, value: Any) -> bool:

@@ -22,10 +22,82 @@ def test_valid_production_configuration(monkeypatch):
     monkeypatch.setenv("EARTHMIND_RERANK_PROVIDER", "cross_encoder")
     monkeypatch.setenv("EARTHMIND_QDRANT_MODE", "remote")
     monkeypatch.setenv("EARTHMIND_QDRANT_URL", "https://qdrant.internal.earthmind.org:6333")
+    monkeypatch.setenv("EARTHMIND_DATABASE_URL", "postgresql://postgres:prod_pass_123@aws-0-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_SSLMODE", "require")
 
     s = Settings()
     assert s.environment == "production"
     assert s.validate_config() is True
+
+
+def test_production_rejects_localhost_postgres(monkeypatch):
+    """Verify production mode rejects localhost PostgreSQL host."""
+    monkeypatch.setenv("EARTHMIND_ENV", "production")
+    monkeypatch.setenv("EARTHMIND_EMBEDDING_PROVIDER", "self_hosted")
+    monkeypatch.setenv("EARTHMIND_RERANK_PROVIDER", "cross_encoder")
+    monkeypatch.setenv("EARTHMIND_QDRANT_MODE", "remote")
+    monkeypatch.setenv("EARTHMIND_QDRANT_URL", "https://qdrant.internal.earthmind.org:6333")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_HOST", "localhost")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_PASSWORD", "secret")
+    monkeypatch.delenv("EARTHMIND_DATABASE_URL", raising=False)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    s = Settings()
+    with pytest.raises(ConfigurationError) as exc_info:
+        s.validate_config()
+
+    assert "PostgreSQL host cannot be localhost/127.0.0.1 in production mode" in str(exc_info.value)
+
+
+def test_production_rejects_missing_postgres_password(monkeypatch):
+    """Verify production mode rejects missing PostgreSQL password."""
+    monkeypatch.setenv("EARTHMIND_ENV", "production")
+    monkeypatch.setenv("EARTHMIND_EMBEDDING_PROVIDER", "self_hosted")
+    monkeypatch.setenv("EARTHMIND_RERANK_PROVIDER", "cross_encoder")
+    monkeypatch.setenv("EARTHMIND_QDRANT_MODE", "remote")
+    monkeypatch.setenv("EARTHMIND_QDRANT_URL", "https://qdrant.internal.earthmind.org:6333")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_HOST", "db.remote.supabase.co")
+    monkeypatch.delenv("EARTHMIND_POSTGRES_PASSWORD", raising=False)
+    monkeypatch.delenv("EARTHMIND_DATABASE_URL", raising=False)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    s = Settings()
+    with pytest.raises(ConfigurationError) as exc_info:
+        s.validate_config()
+
+    assert "PostgreSQL password cannot be empty in production mode" in str(exc_info.value)
+
+
+def test_production_rejects_disabled_ssl(monkeypatch):
+    """Verify production mode rejects disabled SSL for PostgreSQL."""
+    monkeypatch.setenv("EARTHMIND_ENV", "production")
+    monkeypatch.setenv("EARTHMIND_EMBEDDING_PROVIDER", "self_hosted")
+    monkeypatch.setenv("EARTHMIND_RERANK_PROVIDER", "cross_encoder")
+    monkeypatch.setenv("EARTHMIND_QDRANT_MODE", "remote")
+    monkeypatch.setenv("EARTHMIND_QDRANT_URL", "https://qdrant.internal.earthmind.org:6333")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_HOST", "db.remote.supabase.co")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_PASSWORD", "valid_pwd")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_SSLMODE", "disable")
+    monkeypatch.delenv("EARTHMIND_DATABASE_URL", raising=False)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+
+    s = Settings()
+    with pytest.raises(ConfigurationError) as exc_info:
+        s.validate_config()
+
+    assert "PostgreSQL sslmode cannot be 'disable' in production mode" in str(exc_info.value)
+
+
+def test_invalid_postgres_pool_sizes(monkeypatch):
+    """Verify invalid pool configuration raises ConfigurationError."""
+    monkeypatch.setenv("EARTHMIND_POSTGRES_MIN_POOL", "10")
+    monkeypatch.setenv("EARTHMIND_POSTGRES_MAX_POOL", "5")
+
+    s = Settings()
+    with pytest.raises(ConfigurationError) as exc_info:
+        s.validate_config()
+
+    assert "must be >= min_pool_size" in str(exc_info.value)
 
 
 def test_production_rejects_fake_embedding_provider(monkeypatch):
