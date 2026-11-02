@@ -230,11 +230,43 @@ class EvaluationConfig(BaseModel):
     eval_version: str = Field(default_factory=lambda: os.getenv("EARTHMIND_EVAL_VERSION", "1.0.0"), description="Evaluation pipeline implementation version")
 
 
+class PostgresConfig(BaseModel):
+    """Configuration settings for PostgreSQL / Supabase PostgreSQL database."""
+    url: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_DATABASE_URL") or os.getenv("DATABASE_URL"), description="Full PostgreSQL connection URI")
+    host: str = Field(default_factory=lambda: os.getenv("EARTHMIND_POSTGRES_HOST", "localhost"), description="Database server host")
+    port: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_POSTGRES_PORT", "5432")), description="Database server port")
+    user: str = Field(default_factory=lambda: os.getenv("EARTHMIND_POSTGRES_USER", "postgres"), description="Database username")
+    password: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_POSTGRES_PASSWORD"), description="Database user password")
+    database: str = Field(default_factory=lambda: os.getenv("EARTHMIND_POSTGRES_DB", "postgres"), description="Database name")
+    sslmode: str = Field(default_factory=lambda: os.getenv("EARTHMIND_POSTGRES_SSLMODE", "prefer"), description="SSL mode ('disable', 'allow', 'prefer', 'require')")
+    connect_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_POSTGRES_CONNECT_TIMEOUT", "10.0")), description="Connection timeout in seconds")
+    statement_timeout_ms: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_POSTGRES_STATEMENT_TIMEOUT_MS", "30000")), description="Statement timeout in milliseconds")
+    min_pool_size: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_POSTGRES_MIN_POOL", "1")), description="Minimum connection pool size")
+    max_pool_size: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_POSTGRES_MAX_POOL", "10")), description="Maximum connection pool size")
+
+    def get_masked_url(self) -> Optional[str]:
+        """Return masked connection URL for diagnostics without exposing credentials."""
+        if not self.url:
+            return None
+        try:
+            from urllib.parse import urlparse, urlunparse
+            parsed = urlparse(self.url)
+            if parsed.password:
+                netloc = f"{parsed.username}:***@{parsed.hostname}"
+                if parsed.port:
+                    netloc += f":{parsed.port}"
+                return urlunparse((parsed.scheme, netloc, parsed.path, parsed.params, parsed.query, parsed.fragment))
+            return self.url
+        except Exception:
+            return "***masked_url***"
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = Field(default_factory=lambda: os.getenv("EARTHMIND_ENV", "development"), description="Application execution environment ('development', 'production', 'test', 'staging')")
     version: str = "0.1.0"
     db_path: str = Field(default_factory=lambda: os.getenv("EARTHMIND_DB_PATH", "earthmind.db"), description="SQLite database file path")
+    postgres: PostgresConfig = Field(default_factory=PostgresConfig)
     log_level: str = Field(default_factory=lambda: os.getenv("EARTHMIND_LOG_LEVEL", "INFO"), description="Logging level")
     main_model: ModelConfig = Field(
         default_factory=lambda: ModelConfig(
@@ -388,6 +420,13 @@ class Settings(BaseModel):
             cred = raw["embedding"]["credential_reference"]
             if "key" in cred.lower() or "secret" in cred.lower() or "token" in cred.lower():
                 raw["embedding"]["credential_reference"] = "***masked_ref***"
+
+        # Mask Postgres credentials
+        if raw.get("postgres"):
+            if raw["postgres"].get("password"):
+                raw["postgres"]["password"] = "***"
+            if raw["postgres"].get("url"):
+                raw["postgres"]["url"] = self.postgres.get_masked_url()
 
         return raw
 
