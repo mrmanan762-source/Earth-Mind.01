@@ -374,7 +374,29 @@ class Settings(BaseModel):
                     details={"mode": q_mode, "location": self.qdrant.location}
                 )
 
-        # --- 5. Production Constraints Enforcement ---
+        # --- 5. PostgreSQL Pool & Timeout Validations ---
+        if self.postgres.connect_timeout <= 0:
+            raise ConfigurationError(
+                f"Invalid postgres.connect_timeout: timeout must be greater than 0. Got {self.postgres.connect_timeout}.",
+                details={"setting": "postgres.connect_timeout", "value": self.postgres.connect_timeout}
+            )
+        if self.postgres.statement_timeout_ms <= 0:
+            raise ConfigurationError(
+                f"Invalid postgres.statement_timeout_ms: timeout must be greater than 0. Got {self.postgres.statement_timeout_ms}.",
+                details={"setting": "postgres.statement_timeout_ms", "value": self.postgres.statement_timeout_ms}
+            )
+        if self.postgres.min_pool_size <= 0:
+            raise ConfigurationError(
+                f"Invalid postgres.min_pool_size: must be greater than 0. Got {self.postgres.min_pool_size}.",
+                details={"setting": "postgres.min_pool_size", "value": self.postgres.min_pool_size}
+            )
+        if self.postgres.max_pool_size < self.postgres.min_pool_size:
+            raise ConfigurationError(
+                f"Invalid postgres.max_pool_size ({self.postgres.max_pool_size}): must be >= min_pool_size ({self.postgres.min_pool_size}).",
+                details={"setting": "postgres.max_pool_size", "value": self.postgres.max_pool_size}
+            )
+
+        # --- 6. Production Constraints Enforcement ---
         if is_prod:
             # Prohibit fake embedding provider in production
             if self.embedding.provider.lower() in ("fake", "mock", "dummy"):
@@ -398,6 +420,52 @@ class Settings(BaseModel):
                     "Production mode violation: In-memory Qdrant storage (location=':memory:') is prohibited in production mode. "
                     "Configure EARTHMIND_QDRANT_URL or a persistent path EARTHMIND_QDRANT_LOCATION.",
                     details={"setting": "qdrant.location", "value": self.qdrant.location}
+                )
+
+            # Production PostgreSQL persistence validation
+            pg = self.postgres
+            if not pg.url:
+                # Require explicit host, database, user, and password
+                if not pg.host or pg.host.strip() in ("localhost", "127.0.0.1", "0.0.0.0"):
+                    raise ConfigurationError(
+                        "Production mode violation: PostgreSQL host cannot be localhost/127.0.0.1 in production mode. "
+                        "Configure a valid remote Supabase / PostgreSQL endpoint via EARTHMIND_DATABASE_URL or EARTHMIND_POSTGRES_HOST.",
+                        details={"setting": "postgres.host", "value": pg.host}
+                    )
+                if not pg.password or not pg.password.strip():
+                    raise ConfigurationError(
+                        "Production mode violation: PostgreSQL password cannot be empty in production mode. "
+                        "Configure EARTHMIND_POSTGRES_PASSWORD or EARTHMIND_DATABASE_URL.",
+                        details={"setting": "postgres.password"}
+                    )
+                if not pg.database or not pg.database.strip():
+                    raise ConfigurationError(
+                        "Production mode violation: PostgreSQL database name cannot be empty in production mode. "
+                        "Configure EARTHMIND_POSTGRES_DB.",
+                        details={"setting": "postgres.database"}
+                    )
+            else:
+                # Validate URL does not point to localhost in production
+                from urllib.parse import urlparse
+                parsed_url = urlparse(pg.url)
+                if parsed_url.hostname in ("localhost", "127.0.0.1", "0.0.0.0"):
+                    raise ConfigurationError(
+                        "Production mode violation: PostgreSQL connection URL points to localhost in production mode. "
+                        "Configure a remote production Supabase / PostgreSQL instance.",
+                        details={"setting": "postgres.url", "host": parsed_url.hostname}
+                    )
+                if not parsed_url.password:
+                    raise ConfigurationError(
+                        "Production mode violation: PostgreSQL connection URL lacks authentication password in production mode.",
+                        details={"setting": "postgres.url"}
+                    )
+
+            # SSL mode enforcement in production
+            if pg.sslmode.lower() in ("disable", "allow"):
+                raise ConfigurationError(
+                    f"Production mode violation: PostgreSQL sslmode cannot be '{pg.sslmode}' in production mode. "
+                    "Use 'require', 'verify-ca', or 'verify-full' for encrypted Supabase PostgreSQL connections.",
+                    details={"setting": "postgres.sslmode", "value": pg.sslmode}
                 )
 
         return True

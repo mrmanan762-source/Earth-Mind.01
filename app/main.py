@@ -5,9 +5,13 @@ from core.schemas.application import ApplicationRequest
 from app.lifecycle import LifecycleManager
 from app.workflow import WorkflowEngine
 
+import os
 from modules.database.db_module import SQLiteDatabaseModule
+from modules.database.postgres_db import PostgresDatabaseService
 from modules.ai.ai_module import AIModule
 from modules.memory.memory_module import MemoryModule
+from modules.memory.storage_adapter import InMemoryMemoryStorageAdapter
+from modules.memory.supabase_adapter import SupabasePostgresMemoryStorageAdapter
 from modules.inspector.inspector_module import InspectorModule
 from modules.ulpu.ulpu_module import ULPUModule
 from modules.vision.vision_module import VisionModule
@@ -15,16 +19,76 @@ from modules.drone.drone_module import DroneModule
 from modules.data_training.data_training_module import DataTrainingModule
 from modules.external_services.external_services_module import ExternalServicesModule
 from modules.context.context_module import ContextModule
+from core.errors.exceptions import ConfigurationError
 
 logger = get_logger("app.main")
+
+def resolve_memory_storage_adapter(environment: str):
+    """Resolve and initialize the appropriate memory storage adapter based on environment and config.
+
+    Production:
+        Requires persistent Supabase / PostgreSQL storage.
+        Initializes PostgresDatabaseService and SupabasePostgresMemoryStorageAdapter.
+        Fails fast if connection or persistence cannot be established; never silently
+        substitutes in-memory storage.
+
+    Development / Testing:
+        Uses SupabasePostgresMemoryStorageAdapter if explicitly selected or configured;
+        otherwise defaults to InMemoryMemoryStorageAdapter.
+    """
+    env = (environment or "development").lower().strip()
+    is_prod = env in ("production", "prod")
+    explicit_adapter = os.getenv("EARTHMIND_STORAGE_ADAPTER", "").lower().strip()
+
+    use_postgres = is_prod or explicit_adapter in ("postgres", "postgresql", "supabase")
+
+    if use_postgres:
+        logger.info("Initializing Supabase / PostgreSQL persistent storage adapter for Memory Module...")
+        try:
+            pg_service = PostgresDatabaseService(config=settings.postgres)
+            pg_service.connect()
+            storage_adapter = SupabasePostgresMemoryStorageAdapter(db_service=pg_service)
+            health = storage_adapter.check_health()
+            if not health.is_healthy:
+                raise ConfigurationError(
+                    f"PostgreSQL storage health check failed during bootstrap: {health.details}",
+                    details=health.details,
+                )
+            logger.info("Supabase / PostgreSQL storage adapter successfully verified and attached.")
+            return storage_adapter, pg_service
+        except Exception as exc:
+            if is_prod:
+                logger.error(f"FATAL: Production memory persistence bootstrap failed: {exc}")
+                raise ConfigurationError(
+                    f"Production memory persistence bootstrap failed: {exc}. "
+                    "Silent fallback to in-memory storage is strictly prohibited in production mode.",
+                    details={"error": str(exc)},
+                ) from exc
+            logger.warning(
+                f"PostgreSQL storage initialization failed in {env} mode ({exc}); "
+                "falling back to InMemoryMemoryStorageAdapter for development."
+            )
+            return InMemoryMemoryStorageAdapter(), None
+
+    logger.info("Initializing InMemoryMemoryStorageAdapter for Memory Module (development/test mode).")
+    return InMemoryMemoryStorageAdapter(), None
+
 
 def create_app():
     lifecycle = LifecycleManager()
 
+    # Determine environment and resolve storage adapter
+    storage_adapter, pg_service = resolve_memory_storage_adapter(settings.environment)
+
     # Create module instances
     db_module = SQLiteDatabaseModule(db_path=settings.db_path)
     ai_module = AIModule(db_service=db_module.service)
-    memory_module = MemoryModule(db_service=db_module.service)
+    memory_module = MemoryModule(
+        db_service=db_module.service,
+        storage_adapter=storage_adapter,
+    )
+    # Retain reference to pg_service for clean shutdown if created
+    memory_module._pg_service = pg_service
     inspector_module = InspectorModule()
     ulpu_module = ULPUModule()
     vision_module = VisionModule()
