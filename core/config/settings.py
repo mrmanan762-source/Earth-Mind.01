@@ -249,6 +249,14 @@ class PostgresConfig(BaseModel):
         if not self.url:
             return None
         try:
+            import re
+            # Match standard and special-character URI formats:
+            # scheme://user:password@host[:port][/database][?params]
+            pattern = r"^(?P<scheme>[^:]+://)(?P<user>[^:]+):(?P<password>.+?)@(?P<host_port_db>[^@]+)$"
+            match = re.match(pattern, self.url)
+            if match:
+                return f"{match.group('scheme')}{match.group('user')}:***@{match.group('host_port_db')}"
+
             from urllib.parse import urlparse, urlunparse
             parsed = urlparse(self.url)
             if parsed.password:

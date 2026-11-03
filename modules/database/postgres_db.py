@@ -33,10 +33,12 @@ class PostgresDatabaseService(DatabaseInterface):
                 }
 
                 if self.config.url:
+                    # Normalize URL to encode unencoded special characters in password
+                    dsn = self._normalize_dsn(self.config.url)
                     self._pool = pool.SimpleConnectionPool(
                         minconn=self.config.min_pool_size,
                         maxconn=self.config.max_pool_size,
-                        dsn=self.config.url,
+                        dsn=dsn,
                         **conn_kwargs,
                     )
                 else:
@@ -56,6 +58,22 @@ class PostgresDatabaseService(DatabaseInterface):
                 # Never log raw credentials
                 logger.error(f"Failed to connect to PostgreSQL: {type(e).__name__}")
                 raise
+
+    @staticmethod
+    def _normalize_dsn(dsn_url: str) -> str:
+        """Ensure password containing special unencoded characters like '@' or '#' is properly handled."""
+        import re
+        from urllib.parse import quote_plus
+        # Match pattern: scheme://user:password@host...
+        pattern = r"^(?P<scheme>[^:]+://)(?P<user>[^:]+):(?P<password>.+?)@(?P<host_and_rest>[^@]+)$"
+        match = re.match(pattern, dsn_url)
+        if match:
+            pwd = match.group("password")
+            # If '@' or '#' is present unencoded in the password
+            if "@" in pwd or "#" in pwd:
+                encoded_pwd = quote_plus(pwd)
+                return f"{match.group('scheme')}{match.group('user')}:{encoded_pwd}@{match.group('host_and_rest')}"
+        return dsn_url
 
     def disconnect(self) -> None:
         """Close all connections in the pool."""
