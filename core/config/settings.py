@@ -170,13 +170,81 @@ class QueryProcessingConfig(BaseModel):
 
 class WebSearchConfig(BaseModel):
     """Configuration settings for Stage R10 Web Search Engine."""
-    provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_PROVIDER", "fake"), description="Web search provider name")
-    api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_API_KEY"), description="Web search provider API key")
-    endpoint: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_ENDPOINT"), description="Web search provider API endpoint URL")
+    provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_PROVIDER", "fake"), description="Primary web search provider ('brave', 'api', 'fake')")
+    api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_API_KEY"), description="Generic web search provider API key")
+    endpoint: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_ENDPOINT"), description="Generic web search provider API endpoint URL")
     timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEB_SEARCH_TIMEOUT", "10.0")), description="Web search execution timeout in seconds")
     max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_MAX_RESULTS", "10")), description="Default maximum results returned per query")
     safe_search: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_SAFE_SEARCH", "true").lower() == "true", description="Enable safe search filtering")
-    user_agent: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_USER_AGENT", "EarthMind-RAG/1.0"), description="Custom User-Agent header for HTTP requests")
+    user_agent: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_USER_AGENT", "EarthMind-RAG/1.0 (+https://github.com/earthmind)"), description="Custom User-Agent header for HTTP requests")
+
+    # Brave Search API settings
+    brave_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_BRAVE_API_KEY"), description="Brave Search API subscription key")
+    brave_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_BRAVE_ENDPOINT", "https://api.search.brave.com/res/v1/web/search"), description="Brave Search API endpoint URL")
+    brave_enable_llm_context: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_BRAVE_ENABLE_LLM_CONTEXT", "false").lower() == "true", description="Use Brave LLM Context endpoint if available")
+    brave_country: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_BRAVE_COUNTRY", "in"), description="Default Brave search country code (e.g., 'in', 'us')")
+    brave_search_lang: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_BRAVE_SEARCH_LANG", "en"), description="Default Brave search language code")
+
+    # Wikipedia MediaWiki API settings
+    enable_wikipedia: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WIKIPEDIA_ENABLED", "true").lower() == "true", description="Enable Wikipedia supplementary search")
+    wikipedia_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WIKIPEDIA_ENDPOINT", "https://en.wikipedia.org/w/api.php"), description="Wikipedia API endpoint URL")
+    wikipedia_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WIKIPEDIA_MAX_RESULTS", "3")), description="Maximum Wikipedia results to include")
+
+    # Scientific Literature settings (Crossref & OpenAlex)
+    enable_crossref: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CROSSREF_ENABLED", "true").lower() == "true", description="Enable Crossref DOI and scholarly metadata search")
+    crossref_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_CROSSREF_ENDPOINT", "https://api.crossref.org/works"), description="Crossref works endpoint")
+    crossref_mailto: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_CROSSREF_MAILTO", "research@earthmind.org"), description="Polite pool email for Crossref API")
+    crossref_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_CROSSREF_MAX_RESULTS", "3")), description="Maximum Crossref results")
+
+    enable_openalex: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_ENABLED", "true").lower() == "true", description="Enable OpenAlex scholarly works discovery")
+    openalex_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_ENDPOINT", "https://api.openalex.org/works"), description="OpenAlex works endpoint")
+    openalex_email: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_EMAIL", "research@earthmind.org"), description="Polite pool email for OpenAlex API")
+    openalex_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_OPENALEX_MAX_RESULTS", "3")), description="Maximum OpenAlex results")
+
+    # Safe Web Page Content Retriever settings
+    enable_content_fetch: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_FETCH_CONTENT", "false").lower() == "true", description="Fetch page text extracts for top public URLs")
+    content_fetch_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEB_FETCH_TIMEOUT", "5.0")), description="Per-page content fetch timeout in seconds")
+    content_fetch_max_bytes: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_FETCH_MAX_BYTES", "1048576")), description="Maximum response size to download (1MB default)")
+
+    # Agricultural Authoritative Source Prioritization
+    trusted_agricultural_domains: List[str] = Field(
+        default_factory=lambda: [
+            "icar.org.in",
+            "agricoop.gov.in",
+            "agriwelfare.gov.in",
+            "kvk.icar.gov.in",
+            "fao.org",
+            "cgiar.org",
+            "irri.org",
+            "cimmyt.org",
+            "icrisat.org",
+            "iari.res.in",
+            "kau.in",
+            "tnau.ac.in",
+            "pau.edu",
+            "uasbangalore.edu.in",
+            "angrau.ac.in",
+            "pjtsau.edu.in",
+            "bausabour.ac.in",
+            "rpcau.ac.in",
+            "ccshau.ac.in",
+            "sknau.ac.in",
+            "iihr.res.in",
+            "iipr.icar.gov.in",
+            "cicr.org.in",
+            "cpri.icar.gov.in",
+            "iiwbr.icar.gov.in",
+            "drmr.res.in",
+            "dogr.icar.gov.in",
+            "nrri.icar.gov.in",
+            "crida.in",
+            "agricoop.nic.in",
+            "farmer.gov.in",
+            "upag.gov.in",
+        ],
+        description="Domain suffixes prioritized in search result scoring"
+    )
+    trusted_domain_boost: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_TRUSTED_DOMAIN_BOOST", "0.2")), description="Score boost for trusted agricultural domains")
 
 
 class EvidenceBuilderConfig(BaseModel):
@@ -486,10 +554,14 @@ class Settings(BaseModel):
         if raw.get("qdrant", {}).get("api_key"):
             raw["qdrant"]["api_key"] = self.qdrant.get_masked_api_key()
 
-        # Mask Web Search API key
-        if raw.get("web_search", {}).get("api_key"):
-            ws_key = raw["web_search"]["api_key"]
-            raw["web_search"]["api_key"] = f"{ws_key[:3]}***{ws_key[-3:]}" if len(ws_key) > 6 else "***"
+        # Mask Web Search API keys
+        if raw.get("web_search"):
+            if raw["web_search"].get("api_key"):
+                ws_key = raw["web_search"]["api_key"]
+                raw["web_search"]["api_key"] = f"{ws_key[:3]}***{ws_key[-3:]}" if len(ws_key) > 6 else "***"
+            if raw["web_search"].get("brave_api_key"):
+                b_key = raw["web_search"]["brave_api_key"]
+                raw["web_search"]["brave_api_key"] = f"{b_key[:3]}***{b_key[-3:]}" if len(b_key) > 6 else "***"
 
         # Mask Embedding credential reference if contains secret
         if raw.get("embedding", {}).get("credential_reference"):
