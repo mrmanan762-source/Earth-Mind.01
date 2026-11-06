@@ -186,7 +186,12 @@ def test_openalex_provider_success(mock_urlopen):
     mock_resp.__enter__.return_value = mock_resp
     mock_urlopen.return_value = mock_resp
 
-    provider = OpenAlexSearchProvider()
+    # Test with optional api key
+    cfg = WebSearchConfig(openalex_api_key="optional_openalex_key_123")
+    provider = OpenAlexSearchProvider(config=cfg)
+    assert provider.is_available()
+    assert provider.supported_capabilities()["optional_api_key"] is True
+
     req = WebSearchRequest(query_text="cotton pink bollworm ipm")
     res = provider.search(req)
 
@@ -197,3 +202,209 @@ def test_openalex_provider_success(mock_urlopen):
     assert "Anita Sharma" in item.snippet
     assert "Pink bollworm is controlled effectively." in item.snippet
     assert item.metadata.get("cited_by_count") == 42
+
+
+# --- 5. WikidataSearchProvider Tests ---
+
+from modules.knowledge_base.web_search.providers.wikidata_provider import WikidataSearchProvider
+
+@patch("urllib.request.urlopen")
+def test_wikidata_provider_success(mock_urlopen):
+    mock_body = json.dumps({
+        "results": {
+            "bindings": [
+                {
+                    "item": {"value": "http://www.wikidata.org/entity/Q81375"},
+                    "itemLabel": {"value": "cicer arietinum"},
+                    "itemDescription": {"value": "species of legume plant"},
+                    "taxonName": {"value": "Cicer arietinum"},
+                }
+            ]
+        }
+    }).encode("utf-8")
+
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = mock_body
+    mock_resp.__enter__.return_value = mock_resp
+    mock_urlopen.return_value = mock_resp
+
+    provider = WikidataSearchProvider()
+    assert provider.is_available()
+
+    req = WebSearchRequest(query_text="chickpea", language="en")
+    res = provider.search(req)
+
+    assert res.status == WebSearchStatus.SUCCESS
+    assert res.result_count == 1
+    item = res.results[0]
+    assert item.result_type == "structured_fact"
+    assert item.metadata["is_structured_fact"] is True
+    assert item.metadata["qid"] == "Q81375"
+    assert "cicer arietinum (Q81375)" in item.snippet
+    assert item.url == "https://www.wikidata.org/wiki/Q81375"
+
+
+# --- 6. NasaPowerSearchProvider Tests ---
+
+from modules.knowledge_base.web_search.providers.nasa_power_provider import NasaPowerSearchProvider
+
+@patch("urllib.request.urlopen")
+def test_nasa_power_provider_success(mock_urlopen):
+    mock_body = json.dumps({
+        "properties": {
+            "parameter": {
+                "T2M": {"20240101": 15.2, "20240102": 16.0},
+                "T2M_MAX": {"20240101": 22.1, "20240102": 23.0},
+                "T2M_MIN": {"20240101": 8.5, "20240102": 9.1},
+                "PRECTOTCORR": {"20240101": 0.0, "20240102": 1.5},
+                "ALLSKY_SFC_SW_DWN": {"20240101": 14.5, "20240102": 15.2},
+            },
+            "parameter_information": {
+                "T2M": {"units": "C"},
+                "PRECTOTCORR": {"units": "mm/day"},
+            }
+        }
+    }).encode("utf-8")
+
+    mock_resp = MagicMock()
+    mock_resp.read.return_value = mock_body
+    mock_resp.__enter__.return_value = mock_resp
+    mock_urlopen.return_value = mock_resp
+
+    provider = NasaPowerSearchProvider()
+    assert provider.is_available()
+
+    req = WebSearchRequest(
+        query_text="punjab rainfall and temperature for wheat sowing",
+        region="punjab",
+        filters={"start_date": "2024-01-01", "end_date": "2024-01-02"},
+    )
+    res = provider.search(req)
+
+    assert res.status == WebSearchStatus.SUCCESS
+    assert res.result_count == 1
+    item = res.results[0]
+    assert item.result_type == "agroclimatology"
+    assert item.metadata["is_numerical_agroclimatology"] is True
+    assert "Mean Temperature (T2M): 15.6°C" in item.snippet
+    assert "Total Precipitation: 1.5 mm" in item.snippet
+    assert item.metadata["parameter_summaries"]["T2M"]["mean"] == 15.6
+
+
+# --- 7. TavilySearchProvider Tests ---
+
+from modules.knowledge_base.web_search.providers.tavily_provider import TavilySearchProvider
+
+def test_tavily_provider_unconfigured():
+    provider = TavilySearchProvider(config=WebSearchConfig(tavily_api_key=None))
+    assert not provider.is_available()
+
+    req = WebSearchRequest(query_text="rice stem borer")
+    with pytest.raises(WebSearchAuthenticationError) as exc_info:
+        provider.search(req)
+    assert "Tavily API key is not configured" in str(exc_info.value)
+
+
+@patch("urllib.request.urlopen")
+def test_tavily_provider_with_mock_credentials(mock_urlopen):
+    mock_body = json.dumps({
+        "answer": "Pheromone traps and Cartap Hydrochloride effectively manage stem borer.",
+        "results": [
+            {
+                "title": "Stem Borer Management - IRRI",
+                "url": "https://irri.org/stem-borer",
+                "content": "Stem borer causes dead heart in vegetative stage.",
+                "score": 0.95,
+            }
+        ]
+    }).encode("utf-8")
+
+    mock_resp = MagicMock()
+    mock_resp.getcode.return_value = 200
+    mock_resp.read.return_value = mock_body
+    mock_resp.__enter__.return_value = mock_resp
+    mock_urlopen.return_value = mock_resp
+
+    cfg = WebSearchConfig(tavily_api_key="tvly-mock-key-1234")
+    provider = TavilySearchProvider(config=cfg)
+    assert provider.is_available()
+
+    req = WebSearchRequest(query_text="rice stem borer management")
+    res = provider.search(req)
+
+    assert res.status == WebSearchStatus.SUCCESS
+    assert res.result_count == 1
+    item = res.results[0]
+    assert item.result_type == "web"
+    assert item.score == 0.95
+    assert item.metadata["tavily_answer_summary"] is not None
+    assert item.url == "https://irri.org/stem-borer"
+
+
+# --- 8. GeminiGroundingSearchProvider Tests ---
+
+from modules.knowledge_base.web_search.providers.gemini_grounding_provider import GeminiGroundingSearchProvider
+
+def test_gemini_grounding_unconfigured():
+    provider = GeminiGroundingSearchProvider(config=WebSearchConfig(gemini_api_key=None))
+    assert not provider.is_available()
+
+    req = WebSearchRequest(query_text="cotton whitefly management")
+    with pytest.raises(WebSearchAuthenticationError) as exc_info:
+        provider.search(req)
+    assert "Gemini API key is not configured" in str(exc_info.value)
+
+
+@patch("urllib.request.urlopen")
+def test_gemini_grounding_with_mock_credentials(mock_urlopen):
+    mock_body = json.dumps({
+        "candidates": [
+            {
+                "content": {
+                    "parts": [
+                        {"text": "Whitefly in cotton can be monitored with yellow sticky traps."}
+                    ]
+                },
+                "grounding_metadata": {
+                    "web_search_queries": ["cotton whitefly sticky traps ICAR"],
+                    "grounding_chunks": [
+                        {
+                            "web": {
+                                "uri": "https://cicr.icar.gov.in/whitefly-advisory",
+                                "title": "ICAR-CICR Whitefly Advisory",
+                            }
+                        }
+                    ],
+                    "grounding_supports": [
+                        {
+                            "segment": {
+                                "text": "Whitefly in cotton can be monitored with yellow sticky traps."
+                            },
+                            "grounding_chunk_indices": [0],
+                        }
+                    ]
+                }
+            }
+        ]
+    }).encode("utf-8")
+
+    mock_resp = MagicMock()
+    mock_resp.getcode.return_value = 200
+    mock_resp.read.return_value = mock_body
+    mock_resp.__enter__.return_value = mock_resp
+    mock_urlopen.return_value = mock_resp
+
+    cfg = WebSearchConfig(gemini_api_key="AIzaSyMockKey12345")
+    provider = GeminiGroundingSearchProvider(config=cfg)
+    assert provider.is_available()
+
+    req = WebSearchRequest(query_text="cotton whitefly management")
+    res = provider.search(req)
+
+    assert res.status == WebSearchStatus.SUCCESS
+    assert res.result_count == 1
+    item = res.results[0]
+    assert item.result_type == "grounded_search"
+    assert item.url == "https://cicr.icar.gov.in/whitefly-advisory"
+    assert "Whitefly in cotton" in item.snippet
+    assert item.metadata["web_search_queries"] == ["cotton whitefly sticky traps ICAR"]
