@@ -228,6 +228,52 @@ class WebSearchConfig(BaseModel):
         ),
         description="Gemini API endpoint with Google Search grounding"
     )
+    gemini_model: str = Field(default_factory=lambda: os.getenv("EARTHMIND_GEMINI_MODEL", "gemini-1.5-flash"), description="Gemini model identifier for grounding")
+
+    # Provider Fallback Architecture
+    enable_provider_fallback: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_ENABLE_FALLBACK", "true").lower() == "true", description="Enable fallback to secondary provider on primary failure")
+    secondary_provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_SECONDARY_PROVIDER", "gemini_grounding"), description="Secondary managed search provider fallback")
+
+    # Circuit Breaker settings
+    circuit_breaker_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CIRCUIT_BREAKER_ENABLED", "true").lower() == "true", description="Enable circuit breaker protection for providers")
+    circuit_breaker_failure_threshold: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_CIRCUIT_BREAKER_FAILURE_THRESHOLD", "5")), description="Consecutive failures before tripping circuit breaker")
+    circuit_breaker_recovery_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CIRCUIT_BREAKER_RECOVERY_TIMEOUT", "30.0")), description="Cooldown period in seconds before testing half-open recovery")
+    circuit_breaker_half_open_success_threshold: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_CIRCUIT_BREAKER_HALF_OPEN_THRESHOLD", "2")), description="Consecutive successful half-open probes to close circuit")
+
+    # Rate Limiting & Concurrency Throttling settings
+    rate_limits_per_minute: Dict[str, int] = Field(
+        default_factory=lambda: {
+            "tavily": int(os.getenv("EARTHMIND_TAVILY_RPM", "60")),
+            "gemini_grounding": int(os.getenv("EARTHMIND_GEMINI_RPM", "60")),
+            "brave": int(os.getenv("EARTHMIND_BRAVE_RPM", "60")),
+            "wikipedia": int(os.getenv("EARTHMIND_WIKIPEDIA_RPM", "120")),
+            "wikidata": int(os.getenv("EARTHMIND_WIKIDATA_RPM", "60")),
+            "crossref": int(os.getenv("EARTHMIND_CROSSREF_RPM", "100")),
+            "openalex": int(os.getenv("EARTHMIND_OPENALEX_RPM", "100")),
+            "nasa_power": int(os.getenv("EARTHMIND_NASA_POWER_RPM", "60")),
+            "fake": 1000,
+        },
+        description="Per-provider maximum requests allowed per minute"
+    )
+    max_concurrent_requests: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_MAX_CONCURRENCY", "5")), description="Maximum concurrent external search requests per provider")
+
+    # Local Estimated Usage Budgets (preventing billing triggers)
+    daily_usage_budget: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_DAILY_BUDGET", "1000")), description="Estimated daily request budget limit across managed providers")
+    monthly_usage_budget: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_MONTHLY_BUDGET", "25000")), description="Estimated monthly request budget limit across managed providers")
+
+    # Intelligent Freshness Caching settings
+    cache_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_CACHE_ENABLED", "true").lower() == "true", description="Enable intelligent search result caching")
+    cache_max_entries: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_CACHE_MAX_ENTRIES", "1000")), description="Maximum entries in web search cache")
+    cache_ttl_stable_reference: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CACHE_TTL_STABLE", "86400.0")), description="Cache TTL for stable reference knowledge (24h)")
+    cache_ttl_advisory_disease: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CACHE_TTL_ADVISORY", "14400.0")), description="Cache TTL for crop advisories and pest/disease info (4h)")
+    cache_ttl_weather: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CACHE_TTL_WEATHER", "1800.0")), description="Cache TTL for agroclimatology & weather info (30m)")
+    cache_ttl_market_realtime: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_CACHE_TTL_MARKET", "0.0")), description="Cache TTL for real-time market prices (0s = no cache)")
+
+    # Bounded Retries with Exponential Backoff
+    max_retries: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEB_SEARCH_MAX_RETRIES", "3")), description="Maximum bounded retry attempts for transient errors")
+    initial_retry_backoff: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEB_SEARCH_INITIAL_BACKOFF", "0.5")), description="Initial retry backoff delay in seconds")
+    max_retry_backoff: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEB_SEARCH_MAX_BACKOFF", "5.0")), description="Maximum retry backoff delay in seconds")
+    backoff_jitter: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_BACKOFF_JITTER", "true").lower() == "true", description="Add randomized jitter to exponential backoff")
 
     # Safe Web Page Content Retriever settings
     enable_content_fetch: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_FETCH_CONTENT", "false").lower() == "true", description="Fetch page text extracts for top public URLs")

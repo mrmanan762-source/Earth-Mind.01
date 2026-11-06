@@ -1,4 +1,4 @@
-# EarthMind RAG Stage R10 — Multi-Source Live Web Search Integration
+# EarthMind RAG Stage R10 — Multi-Source Live Web Search Integration & Production Hardening
 
 ## 1. Overview & Objective
 
@@ -10,16 +10,30 @@ Stage R10 implements the **Multi-Source Live Web Search Integration** layer for 
                                             │
                                             ▼
                                Stage R10 Web Search Engine
-            ┌───────────────────┬───────────┼───────────┬───────────────────┐
+                                            │
+                      ┌─────────────────────┴─────────────────────┐
+                      ▼                                           ▼
+             Intelligent Cache Check                     Resilience Coordinator
+             (Multi-Tier TTL Freshness,                 (Circuit Breakers, RPM,
+              Farmer Tenant Isolation)                   Concurrency Semaphores,
+                      │                                 Local Estimated Quotas)
+                      ▼                                           │
+            ┌───────────────────┬───────────┬───────────┬─────────┴─────────┐
             ▼                   ▼           ▼           ▼                   ▼
-    Primary Search          Wikipedia    Wikidata    Scholarly          NASA POWER
- (Brave/Tavily/Gemini/API) (MediaWiki)   (SPARQL) (Crossref/OpenAlex) (Agroclimatology)
+     Managed Primary        Wikipedia    Wikidata    Scholarly          NASA POWER
+      (Tavily with         (MediaWiki)   (SPARQL) (Crossref/OpenAlex) (Agroclimatology)
+    Gemini Fallback)            │           │           │                   │
             │                   │           │           │                   │
             └───────────────────┴─────┬─────┴───────────┴───────────────────┘
                                       │
                                       ▼
              URL Canonicalization & Cross-Provider Deduplication
-           (Exempts structured Wikidata & numerical NASA POWER data)
+           (Exempts structured Wikidata & numerical NASA POWER data;
+            strips tracking parameters utm_*, fbclid, etc.)
+                                      │
+                                      ▼
+                     Evidence Contradiction Detection
+                  (Preserves opposing agronomic evidence)
                                       │
                                       ▼
                     Agricultural Authoritative Domain Boost
@@ -48,6 +62,8 @@ Stage R10 implements the **Multi-Source Live Web Search Integration** layer for 
 > 2. **Untrusted Data Plane:** Web-page content and search snippets are untrusted data. Embedded instructions within retrieved web pages are strictly treated as data context and never as system or developer instructions.
 > 3. **Graceful Partial Failure:** If a supplementary search provider (such as Wikipedia, Wikidata, or NASA POWER) experiences downtime, rate limits, or timeouts, the search engine records the error in `provider_statuses` and `partial_errors`, retaining all successful results without failing the request.
 > 4. **Data-Type Separation:** Structured facts (Wikidata entities) and numerical agroclimatological data (NASA POWER) are not ordinary web search results and must never be collapsed or lost during URL deduplication.
+> 5. **No Billing Triggers / Local Estimated Quotas:** Never trigger paid subscriptions or billing via code. Local usage budgets track estimated consumption and halt before paid limits are triggered.
+> 6. **Preservation of Contradictory Evidence:** Opposing agronomic advice (e.g. chemical vs organic or conflicting dosage) must never be discarded silently. Both sides are preserved with contradiction metadata.
 
 ---
 
@@ -141,6 +157,36 @@ All providers adhere to the `IWebSearchProvider` protocol in `core/interfaces/we
 - **International CGIAR Centers & Agencies:** FAO (`fao.org`), CGIAR (`cgiar.org`), IRRI, CIMMYT, ICRISAT.
 
 Matching results are assigned `result_type="agricultural"` and receive an automatic score boost (`trusted_domain_boost`), ensuring official extension bulletins and research take precedence over unverified blogs.
+
+---
+
+## 4.1 Production Hardening Subsystems
+
+### 1. Provider Fallback Architecture
+- **Primary:** Tavily (`TavilySearchProvider`).
+- **Secondary Fallback:** Gemini Grounding with Google Search (`GeminiGroundingSearchProvider`).
+- **Resilience:** If Tavily experiences timeouts, HTTP 429 rate limits, server 5xx errors, or circuit breaker trips, `WebSearchEngine` automatically and gracefully falls back to Gemini Grounding without crashing the pipeline.
+- **Envelope Neutrality:** Preserves provider identity, original response types (`web` vs `grounded_search`), and grounding spans.
+
+### 2. Intelligent Multi-Tier Freshness Caching (`InMemoryWebSearchCache`)
+- **Query Fingerprinting:** Hashes query text, language, region, crop, season, and tenant context.
+- **Farmer Tenant Isolation:** Private farm queries from one user are isolated so they never leak into another farmer's session.
+- **Categorized TTL Freshness:**
+  - `stable_reference` (botanical taxonomy, crop origin): 86,400s (24h).
+  - `advisory_disease` (pest control, disease sprays): 14,400s (4h).
+  - `weather` (rainfall, temperature, agroclimatology): 1,800s (30m).
+  - `market_realtime` (mandi prices, daily rates): 0s (no caching).
+
+### 3. Reliability & Resilience (`ResilienceManager`)
+- **Circuit Breaker:** Per-provider 3-state machine (`CLOSED`, `OPEN`, `HALF_OPEN`). Fast-fails when OPEN to protect downstream infrastructure.
+- **Rate Limiting & Concurrency:** Sliding-window rate limiters per provider respecting `Retry-After` response headers, and concurrency semaphores.
+- **Quota Tracking:** Local estimated daily (1,000) and monthly (25,000) usage budgets preventing paid overages.
+- **Exponential Backoff:** Bounded retries with randomized jitter.
+
+### 4. Evidence Processing & Contradiction Detection (`EvidenceProcessor`)
+- **URL Canonicalization:** Strips commercial tracking query parameters (`utm_*`, `fbclid`, `gclid`, etc.) and normalizes URLs.
+- **Data-Type Separation:** Structured facts (Wikidata) and numerical agroclimatology (NASA POWER) are never collapsed.
+- **Contradiction Preservation:** Detects opposing chemical or management recommendations, preserving both sides and recording conflict warnings for Stage R11 Evidence Builder.
 
 ---
 
