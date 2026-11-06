@@ -248,3 +248,96 @@ def test_r9_to_r13_multi_source_e2e_integration():
     assert "https://icar.org.in/advisory/mustard-aphids" in urls
     assert any("Lipaphis erysimi" in c.content.get("text") for c in web_contracts)
     assert all(c.trace_id == "req_e2e_agri_101" for c in contracts)
+
+
+def test_multi_source_engine_with_structured_and_climate_data():
+    """Verify that structured facts (Wikidata) and agroclimatology data (NASA POWER)
+    are retained without colliding with URL deduplication."""
+    res_primary = [
+        WebSearchResult(
+            result_id="brave_1",
+            title="Gram Cultivation ICAR",
+            url="https://icar.org.in/chickpea",
+            snippet="Chickpea cultivation guidelines.",
+            source="icar.org.in",
+            provider="brave",
+            rank=1,
+            score=0.88,
+        )
+    ]
+    res_wiki = [
+        WebSearchResult(
+            result_id="wiki_1",
+            title="Chickpea - Wikipedia",
+            url="https://en.wikipedia.org/wiki/Chickpea",
+            snippet="Chickpea overview.",
+            source="wikipedia.org",
+            provider="wikipedia",
+            result_type="encyclopedic",
+            rank=1,
+        )
+    ]
+    res_wikidata = [
+        WebSearchResult(
+            result_id="wikidata_Q81375",
+            title="Cicer arietinum (Q81375) - Wikidata",
+            url="https://www.wikidata.org/wiki/Q81375",
+            snippet="Entity: Cicer arietinum (Q81375). Taxon: Cicer arietinum.",
+            source="wikidata.org",
+            provider="wikidata",
+            result_type="structured_fact",
+            metadata={"is_structured_fact": True, "qid": "Q81375"},
+            rank=1,
+        )
+    ]
+    res_nasa = [
+        WebSearchResult(
+            result_id="nasa_power_punjab",
+            title="NASA POWER Agroclimatology Data (Punjab)",
+            url="https://power.larc.nasa.gov/data-access-viewer/?lat=30.90&lon=75.85",
+            snippet="NASA POWER Agroclimatology: Mean Temp: 16.5°C, Precip: 2.0 mm.",
+            source="power.larc.nasa.gov",
+            provider="nasa_power",
+            result_type="agroclimatology",
+            metadata={"is_numerical_agroclimatology": True, "latitude": 30.90, "longitude": 75.85},
+            rank=1,
+        )
+    ]
+
+    primary = MockSuccessProvider("brave", res_primary)
+    wiki_p = MockSuccessProvider("wikipedia", res_wiki)
+    wikidata_p = MockSuccessProvider("wikidata", res_wikidata)
+    nasa_p = MockSuccessProvider("nasa_power", res_nasa)
+
+    engine = WebSearchEngine(
+        provider=primary,
+        wikipedia_provider=wiki_p,
+        wikidata_provider=wikidata_p,
+        nasa_power_provider=nasa_p,
+    )
+
+    req = WebSearchRequest(
+        query_text="chickpea cultivation temperature in punjab",
+        include_encyclopedic=True,
+        include_structured=True,
+        include_agroclimatology=True,
+        region="punjab",
+    )
+    res = engine.search(req)
+
+    assert res.status == WebSearchStatus.SUCCESS
+    assert res.result_count == 4
+    result_types = [r.result_type for r in res.results]
+    assert "agricultural" in result_types  # Boosted ICAR
+    assert "encyclopedic" in result_types
+    assert "structured_fact" in result_types
+    assert "agroclimatology" in result_types
+
+    # Ensure structured facts and climate data are preserved
+    structured_items = [r for r in res.results if r.result_type == "structured_fact"]
+    assert len(structured_items) == 1
+    assert structured_items[0].metadata["qid"] == "Q81375"
+
+    climate_items = [r for r in res.results if r.result_type == "agroclimatology"]
+    assert len(climate_items) == 1
+    assert climate_items[0].metadata["is_numerical_agroclimatology"] is True

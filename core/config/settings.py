@@ -190,6 +190,11 @@ class WebSearchConfig(BaseModel):
     wikipedia_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WIKIPEDIA_ENDPOINT", "https://en.wikipedia.org/w/api.php"), description="Wikipedia API endpoint URL")
     wikipedia_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WIKIPEDIA_MAX_RESULTS", "3")), description="Maximum Wikipedia results to include")
 
+    # Wikidata SPARQL Query Service settings
+    enable_wikidata: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WIKIDATA_ENABLED", "true").lower() == "true", description="Enable Wikidata structured facts search")
+    wikidata_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WIKIDATA_ENDPOINT", "https://query.wikidata.org/sparql"), description="Wikidata SPARQL endpoint URL")
+    wikidata_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WIKIDATA_MAX_RESULTS", "3")), description="Maximum Wikidata results to include")
+
     # Scientific Literature settings (Crossref & OpenAlex)
     enable_crossref: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CROSSREF_ENABLED", "true").lower() == "true", description="Enable Crossref DOI and scholarly metadata search")
     crossref_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_CROSSREF_ENDPOINT", "https://api.crossref.org/works"), description="Crossref works endpoint")
@@ -199,7 +204,30 @@ class WebSearchConfig(BaseModel):
     enable_openalex: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_ENABLED", "true").lower() == "true", description="Enable OpenAlex scholarly works discovery")
     openalex_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_ENDPOINT", "https://api.openalex.org/works"), description="OpenAlex works endpoint")
     openalex_email: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_EMAIL", "research@earthmind.org"), description="Polite pool email for OpenAlex API")
+    openalex_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_OPENALEX_API_KEY"), description="Optional OpenAlex API key for higher usage rates")
     openalex_max_results: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_OPENALEX_MAX_RESULTS", "3")), description="Maximum OpenAlex results")
+
+    # NASA POWER Agroclimatology API settings
+    enable_nasa_power: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_NASA_POWER_ENABLED", "true").lower() == "true", description="Enable NASA POWER agroclimatology search")
+    nasa_power_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_NASA_POWER_ENDPOINT", "https://power.larc.nasa.gov/api/temporal/daily/point"), description="NASA POWER Daily Point API endpoint URL")
+    nasa_power_community: str = Field(default_factory=lambda: os.getenv("EARTHMIND_NASA_POWER_COMMUNITY", "AG"), description="NASA POWER community (e.g. 'AG' for agroclimatology)")
+    nasa_power_parameters: List[str] = Field(
+        default_factory=lambda: ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "ALLSKY_SFC_SW_DWN"],
+        description="Agroclimatology parameters to query from NASA POWER"
+    )
+
+    # Managed Search Providers (Prepared, not active until credentials configured)
+    tavily_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_TAVILY_API_KEY"), description="Tavily API key")
+    tavily_endpoint: str = Field(default_factory=lambda: os.getenv("EARTHMIND_TAVILY_ENDPOINT", "https://api.tavily.com/search"), description="Tavily search API endpoint")
+
+    gemini_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_SEARCH_GEMINI_API_KEY"), description="Gemini Grounding API key")
+    gemini_endpoint: str = Field(
+        default_factory=lambda: os.getenv(
+            "EARTHMIND_GEMINI_ENDPOINT",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+        ),
+        description="Gemini API endpoint with Google Search grounding"
+    )
 
     # Safe Web Page Content Retriever settings
     enable_content_fetch: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_WEB_FETCH_CONTENT", "false").lower() == "true", description="Fetch page text extracts for top public URLs")
@@ -556,12 +584,10 @@ class Settings(BaseModel):
 
         # Mask Web Search API keys
         if raw.get("web_search"):
-            if raw["web_search"].get("api_key"):
-                ws_key = raw["web_search"]["api_key"]
-                raw["web_search"]["api_key"] = f"{ws_key[:3]}***{ws_key[-3:]}" if len(ws_key) > 6 else "***"
-            if raw["web_search"].get("brave_api_key"):
-                b_key = raw["web_search"]["brave_api_key"]
-                raw["web_search"]["brave_api_key"] = f"{b_key[:3]}***{b_key[-3:]}" if len(b_key) > 6 else "***"
+            for key_field in ("api_key", "brave_api_key", "tavily_api_key", "gemini_api_key", "openalex_api_key"):
+                if raw["web_search"].get(key_field):
+                    val = raw["web_search"][key_field]
+                    raw["web_search"][key_field] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
 
         # Mask Embedding credential reference if contains secret
         if raw.get("embedding", {}).get("credential_reference"):

@@ -62,9 +62,11 @@ class WebSearchRequest(BaseModel):
     timeout: float = Field(10.0, description="Per-request execution timeout in seconds")
     user_context: Optional[Dict[str, Any]] = Field(None, description="Upstream user/farm context")
     include_encyclopedic: bool = Field(True, description="Query encyclopedic sources like Wikipedia")
+    include_structured: bool = Field(True, description="Query structured facts from Wikidata")
     include_scholarly: bool = Field(False, description="Query scholarly literature like Crossref/OpenAlex")
+    include_agroclimatology: bool = Field(False, description="Query agroclimatology & meteorological data from NASA POWER")
     fetch_content: bool = Field(False, description="Fetch safe page content extracts for top results")
-    search_mode: Optional[str] = Field("standard", description="Search mode: 'standard', 'academic', 'encyclopedic', 'multi'")
+    search_mode: Optional[str] = Field("standard", description="Search mode: 'standard', 'academic', 'encyclopedic', 'climate', 'multi'")
 
     @classmethod
     def from_retrieval_query(

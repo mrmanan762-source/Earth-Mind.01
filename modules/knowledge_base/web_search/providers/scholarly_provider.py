@@ -223,12 +223,14 @@ class OpenAlexSearchProvider(IWebSearchProvider):
         config: Optional[WebSearchConfig] = None,
         endpoint: Optional[str] = None,
         email: Optional[str] = None,
+        api_key: Optional[str] = None,
         timeout: Optional[float] = None,
         user_agent: Optional[str] = None,
     ):
         cfg = config or WebSearchConfig()
         self._endpoint = endpoint or cfg.openalex_endpoint
         self._email = email or cfg.openalex_email
+        self._api_key = api_key or cfg.openalex_api_key
         self._timeout = timeout if timeout is not None else cfg.timeout
         self._user_agent = user_agent or cfg.user_agent
         self._max_results = cfg.openalex_max_results
@@ -245,6 +247,7 @@ class OpenAlexSearchProvider(IWebSearchProvider):
             "scholarly_search": True,
             "open_access_discovery": True,
             "citation_metrics": True,
+            "optional_api_key": bool(self._api_key),
             "max_results_limit": 10,
         }
 
@@ -278,13 +281,18 @@ class OpenAlexSearchProvider(IWebSearchProvider):
         }
         if self._email:
             params["mailto"] = self._email
+        if self._api_key:
+            params["api_key"] = self._api_key
 
         query_str = urllib.parse.urlencode(params)
         full_url = f"{self._endpoint}?{query_str}"
 
         req = urllib.request.Request(
             full_url,
-            headers={"User-Agent": self._user_agent, "Accept": "application/json"},
+            headers={
+                "User-Agent": f"{self._user_agent} (mailto:{self._email})" if self._email else self._user_agent,
+                "Accept": "application/json",
+            },
             method="GET",
         )
 
