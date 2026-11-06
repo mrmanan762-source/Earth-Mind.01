@@ -34,6 +34,8 @@ class WebSearchResult(BaseModel):
     result_id: str = Field(..., description="Unique provider or normalized result identifier")
     title: str = Field(..., description="Page or snippet title")
     url: str = Field(..., description="Canonical source web URL")
+    canonical_url: Optional[str] = Field(None, description="Normalized or canonicalized source URL")
+    result_type: str = Field("web", description="Result category: 'web', 'encyclopedic', 'scholarly', 'news', 'agricultural'")
     snippet: str = Field(..., description="Content text excerpt or snippet")
     source: Optional[str] = Field(None, description="Domain name or publisher name")
     publication_date: Optional[str] = Field(None, description="Publication timestamp string if available")
@@ -59,6 +61,10 @@ class WebSearchRequest(BaseModel):
     filters: Optional[Dict[str, Any]] = Field(None, description="Search filter options")
     timeout: float = Field(10.0, description="Per-request execution timeout in seconds")
     user_context: Optional[Dict[str, Any]] = Field(None, description="Upstream user/farm context")
+    include_encyclopedic: bool = Field(True, description="Query encyclopedic sources like Wikipedia")
+    include_scholarly: bool = Field(False, description="Query scholarly literature like Crossref/OpenAlex")
+    fetch_content: bool = Field(False, description="Fetch safe page content extracts for top results")
+    search_mode: Optional[str] = Field("standard", description="Search mode: 'standard', 'academic', 'encyclopedic', 'multi'")
 
     @classmethod
     def from_retrieval_query(
@@ -98,6 +104,8 @@ class WebSearchResponse(BaseModel):
     results: List[WebSearchResult] = Field(default_factory=list, description="Normalized search results")
     result_count: int = Field(0, description="Total number of results returned")
     provider_name: str = Field("unknown", description="Web search provider identifier used")
+    provider_statuses: Dict[str, WebSearchStatus] = Field(default_factory=dict, description="Execution statuses per individual provider")
+    partial_errors: Dict[str, str] = Field(default_factory=dict, description="Error messages from failed sub-providers")
     execution_time_ms: float = Field(0.0, description="Latency in milliseconds")
     error_message: Optional[str] = Field(None, description="Error details if status is non-SUCCESS")
     warnings: List[str] = Field(default_factory=list, description="Operational warning messages")
