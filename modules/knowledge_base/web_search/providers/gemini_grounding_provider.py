@@ -54,18 +54,32 @@ class GeminiGroundingSearchProvider(IWebSearchProvider):
         config: Optional[WebSearchConfig] = None,
         api_key: Optional[str] = None,
         endpoint: Optional[str] = None,
+        model: Optional[str] = None,
         timeout: Optional[float] = None,
         user_agent: Optional[str] = None,
     ):
         cfg = config or WebSearchConfig()
         self._api_key = api_key or cfg.gemini_api_key
-        self._endpoint = endpoint or cfg.gemini_endpoint
+        self._model = model or cfg.gemini_model or "gemini-1.5-flash"
+
+        # Build endpoint dynamically if not explicitly specified
+        if endpoint:
+            self._endpoint = endpoint
+        elif cfg.gemini_endpoint and cfg.gemini_endpoint != "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent":
+            self._endpoint = cfg.gemini_endpoint
+        else:
+            self._endpoint = f"https://generativelanguage.googleapis.com/v1beta/models/{self._model}:generateContent"
+
         self._timeout = timeout if timeout is not None else cfg.timeout
         self._user_agent = user_agent or cfg.user_agent
 
     @property
     def provider_name(self) -> str:
         return "gemini_grounding"
+
+    @property
+    def model_name(self) -> str:
+        return self._model
 
     def is_available(self) -> bool:
         """Returns True only when valid API key credentials are configured."""
@@ -77,6 +91,7 @@ class GeminiGroundingSearchProvider(IWebSearchProvider):
             "google_search_grounding": True,
             "grounding_citations": True,
             "multilingual_queries": True,
+            "model_name": self._model,
             "max_results_limit": 10,
             "requires_credentials": True,
             "credentials_present": self.is_available(),
