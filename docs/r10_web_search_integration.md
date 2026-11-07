@@ -283,16 +283,30 @@ When ready, Manan can obtain and securely configure credentials for our two mana
    - Restart the EarthMind service. `WebSearchEngine` will automatically route primary search requests through Tavily.
 
 #### 2. Gemini Grounding with Google Search — Secondary Managed Search Provider
-1. **Obtain API Key:**
+1. **Obtain API Key & Model Grounding Verification:**
    - Navigate to [Google AI Studio](https://aistudio.google.com/) or Google Cloud Vertex AI.
-   - Create an API key with access to Gemini 1.5 models and search grounding.
+   - Create an API key with access to Gemini models supporting Google Search Grounding (`gemini-1.5-flash`, `gemini-1.5-pro`, `gemini-2.0-flash`).
+   - The provider explicitly enables the Google Search tool (`"tools": [{"google_search": {}}]`) in every generateContent call.
 2. **Configure Environment:**
    - In your `.env` or secure production secrets manager, set:
      ```bash
-     EARTHMIND_WEB_SEARCH_PROVIDER=gemini_grounding
+     EARTHMIND_WEB_SEARCH_PROVIDER=tavily
+     EARTHMIND_WEB_SEARCH_SECONDARY_PROVIDER=gemini_grounding
+     EARTHMIND_WEB_SEARCH_ENABLE_FALLBACK=true
+     EARTHMIND_WEB_SEARCH_TAVILY_API_KEY=<your_tavily_api_key_here>
      EARTHMIND_WEB_SEARCH_GEMINI_API_KEY=<your_gemini_api_key_here>
+     EARTHMIND_GEMINI_MODEL=gemini-1.5-flash
      ```
-   - Restart the EarthMind service. `WebSearchEngine` will automatically execute search grounding via Gemini.
+   - When configured, `WebSearchEngine` routes requests to Tavily and falls back seamlessly to Gemini Grounding upon rate-limits or service errors.
+3. **Citation & Metadata Verification:**
+   - Gemini Grounding results are normalized with `result_type="grounded_search"`.
+   - Preserves citation annotations, web search queries, grounding chunk URIs/titles, and grounding support spans.
+   - Downstream Stage R11 Evidence Builder maps grounding items as traceable `EvidenceItem` records with complete provenance.
+4. **How to Disable a Provider:**
+   - To disable Tavily or Gemini, set `EARTHMIND_WEB_SEARCH_PROVIDER=brave` (or `fake` in test), or leave the respective API key unset/empty.
+   - To disable fallback, set `EARTHMIND_WEB_SEARCH_ENABLE_FALLBACK=false`.
+5. **Quota, Billing & Rate Limiting:**
+   - All managed providers are governed by `rate_limits_per_minute` (default 60 RPM) and local estimated budget limits (`EARTHMIND_WEB_SEARCH_DAILY_BUDGET=1000`, `EARTHMIND_WEB_SEARCH_MONTHLY_BUDGET=25000`) to prevent runaway billing or unexpected charges.
 
 > **SECURITY WARNING:**
 > Never paste API keys into chat, PRs, issue trackers, or Git commits. Always keep `.env` in `.gitignore`.
