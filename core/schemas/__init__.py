@@ -92,6 +92,8 @@ __all__ = [
     "DroneCameraRoutingContract",
     "DroneSarvamIntegrationContract",
     "DroneErrorContract",
+    "IngestionStatus",
+    "DroneIngestionResult",
 ]
 
 from core.schemas.drone import (
@@ -100,6 +102,7 @@ from core.schemas.drone import (
     QualityStatus,
     CalibrationStatus,
     EvidenceStatus,
+    IngestionStatus,
     DroneErrorCode,
     SpatialCoordinates,
     SpatialBoundingBox,
@@ -113,4 +116,5 @@ from core.schemas.drone import (
     DroneCameraRoutingContract,
     DroneSarvamIntegrationContract,
     DroneErrorContract,
+    DroneIngestionResult,
 )

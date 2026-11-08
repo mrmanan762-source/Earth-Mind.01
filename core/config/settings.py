@@ -361,6 +361,25 @@ class ContextConfig(BaseModel):
     strict_output_validation: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_CONTEXT_STRICT_OUTPUT_VALIDATION", "true").lower() == "true", description="Enforce strict output validation")
 
 
+class DroneConfig(BaseModel):
+    """Configuration settings for EarthMind Drone Module (Stage D2: Core Foundation)."""
+    enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_ENABLED", "true").lower() == "true", description="Enable or disable Drone module")
+    gateway_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_GATEWAY_ENABLED", "true").lower() == "true", description="Enable Drone Data Gateway ingestion endpoint")
+    max_payload_size_bytes: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_DRONE_MAX_PAYLOAD_SIZE_BYTES", str(50 * 1024 * 1024))), description="Maximum accepted payload size in bytes (default 50MB)")
+    default_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_DRONE_DEFAULT_TIMEOUT", "30.0")), description="Default processing timeout in seconds")
+    storage_adapter: str = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_STORAGE_ADAPTER", "in_memory"), description="Drone storage adapter selection ('in_memory', 'database')")
+    strict_validation: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_STRICT_VALIDATION", "true").lower() == "true", description="Enforce strict contract and boundary validation")
+    supported_formats: List[str] = Field(
+        default_factory=lambda: ["GEOTIFF", "NETCDF", "HDF5", "CSV", "JSON", "LAS", "POINT_CLOUD", "RAW_BINARY", "JPEG_METADATA"],
+        description="Supported sensor payload formats"
+    )
+    supported_categories: List[str] = Field(
+        default_factory=lambda: ["MULTISPECTRAL", "HYPERSPECTRAL", "THERMAL", "RGB", "ENVIRONMENTAL", "SOIL", "LIDAR", "OTHER"],
+        description="Supported sensor categories"
+    )
+    api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_API_KEY"), description="Optional drone telemetry gateway API key")
+
+
 class EvaluationConfig(BaseModel):
     """Configuration settings for Stage R15 Quality & Performance Evaluation."""
     k_values: List[int] = Field(default_factory=lambda: [1, 3, 5, 10], description="K values for evaluation metrics")
@@ -441,6 +460,7 @@ class Settings(BaseModel):
     evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
     rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
     evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
+    drone: DroneConfig = Field(default_factory=DroneConfig)
     context: ContextConfig = Field(default_factory=ContextConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
@@ -476,7 +496,13 @@ class Settings(BaseModel):
             "web_search.timeout": self.web_search.timeout,
             "rag_integration.timeout": self.rag_integration.timeout,
             "context.default_timeout": self.context.default_timeout,
+            "drone.default_timeout": self.drone.default_timeout,
         }
+        if self.drone.max_payload_size_bytes <= 0:
+            raise ConfigurationError(
+                f"Invalid configuration for 'drone.max_payload_size_bytes': must be greater than 0. Got {self.drone.max_payload_size_bytes}.",
+                details={"setting": "drone.max_payload_size_bytes", "value": self.drone.max_payload_size_bytes}
+            )
         for name, t_val in timeouts.items():
             if t_val <= 0:
                 raise ConfigurationError(
@@ -640,6 +666,11 @@ class Settings(BaseModel):
             cred = raw["embedding"]["credential_reference"]
             if "key" in cred.lower() or "secret" in cred.lower() or "token" in cred.lower():
                 raw["embedding"]["credential_reference"] = "***masked_ref***"
+
+        # Mask Drone API key
+        if raw.get("drone") and raw["drone"].get("api_key"):
+            val = raw["drone"]["api_key"]
+            raw["drone"]["api_key"] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
 
         # Mask Postgres credentials
         if raw.get("postgres"):
