@@ -1,14 +1,34 @@
-"""EarthMind Drone Module (Stage D1: Architecture & Contract Lock).
+"""EarthMind Drone Module (Stage D2: Core Foundation).
 
 Exports:
 - DroneModule, DroneService
-- Drone schemas, enums, and data contracts
-- Drone exceptions and error contracts
-- Component interfaces and storage protocols
+- Gateway: DroneDataGateway
+- Registry: SensorRegistry
+- Formats: DataFormatRegistry, FormatCapability
+- Adapters: ISensorAdapter, BaseSensorAdapter, SensorAdapterRegistry, SyntheticMultispectralSensorAdapter, SyntheticThermalSensorAdapter
+- Lifecycle: IngestionLifecycleTracker, IngestionStatus
+- Diagnostics: DroneDiagnostics
+- Camera Router: CameraDataRouter
+- Storage: InMemoryDroneStorageAdapter
+- Schemas & Contracts: All D1 & D2 schemas and exceptions
 """
 
 from modules.drone.drone_module import DroneModule
 from modules.drone.drone_service import DroneService
+from modules.drone.gateway import DroneDataGateway
+from modules.drone.registry import SensorRegistry
+from modules.drone.formats import DataFormatRegistry, FormatCapability
+from modules.drone.adapters import (
+    ISensorAdapter,
+    BaseSensorAdapter,
+    SensorAdapterRegistry,
+    SyntheticMultispectralSensorAdapter,
+    SyntheticThermalSensorAdapter,
+)
+from modules.drone.lifecycle import IngestionLifecycleTracker
+from modules.drone.diagnostics import DroneDiagnostics
+from modules.drone.camera_router import CameraDataRouter
+from modules.drone.storage import InMemoryDroneStorageAdapter
 from modules.drone.errors import (
     DroneError,
     DroneInvalidArgumentError,
@@ -36,6 +56,7 @@ from core.schemas.drone import (
     QualityStatus,
     CalibrationStatus,
     EvidenceStatus,
+    IngestionStatus,
     DroneErrorCode,
     SpatialCoordinates,
     SpatialBoundingBox,
@@ -49,6 +70,7 @@ from core.schemas.drone import (
     DroneCameraRoutingContract,
     DroneSarvamIntegrationContract,
     DroneErrorContract,
+    DroneIngestionResult,
 )
 from core.interfaces.drone import (
     IDroneDataGateway,
@@ -74,6 +96,19 @@ from core.interfaces.drone import (
 __all__ = [
     "DroneModule",
     "DroneService",
+    "DroneDataGateway",
+    "SensorRegistry",
+    "DataFormatRegistry",
+    "FormatCapability",
+    "ISensorAdapter",
+    "BaseSensorAdapter",
+    "SensorAdapterRegistry",
+    "SyntheticMultispectralSensorAdapter",
+    "SyntheticThermalSensorAdapter",
+    "IngestionLifecycleTracker",
+    "DroneDiagnostics",
+    "CameraDataRouter",
+    "InMemoryDroneStorageAdapter",
     "DroneError",
     "DroneInvalidArgumentError",
     "UnsupportedSensorError",
@@ -98,6 +133,7 @@ __all__ = [
     "QualityStatus",
     "CalibrationStatus",
     "EvidenceStatus",
+    "IngestionStatus",
     "DroneErrorCode",
     "SpatialCoordinates",
     "SpatialBoundingBox",
@@ -111,6 +147,7 @@ __all__ = [
     "DroneCameraRoutingContract",
     "DroneSarvamIntegrationContract",
     "DroneErrorContract",
+    "DroneIngestionResult",
     "IDroneDataGateway",
     "ISensorRegistry",
     "IDataFormatDetector",

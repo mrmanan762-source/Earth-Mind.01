@@ -72,6 +72,16 @@ class CalibrationStatus(str, Enum):
     MISSING = "MISSING"
 
 
+class IngestionStatus(str, Enum):
+    """Standardized lifecycle status for incoming drone sensor data ingestion."""
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+    REJECTED = "REJECTED"
+    UNAVAILABLE = "UNAVAILABLE"
+
+
 class EvidenceStatus(str, Enum):
     """Overall status of generated EarthMindDroneSensorEvidence artifact."""
     SUCCESS = "SUCCESS"
@@ -490,3 +500,39 @@ class DroneErrorContract(BaseModel):
     operation: str = Field(..., description="Specific operation during which error occurred")
     retryable: bool = Field(False, description="Whether client/caller should retry operation")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Structured contextual diagnostics")
+
+
+# ============================================================================
+# 6.9 Drone Ingestion Result Contract
+# ============================================================================
+
+from core.schemas.contracts import ErrorContract
+from typing import Union
+
+
+class DroneIngestionResult(BaseModel):
+    """
+    Contract 9: Standardized structured result returned by the Drone Data Gateway upon ingestion.
+    Supports both attribute access and dictionary-style subscript access for full backwards compatibility.
+    """
+    ingestion_id: str = Field(default_factory=lambda: f"ing_{uuid.uuid4().hex[:12]}", description="Unique ingestion tracking ID")
+    drone_id: str = Field(..., min_length=1, description="Origin drone hardware identifier")
+    sensor_id: str = Field(..., min_length=1, description="Origin sensor identifier")
+    status: IngestionStatus = Field(IngestionStatus.PENDING, description="Ingestion lifecycle status")
+    accepted: bool = Field(False, description="Whether ingestion was accepted into the processing pipeline")
+    received_timestamp: str = Field(
+        default_factory=lambda: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        description="ISO 8601 UTC timestamp of reception"
+    )
+    warnings: List[str] = Field(default_factory=list, description="Non-fatal warnings recorded during ingestion")
+    error: Optional[Union[DroneErrorContract, ErrorContract]] = Field(None, description="Structured error contract if ingestion failed or was rejected")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Operational ingestion telemetry and payload metadata")
+
+    def __getitem__(self, item: str) -> Any:
+        return getattr(self, item)
+
+    def get(self, item: str, default: Any = None) -> Any:
+        return getattr(self, item, default)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
