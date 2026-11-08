@@ -562,6 +562,227 @@ class ContextConfigurationError(ContextError):
         )
 
 
+class DroneError(EarthMindException):
+    """Base exception for all EarthMind Drone Module errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "INTERNAL_ERROR",
+        operation: str = "drone_operation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="drone",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {},
+        )
+
+
+class DroneInvalidArgumentError(DroneError):
+    def __init__(self, details: str, operation: str = "validate_argument"):
+        super().__init__(
+            message=f"Invalid argument in drone operation: {details}",
+            error_code="INVALID_ARGUMENT",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class UnsupportedSensorError(DroneError):
+    def __init__(self, sensor_id: str, details: str = "Sensor hardware profile not recognized."):
+        super().__init__(
+            message=f"Unsupported drone sensor '{sensor_id}': {details}",
+            error_code="UNSUPPORTED_SENSOR",
+            operation="lookup_sensor",
+            retryable=False,
+            metadata={"sensor_id": sensor_id, "details": details},
+        )
+
+
+class UnsupportedFormatError(DroneError):
+    def __init__(self, data_format: str, details: str = "Data format cannot be parsed."):
+        super().__init__(
+            message=f"Unsupported drone data format '{data_format}': {details}",
+            error_code="UNSUPPORTED_FORMAT",
+            operation="detect_format",
+            retryable=False,
+            metadata={"data_format": data_format, "details": details},
+        )
+
+
+class InvalidSensorDataError(DroneError):
+    def __init__(self, details: str, operation: str = "parse_raw_data"):
+        super().__init__(
+            message=f"Invalid or corrupted sensor data: {details}",
+            error_code="INVALID_SENSOR_DATA",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SensorMetadataMissingError(DroneError):
+    def __init__(self, sensor_id: str):
+        super().__init__(
+            message=f"Sensor metadata manifest missing for '{sensor_id}'.",
+            error_code="SENSOR_METADATA_MISSING",
+            operation="resolve_metadata",
+            retryable=False,
+            metadata={"sensor_id": sensor_id},
+        )
+
+
+class CalibrationUnavailableError(DroneError):
+    def __init__(self, sensor_id: str, details: str = "Required calibration certificate or panel missing."):
+        super().__init__(
+            message=f"Calibration unavailable for sensor '{sensor_id}': {details}",
+            error_code="CALIBRATION_UNAVAILABLE",
+            operation="apply_calibration",
+            retryable=False,
+            metadata={"sensor_id": sensor_id, "details": details},
+        )
+
+
+class UnitConversionFailedError(DroneError):
+    def __init__(self, from_unit: str, to_unit: str, details: str = ""):
+        msg = f"Failed to convert unit '{from_unit}' to '{to_unit}'."
+        if details:
+            msg += f" {details}"
+        super().__init__(
+            message=msg,
+            error_code="UNIT_CONVERSION_FAILED",
+            operation="normalize_units",
+            retryable=False,
+            metadata={"from_unit": from_unit, "to_unit": to_unit, "details": details},
+        )
+
+
+class GeolocationInvalidError(DroneError):
+    def __init__(self, details: str):
+        super().__init__(
+            message=f"Invalid drone geospatial coordinates: {details}",
+            error_code="GEOLOCATION_INVALID",
+            operation="process_spatial",
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class TimestampInvalidError(DroneError):
+    def __init__(self, timestamp_str: str, details: str = "Timestamp is invalid or in the future."):
+        super().__init__(
+            message=f"Invalid drone timestamp '{timestamp_str}': {details}",
+            error_code="TIMESTAMP_INVALID",
+            operation="process_temporal",
+            retryable=False,
+            metadata={"timestamp": timestamp_str, "details": details},
+        )
+
+
+class InsufficientDroneDataError(DroneError):
+    def __init__(self, details: str, operation: str = "extract_indicators"):
+        super().__init__(
+            message=f"Insufficient drone data: {details}",
+            error_code="INSUFFICIENT_DATA",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class QualityValidationFailedError(DroneError):
+    def __init__(self, details: str, operation: str = "validate_quality"):
+        super().__init__(
+            message=f"Drone data quality validation failed: {details}",
+            error_code="QUALITY_VALIDATION_FAILED",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class IndicatorProcessingFailedError(DroneError):
+    def __init__(self, indicator_name: str, details: str):
+        super().__init__(
+            message=f"Indicator '{indicator_name}' calculation failed: {details}",
+            error_code="INDICATOR_PROCESSING_FAILED",
+            operation="extract_indicator",
+            retryable=False,
+            metadata={"indicator_name": indicator_name, "details": details},
+        )
+
+
+class SensorConflictError(DroneError):
+    def __init__(self, sensor_a: str, sensor_b: str, details: str):
+        super().__init__(
+            message=f"Sensor conflict between '{sensor_a}' and '{sensor_b}': {details}",
+            error_code="SENSOR_CONFLICT",
+            operation="fuse_sensors",
+            retryable=False,
+            metadata={"sensor_a": sensor_a, "sensor_b": sensor_b, "details": details},
+        )
+
+
+class EvidenceValidationFailedError(DroneError):
+    def __init__(self, evidence_id: str, details: str):
+        super().__init__(
+            message=f"Evidence validation failed for '{evidence_id}': {details}",
+            error_code="EVIDENCE_VALIDATION_FAILED",
+            operation="validate_evidence",
+            retryable=False,
+            metadata={"evidence_id": evidence_id, "details": details},
+        )
+
+
+class DroneStorageUnavailableError(DroneError):
+    def __init__(self, details: str = "Drone storage backend is unavailable."):
+        super().__init__(
+            message=f"Drone storage unavailable: {details}",
+            error_code="STORAGE_UNAVAILABLE",
+            operation="storage_access",
+            retryable=True,
+            metadata={"details": details},
+        )
+
+
+class DroneStorageError(DroneError):
+    def __init__(self, details: str, operation: str = "storage_execute", retryable: bool = False):
+        super().__init__(
+            message=f"Drone storage error: {details}",
+            error_code="STORAGE_ERROR",
+            operation=operation,
+            retryable=retryable,
+            metadata={"details": details},
+        )
+
+
+class DroneProcessingTimeoutError(DroneError):
+    def __init__(self, operation: str, timeout: float):
+        super().__init__(
+            message=f"Drone operation '{operation}' timed out after {timeout} seconds.",
+            error_code="PROCESSING_TIMEOUT",
+            operation=operation,
+            retryable=True,
+            metadata={"timeout": timeout},
+        )
+
+
+class DroneInternalError(DroneError):
+    def __init__(self, details: str, operation: str = "execute"):
+        super().__init__(
+            message=f"Internal drone module failure: {details}",
+            error_code="INTERNAL_ERROR",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
 class MemoryError(EarthMindException):
     """Base exception for all Memory Module errors."""
     def __init__(
