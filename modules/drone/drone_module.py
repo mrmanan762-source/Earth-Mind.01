@@ -10,10 +10,15 @@ from core.interfaces.module import ModuleInterface
 from core.logging.logger import get_logger
 from core.schemas.application import ApplicationRequest, ApplicationResponse
 from core.schemas.drone import (
+    AgriculturalIndicatorContract,
     DroneCameraRoutingContract,
     DroneSensorInputContract,
+    FusedSensorMeasurementContract,
+    MultiSensorFusionReportContract,
+    NumericalAnalysisResultContract,
     ProcessedSensorMeasurementContract,
     SensorMetadataContract,
+    SpectralAnalysisResultContract,
 )
 from modules.drone.drone_service import DroneService
 
@@ -153,6 +158,63 @@ class DroneModule(ModuleInterface):
                     request_id=request.request_id,
                     status="SUCCESS",
                     response=association.model_dump()
+                )
+
+            elif op in ("analyze_spectral", "spectral"):
+                result = self._service.analyze_spectral(payload)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=result
+                )
+
+            elif op in ("extract_indicator", "indicator"):
+                ind_name = payload.get("indicator_name")
+                raw_meas = payload.get("measurements", [])
+                meas_objs = [
+                    m if isinstance(m, ProcessedSensorMeasurementContract)
+                    else ProcessedSensorMeasurementContract(**m)
+                    for m in raw_meas
+                ]
+                ind = self._service.extract_indicator(ind_name, meas_objs)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=ind.model_dump()
+                )
+
+            elif op in ("extract_available_indicators", "available_indicators"):
+                raw_meas = payload.get("measurements", [])
+                meas_objs = [
+                    m if isinstance(m, ProcessedSensorMeasurementContract)
+                    else ProcessedSensorMeasurementContract(**m)
+                    for m in raw_meas
+                ]
+                inds = self._service.extract_available_indicators(meas_objs)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=[i.model_dump() for i in inds]
+                )
+
+            elif op in ("fuse_sensor_data", "fuse_sensors", "fusion"):
+                raw_streams = payload.get("sensor_streams", {})
+                converted_streams = {}
+                for sid, m_list in raw_streams.items():
+                    converted_streams[sid] = [
+                        m if isinstance(m, ProcessedSensorMeasurementContract)
+                        else ProcessedSensorMeasurementContract(**m)
+                        for m in m_list
+                    ]
+                report = self._service.fuse_sensor_data(
+                    sensor_streams=converted_streams,
+                    drone_id=payload.get("drone_id", "drone_default"),
+                    field_id=payload.get("field_id"),
+                )
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=report.model_dump()
                 )
 
             return ApplicationResponse(

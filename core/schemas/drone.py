@@ -381,6 +381,162 @@ class EarthMindDroneSensorEvidence(BaseModel):
 
 
 # ============================================================================
+# Stage D5: Spectral, Numerical & Multi-Sensor Fusion Extended Contracts
+# ============================================================================
+
+class SpectralBandMetadataContract(BaseModel):
+    """
+    Contract 15A: Descriptive metadata and validation profile for a spectral band.
+    """
+    band_name: str = Field(..., description="Canonical band identifier (e.g. 'blue', 'green', 'red', 'red_edge', 'nir', 'swir1')")
+    center_wavelength_nm: Optional[float] = Field(None, gt=0.0, description="Center wavelength in nanometers")
+    bandwidth_nm: Optional[float] = Field(None, gt=0.0, description="Full-width at half-maximum (FWHM) bandwidth in nm")
+    wavelength_min_nm: Optional[float] = Field(None, gt=0.0, description="Minimum wavelength range boundary")
+    wavelength_max_nm: Optional[float] = Field(None, gt=0.0, description="Maximum wavelength range boundary")
+    unit: str = Field("reflectance", description="Radiometric or reflectance unit (e.g. 'reflectance', 'unitless_ratio')")
+    spatial_resolution_meters: Optional[float] = Field(None, gt=0.0, description="Ground sampling distance / spatial resolution in meters")
+    is_calibrated: bool = Field(True, description="Whether band data has undergone radiometric calibration")
+
+
+class SpectralAnalysisResultContract(BaseModel):
+    """
+    Contract 15: Versioned result container for spectral band processing and statistics.
+    """
+    contract_name: str = Field("SpectralAnalysisResultContract", description="Contract identifier")
+    schema_version: str = Field("1.0", description="Schema version")
+    analysis_id: str = Field(default_factory=lambda: f"spec_{uuid.uuid4().hex[:12]}", description="Unique spectral analysis ID")
+
+    drone_id: str = Field(..., min_length=1, description="Origin drone identifier")
+    sensor_id: str = Field(..., min_length=1, description="Origin multispectral/hyperspectral sensor identifier")
+    timestamp: str = Field(..., description="ISO 8601 UTC observation timestamp")
+
+    detected_bands: List[str] = Field(default_factory=list, description="List of recognized spectral bands")
+    band_metadata: Dict[str, SpectralBandMetadataContract] = Field(default_factory=dict, description="Metadata per band")
+
+    band_statistics: Dict[str, Dict[str, float]] = Field(
+        default_factory=dict,
+        description="Summary statistics per band (mean, min, max, std_dev, median, p25, p75)"
+    )
+    spatial_reference: Optional[SpatialCoordinates] = Field(None, description="Spatial coordinates if single point or centroid")
+    raster_dimensions: Optional[Dict[str, int]] = Field(None, description="Dimensions {'rows': H, 'cols': W} if matrix input")
+
+    quality_status: QualityStatus = Field(QualityStatus.VALID, description="Overall quality status of spectral analysis")
+    warnings: List[str] = Field(default_factory=list, description="Spectral operational or validation warnings")
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Lineage and processing parameters")
+
+    @model_validator(mode="after")
+    def validate_integrity(self) -> "SpectralAnalysisResultContract":
+        if self.contract_name != "SpectralAnalysisResultContract":
+            raise ValueError(f"Invalid contract_name: expected 'SpectralAnalysisResultContract', got '{self.contract_name}'")
+        if self.schema_version != "1.0":
+            raise ValueError(f"Unsupported schema_version: expected '1.0', got '{self.schema_version}'")
+        return self
+
+
+class NumericalAnalysisResultContract(BaseModel):
+    """
+    Contract 16: Versioned result container for numerical sensor channels (e.g. thermal IR, environmental).
+    Preserves units and values without agricultural diagnosis or stress assertions.
+    """
+    contract_name: str = Field("NumericalAnalysisResultContract", description="Contract identifier")
+    schema_version: str = Field("1.0", description="Schema version")
+    analysis_id: str = Field(default_factory=lambda: f"num_{uuid.uuid4().hex[:12]}", description="Unique numerical analysis ID")
+
+    drone_id: str = Field(..., min_length=1, description="Origin drone identifier")
+    sensor_id: str = Field(..., min_length=1, description="Origin sensor identifier")
+    channel_name: str = Field(..., description="Processed channel name (e.g. 'thermal_ir', 'ambient_temperature')")
+    timestamp: str = Field(..., description="ISO 8601 UTC observation timestamp")
+
+    original_unit: str = Field(..., description="Original raw unit from sensor")
+    normalized_unit: str = Field(..., description="Standard scientific/engineering unit")
+
+    sample_count: int = Field(..., ge=1, description="Number of samples evaluated")
+    mean: float = Field(..., description="Mean numerical value")
+    min_value: float = Field(..., description="Minimum numerical value")
+    max_value: float = Field(..., description="Maximum numerical value")
+    std_dev: float = Field(0.0, ge=0.0, description="Standard deviation")
+    median: Optional[float] = Field(None, description="Median numerical value")
+    percentiles: Dict[str, float] = Field(default_factory=dict, description="Percentiles (e.g. {'p25': ..., 'p75': ...})")
+
+    quality_status: QualityStatus = Field(QualityStatus.VALID, description="Numerical quality status")
+    warnings: List[str] = Field(default_factory=list, description="Numerical validation warnings")
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Processing method and input references")
+
+    @model_validator(mode="after")
+    def validate_integrity(self) -> "NumericalAnalysisResultContract":
+        if self.contract_name != "NumericalAnalysisResultContract":
+            raise ValueError(f"Invalid contract_name: expected 'NumericalAnalysisResultContract', got '{self.contract_name}'")
+        if self.schema_version != "1.0":
+            raise ValueError(f"Unsupported schema_version: expected '1.0', got '{self.schema_version}'")
+        return self
+
+
+class FusedSensorMeasurementContract(BaseModel):
+    """
+    Contract 17: Co-registered and fused multi-sensor observation combining compatible sensors.
+    Preserves individual sensor readings, source IDs, and provenance without silent averaging.
+    """
+    fusion_id: str = Field(default_factory=lambda: f"fuse_{uuid.uuid4().hex[:12]}", description="Unique fused measurement ID")
+    timestamp: str = Field(..., description="ISO 8601 UTC timestamp of fused observation")
+    spatial_reference: Optional[SpatialCoordinates] = Field(None, description="Common or co-registered coordinate")
+
+    participating_sensor_ids: List[str] = Field(..., min_length=1, description="List of source sensor IDs")
+    participating_measurement_ids: List[str] = Field(..., min_length=1, description="Source ProcessedSensorMeasurementContract IDs")
+
+    fused_channels: Dict[str, Any] = Field(
+        ...,
+        description="Co-registered channel values or statistics by channel name"
+    )
+    fusion_method: str = Field(..., description="Applied fusion algorithm (e.g. 'spatiotemporal_nearest_neighbor', 'co_located_composite')")
+
+    spatial_offset_meters: Optional[float] = Field(None, ge=0.0, description="Estimated distance between fused sensor locations")
+    temporal_delta_seconds: Optional[float] = Field(None, ge=0.0, description="Time difference between merged observations")
+
+    has_conflict: bool = Field(False, description="True if conflict was detected between participating sensors")
+    conflict_details: Optional[Dict[str, Any]] = Field(None, description="Details of conflicting measurements if detected")
+
+    quality_status: QualityStatus = Field(QualityStatus.VALID, description="Fused data quality status")
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Full trace and transformation history")
+
+
+class MultiSensorFusionReportContract(BaseModel):
+    """
+    Contract 18: Complete multi-sensor fusion synthesis report.
+    """
+    contract_name: str = Field("MultiSensorFusionReportContract", description="Contract identifier")
+    schema_version: str = Field("1.0", description="Schema version")
+    report_id: str = Field(default_factory=lambda: f"fusrep_{uuid.uuid4().hex[:12]}", description="Unique fusion report ID")
+
+    mission_reference: Optional[str] = Field(None, description="Associated drone mission reference")
+    drone_id: str = Field(..., min_length=1, description="Drone hardware identifier")
+    field_id: Optional[str] = Field(None, description="Target field ID")
+
+    input_sensor_streams: List[str] = Field(default_factory=list, description="IDs of input sensor streams")
+    total_input_measurements: int = Field(0, ge=0, description="Total count of candidate measurements")
+
+    fused_measurements_count: int = Field(0, ge=0, description="Total count of successfully fused records")
+    fused_measurements: List[FusedSensorMeasurementContract] = Field(default_factory=list, description="Fused records")
+
+    conflicts_detected_count: int = Field(0, ge=0, description="Count of detected sensor conflicts")
+    conflicts: List[Dict[str, Any]] = Field(default_factory=list, description="Recorded conflict details")
+
+    incompatible_inputs_count: int = Field(0, ge=0, description="Count of inputs rejected due to spatial/temporal/meaning incompatibility")
+    spatial_coverage: Optional[SpatialCoverage] = Field(None, description="Fused spatial coverage")
+    temporal_coverage: Optional[TemporalCoverage] = Field(None, description="Fused temporal coverage")
+
+    warnings: List[str] = Field(default_factory=list, description="Fusion warnings and notes")
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Engine version and parameters")
+
+    @model_validator(mode="after")
+    def validate_integrity(self) -> "MultiSensorFusionReportContract":
+        if self.contract_name != "MultiSensorFusionReportContract":
+            raise ValueError(f"Invalid contract_name: expected 'MultiSensorFusionReportContract', got '{self.contract_name}'")
+        if self.schema_version != "1.0":
+            raise ValueError(f"Unsupported schema_version: expected '1.0', got '{self.schema_version}'")
+        return self
+
+
+# ============================================================================
 # 6.6 Camera Routing Contract
 # ============================================================================
 

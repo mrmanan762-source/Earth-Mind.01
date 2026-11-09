@@ -37,6 +37,10 @@ from modules.drone.processing import DroneProcessingEngine, CalibrationNormalize
 from modules.drone.geospatial import GeospatialProcessor
 from modules.drone.temporal import TemporalProcessor
 from modules.drone.spatiotemporal import SpatioTemporalAssociator
+from modules.drone.spectral import SpectralAnalysisEngine, STANDARD_SPECTRAL_BANDS
+from modules.drone.numerical import NumericalAnalysisEngine
+from modules.drone.indicators import IndicatorExtractionEngine, INDICATOR_CATALOG
+from modules.drone.fusion import MultiSensorFusionEngine
 from modules.drone.errors import (
     DroneError,
     DroneInvalidArgumentError,
@@ -84,6 +88,11 @@ from core.schemas.drone import (
     SpatialProcessingReport,
     TemporalProcessingReport,
     SpatioTemporalAssociationContract,
+    SpectralBandMetadataContract,
+    SpectralAnalysisResultContract,
+    NumericalAnalysisResultContract,
+    FusedSensorMeasurementContract,
+    MultiSensorFusionReportContract,
 )
 from core.interfaces.drone import (
     IDroneDataGateway,
@@ -134,6 +143,12 @@ __all__ = [
     "GeospatialProcessor",
     "TemporalProcessor",
     "SpatioTemporalAssociator",
+    "SpectralAnalysisEngine",
+    "STANDARD_SPECTRAL_BANDS",
+    "NumericalAnalysisEngine",
+    "IndicatorExtractionEngine",
+    "INDICATOR_CATALOG",
+    "MultiSensorFusionEngine",
     "DroneError",
     "DroneInvalidArgumentError",
     "UnsupportedSensorError",
@@ -178,6 +193,11 @@ __all__ = [
     "SpatialProcessingReport",
     "TemporalProcessingReport",
     "SpatioTemporalAssociationContract",
+    "SpectralBandMetadataContract",
+    "SpectralAnalysisResultContract",
+    "NumericalAnalysisResultContract",
+    "FusedSensorMeasurementContract",
+    "MultiSensorFusionReportContract",
     "IDroneDataGateway",
     "ISensorRegistry",
     "IDataFormatDetector",
