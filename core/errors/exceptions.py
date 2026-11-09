@@ -593,6 +593,224 @@ class DroneInvalidArgumentError(DroneError):
         )
 
 
+class SatelliteError(EarthMindException):
+    """Base exception for all EarthMind Satellite Intelligence Module errors."""
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "INTERNAL_ERROR",
+        operation: str = "satellite_operation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="satellite",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {},
+        )
+
+
+class SatelliteInvalidArgumentError(SatelliteError):
+    def __init__(self, details: str, operation: str = "validate_argument"):
+        super().__init__(
+            message=f"Invalid argument in satellite operation: {details}",
+            error_code="INVALID_ARGUMENT",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteProviderError(SatelliteError):
+    def __init__(self, provider_id: str, details: str, operation: str = "provider_access"):
+        super().__init__(
+            message=f"Satellite provider '{provider_id}' error: {details}",
+            error_code="PROVIDER_ERROR",
+            operation=operation,
+            retryable=False,
+            metadata={"provider_id": provider_id, "details": details},
+        )
+
+
+class SatelliteProviderUnavailableError(SatelliteError):
+    def __init__(self, provider_id: str, details: str = "Satellite provider is offline or unreachable."):
+        super().__init__(
+            message=f"Satellite provider '{provider_id}' unavailable: {details}",
+            error_code="PROVIDER_UNAVAILABLE",
+            operation="check_availability",
+            retryable=True,
+            metadata={"provider_id": provider_id, "details": details},
+        )
+
+
+class SatelliteDatasetUnavailableError(SatelliteError):
+    def __init__(self, dataset_id: str, details: str = "Requested satellite scene or granule is unavailable."):
+        super().__init__(
+            message=f"Satellite dataset '{dataset_id}' unavailable: {details}",
+            error_code="DATASET_UNAVAILABLE",
+            operation="acquire_dataset",
+            retryable=True,
+            metadata={"dataset_id": dataset_id, "details": details},
+        )
+
+
+class SatelliteDatasetNotFoundError(SatelliteError):
+    def __init__(self, query_details: str):
+        super().__init__(
+            message=f"No matching satellite scene found for query: {query_details}",
+            error_code="DATASET_NOT_FOUND",
+            operation="search_catalog",
+            retryable=False,
+            metadata={"query_details": query_details},
+        )
+
+
+class SatelliteUnsupportedFormatError(SatelliteError):
+    def __init__(self, data_format: str, details: str = "Satellite data format cannot be parsed."):
+        super().__init__(
+            message=f"Unsupported satellite data format '{data_format}': {details}",
+            error_code="UNSUPPORTED_FORMAT",
+            operation="detect_format",
+            retryable=False,
+            metadata={"data_format": data_format, "details": details},
+        )
+
+
+class SatelliteIngestionError(SatelliteError):
+    def __init__(self, details: str, operation: str = "ingest_raw_data"):
+        super().__init__(
+            message=f"Satellite data ingestion failed: {details}",
+            error_code="INGESTION_FAILED",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteMetadataError(SatelliteError):
+    def __init__(self, dataset_id: str, details: str = "Metadata parsing or validation failed."):
+        super().__init__(
+            message=f"Invalid satellite metadata for '{dataset_id}': {details}",
+            error_code="INVALID_METADATA",
+            operation="extract_metadata",
+            retryable=False,
+            metadata={"dataset_id": dataset_id, "details": details},
+        )
+
+
+class SatelliteProcessingError(SatelliteError):
+    def __init__(self, details: str, operation: str = "process_satellite_data"):
+        super().__init__(
+            message=f"Satellite processing failure: {details}",
+            error_code="PROCESSING_FAILED",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteInsufficientDataError(SatelliteError):
+    def __init__(self, details: str, operation: str = "calculate_indicator"):
+        super().__init__(
+            message=f"Insufficient satellite data: {details}",
+            error_code="INSUFFICIENT_DATA",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteQualityValidationFailedError(SatelliteError):
+    def __init__(self, details: str, operation: str = "validate_quality"):
+        super().__init__(
+            message=f"Satellite quality validation failed: {details}",
+            error_code="QUALITY_VALIDATION_FAILED",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteIndicatorProcessingError(SatelliteError):
+    def __init__(self, indicator_name: str, details: str):
+        super().__init__(
+            message=f"Satellite indicator '{indicator_name}' calculation failed: {details}",
+            error_code="INDICATOR_PROCESSING_FAILED",
+            operation="extract_indicator",
+            retryable=False,
+            metadata={"indicator_name": indicator_name, "details": details},
+        )
+
+
+class SatelliteEvidenceValidationError(SatelliteError):
+    def __init__(self, evidence_id: str, details: str):
+        super().__init__(
+            message=f"Satellite evidence validation failed for '{evidence_id}': {details}",
+            error_code="EVIDENCE_VALIDATION_FAILED",
+            operation="validate_evidence",
+            retryable=False,
+            metadata={"evidence_id": evidence_id, "details": details},
+        )
+
+
+class SatelliteStorageUnavailableError(SatelliteError):
+    def __init__(self, details: str = "Satellite storage backend is unreachable."):
+        super().__init__(
+            message=f"Satellite storage unavailable: {details}",
+            error_code="STORAGE_UNAVAILABLE",
+            operation="storage_access",
+            retryable=True,
+            metadata={"details": details},
+        )
+
+
+class SatelliteStorageError(SatelliteError):
+    def __init__(self, details: str, operation: str = "storage_execute", retryable: bool = False):
+        super().__init__(
+            message=f"Satellite storage error: {details}",
+            error_code="STORAGE_ERROR",
+            operation=operation,
+            retryable=retryable,
+            metadata={"details": details},
+        )
+
+
+class SatelliteTimeoutError(SatelliteError):
+    def __init__(self, operation: str, timeout: float):
+        super().__init__(
+            message=f"Satellite operation '{operation}' timed out after {timeout} seconds.",
+            error_code="TIMEOUT",
+            operation=operation,
+            retryable=True,
+            metadata={"timeout": timeout},
+        )
+
+
+class SatelliteIntegrationError(SatelliteError):
+    def __init__(self, details: str, operation: str = "b2_integration"):
+        super().__init__(
+            message=f"Satellite integration failure: {details}",
+            error_code="INTEGRATION_ERROR",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
+class SatelliteInternalError(SatelliteError):
+    def __init__(self, details: str, operation: str = "execute"):
+        super().__init__(
+            message=f"Internal satellite module failure: {details}",
+            error_code="INTERNAL_ERROR",
+            operation=operation,
+            retryable=False,
+            metadata={"details": details},
+        )
+
+
 class UnsupportedSensorError(DroneError):
     def __init__(self, sensor_id: str, details: str = "Sensor hardware profile not recognized."):
         super().__init__(
