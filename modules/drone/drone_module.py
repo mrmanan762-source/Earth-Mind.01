@@ -13,12 +13,15 @@ from core.schemas.drone import (
     AgriculturalIndicatorContract,
     DroneCameraRoutingContract,
     DroneSensorInputContract,
+    EarthMindDroneSensorEvidence,
     FusedSensorMeasurementContract,
     MultiSensorFusionReportContract,
     NumericalAnalysisResultContract,
     ProcessedSensorMeasurementContract,
     SensorMetadataContract,
+    SpatialCoverage,
     SpectralAnalysisResultContract,
+    TemporalCoverage,
 )
 from modules.drone.drone_service import DroneService
 
@@ -215,6 +218,78 @@ class DroneModule(ModuleInterface):
                     request_id=request.request_id,
                     status="SUCCESS",
                     response=report.model_dump()
+                )
+
+            elif op in ("build_evidence", "evidence"):
+                raw_input = payload.get("input_data", {})
+                input_contract = (
+                    raw_input if isinstance(raw_input, DroneSensorInputContract)
+                    else DroneSensorInputContract(**raw_input)
+                )
+                raw_meas = payload.get("measurements", [])
+                meas_objs = [
+                    m if isinstance(m, ProcessedSensorMeasurementContract)
+                    else ProcessedSensorMeasurementContract(**m)
+                    for m in raw_meas
+                ]
+                raw_inds = payload.get("indicators", [])
+                ind_objs = [
+                    i if isinstance(i, AgriculturalIndicatorContract)
+                    else AgriculturalIndicatorContract(**i)
+                    for i in raw_inds
+                ]
+                spatial_raw = payload.get("spatial", {})
+                spatial_obj = (
+                    spatial_raw if isinstance(spatial_raw, SpatialCoverage)
+                    else SpatialCoverage(**spatial_raw)
+                )
+                temporal_raw = payload.get("temporal", {})
+                temporal_obj = (
+                    temporal_raw if isinstance(temporal_raw, TemporalCoverage)
+                    else TemporalCoverage(**temporal_raw)
+                )
+                evidence = self._service.build_evidence(
+                    input_data=input_contract,
+                    measurements=meas_objs,
+                    indicators=ind_objs,
+                    spatial=spatial_obj,
+                    temporal=temporal_obj,
+                    warnings=payload.get("warnings"),
+                    limitations=payload.get("limitations"),
+                    mission_id=payload.get("mission_id"),
+                    crop=payload.get("crop"),
+                )
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=evidence.model_dump()
+                )
+
+            elif op in ("validate_evidence", "validate"):
+                raw_ev = payload.get("evidence", payload)
+                evidence_obj = (
+                    raw_ev if isinstance(raw_ev, EarthMindDroneSensorEvidence)
+                    else EarthMindDroneSensorEvidence(**raw_ev)
+                )
+                strict = bool(payload.get("strict", False))
+                val_res = self._service.validate_evidence(evidence_obj, strict=strict)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS" if val_res.is_valid else "FAILED",
+                    response=val_res.model_dump()
+                )
+
+            elif op in ("deliver_to_context", "deliver_evidence"):
+                raw_ev = payload.get("evidence", payload)
+                evidence_obj = (
+                    raw_ev if isinstance(raw_ev, EarthMindDroneSensorEvidence)
+                    else EarthMindDroneSensorEvidence(**raw_ev)
+                )
+                delivery_res = self._service.deliver_evidence_to_context(evidence_obj)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS" if delivery_res.get("delivered") else "FAILED",
+                    response=delivery_res
                 )
 
             return ApplicationResponse(
