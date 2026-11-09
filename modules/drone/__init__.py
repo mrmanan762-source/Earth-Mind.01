@@ -29,6 +29,11 @@ from modules.drone.lifecycle import IngestionLifecycleTracker
 from modules.drone.diagnostics import DroneDiagnostics
 from modules.drone.camera_router import CameraDataRouter
 from modules.drone.storage import InMemoryDroneStorageAdapter
+from modules.drone.parser import RawDataParser
+from modules.drone.quality import DataQualityValidator, DataQualityReport, MeasurementValidationItem
+from modules.drone.calibration import CalibrationEngine, CalibrationAssessment
+from modules.drone.normalization import UnitNormalizer
+from modules.drone.processing import DroneProcessingEngine, CalibrationNormalizerAdapter
 from modules.drone.errors import (
     DroneError,
     DroneInvalidArgumentError,
@@ -109,6 +114,15 @@ __all__ = [
     "DroneDiagnostics",
     "CameraDataRouter",
     "InMemoryDroneStorageAdapter",
+    "RawDataParser",
+    "DataQualityValidator",
+    "DataQualityReport",
+    "MeasurementValidationItem",
+    "CalibrationEngine",
+    "CalibrationAssessment",
+    "UnitNormalizer",
+    "DroneProcessingEngine",
+    "CalibrationNormalizerAdapter",
     "DroneError",
     "DroneInvalidArgumentError",
     "UnsupportedSensorError",
