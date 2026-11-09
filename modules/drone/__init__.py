@@ -34,6 +34,9 @@ from modules.drone.quality import DataQualityValidator, DataQualityReport, Measu
 from modules.drone.calibration import CalibrationEngine, CalibrationAssessment
 from modules.drone.normalization import UnitNormalizer
 from modules.drone.processing import DroneProcessingEngine, CalibrationNormalizerAdapter
+from modules.drone.geospatial import GeospatialProcessor
+from modules.drone.temporal import TemporalProcessor
+from modules.drone.spatiotemporal import SpatioTemporalAssociator
 from modules.drone.errors import (
     DroneError,
     DroneInvalidArgumentError,
@@ -76,6 +79,11 @@ from core.schemas.drone import (
     DroneSarvamIntegrationContract,
     DroneErrorContract,
     DroneIngestionResult,
+    GeospatialCoordinateContract,
+    FieldBoundaryContract,
+    SpatialProcessingReport,
+    TemporalProcessingReport,
+    SpatioTemporalAssociationContract,
 )
 from core.interfaces.drone import (
     IDroneDataGateway,
@@ -123,6 +131,9 @@ __all__ = [
     "UnitNormalizer",
     "DroneProcessingEngine",
     "CalibrationNormalizerAdapter",
+    "GeospatialProcessor",
+    "TemporalProcessor",
+    "SpatioTemporalAssociator",
     "DroneError",
     "DroneInvalidArgumentError",
     "UnsupportedSensorError",
@@ -162,6 +173,11 @@ __all__ = [
     "DroneSarvamIntegrationContract",
     "DroneErrorContract",
     "DroneIngestionResult",
+    "GeospatialCoordinateContract",
+    "FieldBoundaryContract",
+    "SpatialProcessingReport",
+    "TemporalProcessingReport",
+    "SpatioTemporalAssociationContract",
     "IDroneDataGateway",
     "ISensorRegistry",
     "IDataFormatDetector",

@@ -536,3 +536,116 @@ class DroneIngestionResult(BaseModel):
 
     def to_dict(self) -> Dict[str, Any]:
         return self.model_dump()
+
+
+# ============================================================================
+# Stage D4: Geospatial & Temporal Extended Contracts
+# ============================================================================
+
+class GeospatialCoordinateContract(BaseModel):
+    """
+    Contract 10: Normalized geospatial coordinate preserving original values & CRS.
+    Guarantees that raw coordinates are never lost or silently altered.
+    """
+    original_latitude: float = Field(..., description="Original raw latitude or northing")
+    original_longitude: float = Field(..., description="Original raw longitude or easting")
+    original_altitude: Optional[float] = Field(None, description="Original altitude if provided")
+    original_crs: str = Field(..., description="Declared original Coordinate Reference System (e.g. EPSG:4326, EPSG:32644)")
+
+    latitude: float = Field(..., ge=-90.0, le=90.0, description="Normalized WGS84 latitude")
+    longitude: float = Field(..., ge=-180.0, le=180.0, description="Normalized WGS84 longitude")
+    altitude_meters: Optional[float] = Field(None, description="Normalized altitude in meters above sea level / ground")
+    crs: str = Field("EPSG:4326", description="Normalized target CRS (canonical WGS84)")
+
+    transformation_applied: str = Field("none", description="Name of CRS transformation or validation applied")
+    is_transformed: bool = Field(False, description="True if coordinates were reprojected from a different CRS")
+
+
+class FieldBoundaryContract(BaseModel):
+    """
+    Contract 11: Agricultural field boundary specification.
+    Supports GeoJSON-style Polygon coordinates or coordinate tuples with CRS.
+    """
+    field_id: str = Field(..., min_length=1, description="Unique field identifier")
+    farm_id: Optional[str] = Field(None, description="Farm identifier")
+    crs: str = Field("EPSG:4326", description="CRS of the field boundary polygon")
+    # Coordinates list of [lon, lat] or [lat, lon] tuples defining polygon exterior ring
+    polygon_coordinates: List[List[float]] = Field(
+        ...,
+        min_length=3,
+        description="Exterior ring coordinates as a list of [lon, lat] or [lat, lon] pairs"
+    )
+    coordinate_format: str = Field(
+        "LON_LAT",
+        description="Format of pairs in polygon_coordinates ('LON_LAT' or 'LAT_LON')"
+    )
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Field agronomic and cadastral tags")
+
+
+class SpatialProcessingReport(BaseModel):
+    """
+    Contract 12: Detailed report of geospatial validation, transformations, and boundary checks.
+    """
+    has_spatial_metadata: bool = Field(True, description="False if geolocation was absent")
+    crs_detected: Optional[str] = Field(None, description="Detected source CRS")
+    crs_target: str = Field("EPSG:4326", description="Target normalized CRS")
+    is_transformed: bool = Field(False, description="Whether coordinates were transformed")
+    bounding_box: Optional[SpatialBoundingBox] = Field(None, description="Encompassing bounding box in EPSG:4326")
+    centroid: Optional[SpatialCoordinates] = Field(None, description="Geometric center point")
+    field_boundary_checked: bool = Field(False, description="Whether field boundary check was executed")
+    is_within_field_boundary: Optional[bool] = Field(None, description="None if not checked; True/False if checked")
+    total_points_evaluated: int = Field(0, ge=0, description="Number of measurement points geolocated")
+    points_within_boundary: int = Field(0, ge=0, description="Number of points inside boundary")
+    points_outside_boundary: int = Field(0, ge=0, description="Number of points outside boundary")
+    warnings: List[str] = Field(default_factory=list, description="Geospatial operational warnings")
+    errors: List[str] = Field(default_factory=list, description="Non-fatal geospatial errors or flags")
+
+
+class TemporalProcessingReport(BaseModel):
+    """
+    Contract 13: Detailed report of temporal validation, sequence ordering, and gap analysis.
+    """
+    normalized_start_time: str = Field(..., description="ISO 8601 UTC start timestamp")
+    normalized_end_time: Optional[str] = Field(None, description="ISO 8601 UTC end timestamp")
+    duration_seconds: Optional[float] = Field(None, ge=0.0, description="Duration in seconds")
+    sampling_frequency_hz: Optional[float] = Field(None, gt=0.0, description="Estimated sampling frequency")
+    original_timestamps_preserved: bool = Field(True, description="Confirms original timestamps are retained")
+    detected_timezones: List[str] = Field(default_factory=list, description="Original timezones identified in raw data")
+    is_chronological: bool = Field(True, description="True if measurements were in strict chronological order")
+    duplicate_timestamps_count: int = Field(0, ge=0, description="Number of duplicate timestamps identified")
+    out_of_order_count: int = Field(0, ge=0, description="Number of out-of-order records re-sequenced")
+    temporal_gaps_count: int = Field(0, ge=0, description="Number of detectable gaps exceeding threshold")
+    gap_intervals_seconds: List[float] = Field(default_factory=list, description="Durations of detected gaps")
+    warnings: List[str] = Field(default_factory=list, description="Temporal operational warnings")
+
+
+class SpatioTemporalAssociationContract(BaseModel):
+    """
+    Contract 14: Versioned association associating processed sensor measurements
+    with validated spatial and temporal context without hallucination.
+    """
+    contract_name: str = Field("SpatioTemporalAssociationContract", description="Contract identifier")
+    schema_version: str = Field("1.0", description="Schema version")
+    association_id: str = Field(default_factory=lambda: f"sta_{uuid.uuid4().hex[:12]}", description="Unique association ID")
+
+    drone_id: str = Field(..., min_length=1, description="Origin drone ID")
+    sensor_id: str = Field(..., min_length=1, description="Origin sensor ID")
+    field_id: Optional[str] = Field(None, description="Associated agricultural field ID")
+
+    spatial_report: SpatialProcessingReport = Field(..., description="Geospatial validation and coverage report")
+    temporal_report: TemporalProcessingReport = Field(..., description="Temporal sequencing and coverage report")
+
+    measurements_count: int = Field(..., ge=0, description="Total measurements associated")
+    measurements: List[ProcessedSensorMeasurementContract] = Field(default_factory=list, description="Sequenced measurements")
+
+    provenance: Dict[str, Any] = Field(default_factory=dict, description="Processing history and transformations")
+    warnings: List[str] = Field(default_factory=list, description="Consolidated operational warnings")
+    errors: List[str] = Field(default_factory=list, description="Consolidated non-fatal errors")
+
+    @model_validator(mode="after")
+    def validate_integrity(self) -> "SpatioTemporalAssociationContract":
+        if self.contract_name != "SpatioTemporalAssociationContract":
+            raise ValueError(f"Invalid contract_name: expected 'SpatioTemporalAssociationContract', got '{self.contract_name}'")
+        if self.schema_version != "1.0":
+            raise ValueError(f"Unsupported schema_version: expected '1.0', got '{self.schema_version}'")
+        return self

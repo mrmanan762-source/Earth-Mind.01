@@ -4,7 +4,7 @@ Central coordinator and service facade wiring together Gateway, Registry,
 Adapters, Formats, Storage, Diagnostics, and Camera Router.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from core.config.settings import DroneConfig, settings
 from core.interfaces.drone import (
@@ -28,8 +28,17 @@ from modules.drone.formats import DataFormatRegistry
 from modules.drone.gateway import DroneDataGateway
 from modules.drone.lifecycle import IngestionLifecycleTracker
 from modules.drone.processing import DroneProcessingEngine
+from modules.drone.geospatial import GeospatialProcessor
+from modules.drone.temporal import TemporalProcessor
+from modules.drone.spatiotemporal import SpatioTemporalAssociator
 from modules.drone.registry import SensorRegistry
 from modules.drone.storage import InMemoryDroneStorageAdapter
+from core.schemas.drone import (
+    FieldBoundaryContract,
+    ProcessedSensorMeasurementContract,
+    SpatialBoundingBox,
+    SpatioTemporalAssociationContract,
+)
 
 logger = get_logger("modules.drone.service")
 
@@ -53,6 +62,12 @@ class DroneService:
         self._diagnostics = DroneDiagnostics()
         self._camera_router = CameraDataRouter(vision_service=vision_service)
         self._processing_engine = processing_engine or DroneProcessingEngine()
+        self._geospatial_processor = GeospatialProcessor()
+        self._temporal_processor = TemporalProcessor()
+        self._spatiotemporal_associator = SpatioTemporalAssociator(
+            geospatial_processor=self._geospatial_processor,
+            temporal_processor=self._temporal_processor,
+        )
 
         self._gateway = DroneDataGateway(
             sensor_registry=self._sensor_registry,
@@ -102,6 +117,18 @@ class DroneService:
     def processing_engine(self) -> DroneProcessingEngine:
         return self._processing_engine
 
+    @property
+    def geospatial_processor(self) -> GeospatialProcessor:
+        return self._geospatial_processor
+
+    @property
+    def temporal_processor(self) -> TemporalProcessor:
+        return self._temporal_processor
+
+    @property
+    def spatiotemporal_associator(self) -> SpatioTemporalAssociator:
+        return self._spatiotemporal_associator
+
     # ------------------------------------------------------------------------
     # Core Operations
     # ------------------------------------------------------------------------
@@ -127,6 +154,32 @@ class DroneService:
             "quality_report": quality_report.model_dump(),
             "calibration_assessment": cal_assessment.model_dump(),
         }
+
+    # ------------------------------------------------------------------------
+    # Stage D4: Geospatial & Temporal Operations
+    # ------------------------------------------------------------------------
+    def associate_spatiotemporal(
+        self,
+        drone_id: str,
+        sensor_id: str,
+        measurements: List[ProcessedSensorMeasurementContract],
+        field_id: Optional[str] = None,
+        field_boundary: Optional[Union[FieldBoundaryContract, Dict[str, Any]]] = None,
+        declared_crs: Optional[str] = None,
+        gap_threshold_seconds: Optional[float] = None,
+    ) -> SpatioTemporalAssociationContract:
+        """Associate processed sensor measurements with validated geospatial & temporal context."""
+        self._diagnostics.record_metric("spatiotemporal_associations_total", 1.0)
+        association = self._spatiotemporal_associator.associate(
+            drone_id=drone_id,
+            sensor_id=sensor_id,
+            measurements=measurements,
+            field_id=field_id,
+            field_boundary=field_boundary,
+            declared_crs=declared_crs,
+            gap_threshold_seconds=gap_threshold_seconds,
+        )
+        return association
 
     # ------------------------------------------------------------------------
     # Ingestion Operations

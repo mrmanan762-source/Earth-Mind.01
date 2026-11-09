@@ -12,6 +12,7 @@ from core.schemas.application import ApplicationRequest, ApplicationResponse
 from core.schemas.drone import (
     DroneCameraRoutingContract,
     DroneSensorInputContract,
+    ProcessedSensorMeasurementContract,
     SensorMetadataContract,
 )
 from modules.drone.drone_service import DroneService
@@ -126,6 +127,32 @@ class DroneModule(ModuleInterface):
                     request_id=request.request_id,
                     status="NOT_FOUND",
                     response={"sensor_id": sensor_id, "error": "Sensor not found"}
+                )
+
+            elif op in ("associate_spatiotemporal", "spatiotemporal"):
+                drone_id = payload.get("drone_id")
+                sensor_id = payload.get("sensor_id")
+                raw_meas = payload.get("measurements", [])
+                meas_objs = []
+                for m in raw_meas:
+                    if isinstance(m, ProcessedSensorMeasurementContract):
+                        meas_objs.append(m)
+                    else:
+                        meas_objs.append(ProcessedSensorMeasurementContract(**m))
+
+                association = self._service.associate_spatiotemporal(
+                    drone_id=drone_id,
+                    sensor_id=sensor_id,
+                    measurements=meas_objs,
+                    field_id=payload.get("field_id"),
+                    field_boundary=payload.get("field_boundary"),
+                    declared_crs=payload.get("declared_crs"),
+                    gap_threshold_seconds=payload.get("gap_threshold_seconds"),
+                )
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=association.model_dump()
                 )
 
             return ApplicationResponse(
