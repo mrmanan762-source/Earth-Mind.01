@@ -663,25 +663,29 @@ class UnitConversionFailedError(DroneError):
 
 
 class GeolocationInvalidError(DroneError):
-    def __init__(self, details: str):
+    def __init__(self, details: str, operation: str = "process_spatial"):
         super().__init__(
             message=f"Invalid drone geospatial coordinates: {details}",
             error_code="GEOLOCATION_INVALID",
-            operation="process_spatial",
+            operation=operation,
             retryable=False,
             metadata={"details": details},
         )
+        self.details = details
 
 
 class TimestampInvalidError(DroneError):
-    def __init__(self, timestamp_str: str, details: str = "Timestamp is invalid or in the future."):
+    def __init__(self, timestamp_str: str = "", details: str = "Timestamp is invalid or in the future.", operation: str = "process_temporal"):
+        msg = f"Invalid drone timestamp '{timestamp_str}': {details}" if timestamp_str else f"Invalid drone timestamp: {details}"
         super().__init__(
-            message=f"Invalid drone timestamp '{timestamp_str}': {details}",
+            message=msg,
             error_code="TIMESTAMP_INVALID",
-            operation="process_temporal",
+            operation=operation,
             retryable=False,
             metadata={"timestamp": timestamp_str, "details": details},
         )
+        self.details = details
+        self.timestamp_str = timestamp_str
 
 
 class InsufficientDroneDataError(DroneError):
