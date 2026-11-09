@@ -31,13 +31,22 @@ from modules.drone.processing import DroneProcessingEngine
 from modules.drone.geospatial import GeospatialProcessor
 from modules.drone.temporal import TemporalProcessor
 from modules.drone.spatiotemporal import SpatioTemporalAssociator
+from modules.drone.spectral import SpectralAnalysisEngine
+from modules.drone.numerical import NumericalAnalysisEngine
+from modules.drone.indicators import IndicatorExtractionEngine
+from modules.drone.fusion import MultiSensorFusionEngine
 from modules.drone.registry import SensorRegistry
 from modules.drone.storage import InMemoryDroneStorageAdapter
 from core.schemas.drone import (
+    AgriculturalIndicatorContract,
     FieldBoundaryContract,
+    FusedSensorMeasurementContract,
+    MultiSensorFusionReportContract,
+    NumericalAnalysisResultContract,
     ProcessedSensorMeasurementContract,
     SpatialBoundingBox,
     SpatioTemporalAssociationContract,
+    SpectralAnalysisResultContract,
 )
 
 logger = get_logger("modules.drone.service")
@@ -68,6 +77,10 @@ class DroneService:
             geospatial_processor=self._geospatial_processor,
             temporal_processor=self._temporal_processor,
         )
+        self._spectral_engine = SpectralAnalysisEngine()
+        self._numerical_engine = NumericalAnalysisEngine()
+        self._indicator_engine = IndicatorExtractionEngine(spectral_engine=self._spectral_engine)
+        self._fusion_engine = MultiSensorFusionEngine()
 
         self._gateway = DroneDataGateway(
             sensor_registry=self._sensor_registry,
@@ -129,6 +142,22 @@ class DroneService:
     def spatiotemporal_associator(self) -> SpatioTemporalAssociator:
         return self._spatiotemporal_associator
 
+    @property
+    def spectral_engine(self) -> SpectralAnalysisEngine:
+        return self._spectral_engine
+
+    @property
+    def numerical_engine(self) -> NumericalAnalysisEngine:
+        return self._numerical_engine
+
+    @property
+    def indicator_engine(self) -> IndicatorExtractionEngine:
+        return self._indicator_engine
+
+    @property
+    def fusion_engine(self) -> MultiSensorFusionEngine:
+        return self._fusion_engine
+
     # ------------------------------------------------------------------------
     # Core Operations
     # ------------------------------------------------------------------------
@@ -180,6 +209,76 @@ class DroneService:
             gap_threshold_seconds=gap_threshold_seconds,
         )
         return association
+
+    # ------------------------------------------------------------------------
+    # Stage D5: Spectral, Numerical, Indicators & Fusion Operations
+    # ------------------------------------------------------------------------
+    def analyze_spectral(self, band_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze spectral band inputs and compute summary statistics."""
+        self._diagnostics.record_metric("spectral_analyses_total", 1.0)
+        return self._spectral_engine.analyze_bands(band_data)
+
+    def process_numerical(
+        self,
+        measurements: List[ProcessedSensorMeasurementContract],
+        channel_name: str,
+    ) -> NumericalAnalysisResultContract:
+        """Process numerical channel measurements and calculate summary statistics."""
+        self._diagnostics.record_metric("numerical_analyses_total", 1.0)
+        return self._numerical_engine.process_measurements(measurements, channel_name=channel_name)
+
+    def process_thermal_summary(
+        self,
+        measurements: List[ProcessedSensorMeasurementContract],
+        channel_name: str = "thermal_ir",
+    ) -> NumericalAnalysisResultContract:
+        """Process thermal IR measurements preserving units and range checks."""
+        self._diagnostics.record_metric("thermal_analyses_total", 1.0)
+        return self._numerical_engine.process_thermal_summary(measurements, channel_name=channel_name)
+
+    def extract_indicator(
+        self,
+        indicator_name: str,
+        measurements: List[ProcessedSensorMeasurementContract],
+    ) -> AgriculturalIndicatorContract:
+        """Extract a single agricultural vegetation/water indicator (e.g. NDVI, NDRE, NDWI)."""
+        self._diagnostics.record_metric("indicator_extractions_total", 1.0)
+        sensor_meta = None
+        if measurements:
+            sensor_meta = self._sensor_registry.get_sensor(measurements[0].source_sensor)
+        return self._indicator_engine.extract_indicator(
+            indicator_name=indicator_name,
+            measurements=measurements,
+            sensor_metadata=sensor_meta,
+        )
+
+    def extract_available_indicators(
+        self,
+        measurements: List[ProcessedSensorMeasurementContract],
+    ) -> List[AgriculturalIndicatorContract]:
+        """Extract all possible agricultural indicators supported by the present measurements."""
+        self._diagnostics.record_metric("available_indicators_total", 1.0)
+        sensor_meta = None
+        if measurements:
+            sensor_meta = self._sensor_registry.get_sensor(measurements[0].source_sensor)
+        return self._indicator_engine.extract_available_indicators(
+            measurements=measurements,
+            sensor_metadata=sensor_meta,
+        )
+
+    def fuse_sensor_data(
+        self,
+        sensor_streams: Dict[str, List[ProcessedSensorMeasurementContract]],
+        drone_id: str = "drone_default",
+        field_id: Optional[str] = None,
+    ) -> MultiSensorFusionReportContract:
+        """Spatially and temporally fuse concurrent multi-sensor streams."""
+        self._diagnostics.record_metric("sensor_fusions_total", 1.0)
+        return self._fusion_engine.fuse_measurements(
+            sensor_streams=sensor_streams,
+            drone_id=drone_id,
+            field_id=field_id,
+        )
 
     # ------------------------------------------------------------------------
     # Ingestion Operations
