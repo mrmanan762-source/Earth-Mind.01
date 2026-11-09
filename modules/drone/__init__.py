@@ -41,6 +41,10 @@ from modules.drone.spectral import SpectralAnalysisEngine, STANDARD_SPECTRAL_BAN
 from modules.drone.numerical import NumericalAnalysisEngine
 from modules.drone.indicators import IndicatorExtractionEngine, INDICATOR_CATALOG
 from modules.drone.fusion import MultiSensorFusionEngine
+from modules.drone.uncertainty import UncertaintyAssessor, ConfidenceLevel
+from modules.drone.evidence_builder import SensorEvidenceBuilder
+from modules.drone.evidence_validator import SensorEvidenceValidator, EvidenceValidationResult
+from modules.drone.sarvam_integration import SarvamDroneIntegration, DroneContextProvider
 from modules.drone.errors import (
     DroneError,
     DroneInvalidArgumentError,
@@ -149,6 +153,13 @@ __all__ = [
     "IndicatorExtractionEngine",
     "INDICATOR_CATALOG",
     "MultiSensorFusionEngine",
+    "UncertaintyAssessor",
+    "ConfidenceLevel",
+    "SensorEvidenceBuilder",
+    "SensorEvidenceValidator",
+    "EvidenceValidationResult",
+    "SarvamDroneIntegration",
+    "DroneContextProvider",
     "DroneError",
     "DroneInvalidArgumentError",
     "UnsupportedSensorError",

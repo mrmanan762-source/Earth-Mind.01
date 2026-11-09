@@ -35,18 +35,28 @@ from modules.drone.spectral import SpectralAnalysisEngine
 from modules.drone.numerical import NumericalAnalysisEngine
 from modules.drone.indicators import IndicatorExtractionEngine
 from modules.drone.fusion import MultiSensorFusionEngine
+from modules.drone.uncertainty import UncertaintyAssessor
+from modules.drone.evidence_builder import SensorEvidenceBuilder
+from modules.drone.evidence_validator import SensorEvidenceValidator, EvidenceValidationResult
+from modules.drone.sarvam_integration import SarvamDroneIntegration, DroneContextProvider
 from modules.drone.registry import SensorRegistry
 from modules.drone.storage import InMemoryDroneStorageAdapter
 from core.schemas.drone import (
     AgriculturalIndicatorContract,
+    DroneCalibrationInfo,
+    DroneQualityAssessment,
+    DroneUncertaintyAssessment,
+    EarthMindDroneSensorEvidence,
     FieldBoundaryContract,
     FusedSensorMeasurementContract,
     MultiSensorFusionReportContract,
     NumericalAnalysisResultContract,
     ProcessedSensorMeasurementContract,
     SpatialBoundingBox,
+    SpatialCoverage,
     SpatioTemporalAssociationContract,
     SpectralAnalysisResultContract,
+    TemporalCoverage,
 )
 
 logger = get_logger("modules.drone.service")
@@ -81,6 +91,10 @@ class DroneService:
         self._numerical_engine = NumericalAnalysisEngine()
         self._indicator_engine = IndicatorExtractionEngine(spectral_engine=self._spectral_engine)
         self._fusion_engine = MultiSensorFusionEngine()
+        self._uncertainty_assessor = UncertaintyAssessor()
+        self._evidence_builder = SensorEvidenceBuilder(uncertainty_assessor=self._uncertainty_assessor)
+        self._evidence_validator = SensorEvidenceValidator()
+        self._sarvam_integration = SarvamDroneIntegration(validator=self._evidence_validator)
 
         self._gateway = DroneDataGateway(
             sensor_registry=self._sensor_registry,
@@ -157,6 +171,22 @@ class DroneService:
     @property
     def fusion_engine(self) -> MultiSensorFusionEngine:
         return self._fusion_engine
+
+    @property
+    def uncertainty_assessor(self) -> UncertaintyAssessor:
+        return self._uncertainty_assessor
+
+    @property
+    def evidence_builder(self) -> SensorEvidenceBuilder:
+        return self._evidence_builder
+
+    @property
+    def evidence_validator(self) -> SensorEvidenceValidator:
+        return self._evidence_validator
+
+    @property
+    def sarvam_integration(self) -> SarvamDroneIntegration:
+        return self._sarvam_integration
 
     # ------------------------------------------------------------------------
     # Core Operations
@@ -278,6 +308,89 @@ class DroneService:
             sensor_streams=sensor_streams,
             drone_id=drone_id,
             field_id=field_id,
+        )
+
+    # ------------------------------------------------------------------------
+    # Stage D6: Uncertainty, Evidence & Sarvam Integration Operations
+    # ------------------------------------------------------------------------
+    def assess_uncertainty(
+        self,
+        quality_assessment: DroneQualityAssessment,
+        calibration_status: Any,
+        panel_used: bool,
+        sun_sensor_used: bool,
+        spatial_coverage: Optional[SpatialCoverage] = None,
+        temporal_coverage: Optional[TemporalCoverage] = None,
+        measurements_count: int = 0,
+        indicators_count: int = 0,
+        operational_warnings: Optional[List[str]] = None,
+    ) -> DroneUncertaintyAssessment:
+        """Assess multi-dimensional uncertainty without fabricated confidence."""
+        self._diagnostics.record_metric("uncertainty_assessments_total", 1.0)
+        return self._uncertainty_assessor.assess_comprehensive_uncertainty(
+            quality_assessment=quality_assessment,
+            calibration_status=calibration_status,
+            panel_used=panel_used,
+            sun_sensor_used=sun_sensor_used,
+            spatial_coverage=spatial_coverage,
+            temporal_coverage=temporal_coverage,
+            measurements_count=measurements_count,
+            indicators_count=indicators_count,
+            operational_warnings=operational_warnings,
+        )
+
+    def build_evidence(
+        self,
+        input_data: DroneSensorInputContract,
+        measurements: List[ProcessedSensorMeasurementContract],
+        indicators: List[AgriculturalIndicatorContract],
+        spatial: SpatialCoverage,
+        temporal: TemporalCoverage,
+        quality: Optional[DroneQualityAssessment] = None,
+        uncertainty: Optional[DroneUncertaintyAssessment] = None,
+        calibration: Optional[DroneCalibrationInfo] = None,
+        warnings: Optional[List[str]] = None,
+        limitations: Optional[List[str]] = None,
+        mission_id: Optional[str] = None,
+        crop: Optional[str] = None,
+    ) -> EarthMindDroneSensorEvidence:
+        """Build canonical EarthMindDroneSensorEvidence packet."""
+        self._diagnostics.record_metric("evidence_builds_total", 1.0)
+        evidence = self._evidence_builder.build_evidence(
+            input_data=input_data,
+            measurements=measurements,
+            indicators=indicators,
+            spatial=spatial,
+            temporal=temporal,
+            quality=quality,
+            uncertainty=uncertainty,
+            calibration=calibration,
+            warnings=warnings,
+            limitations=limitations,
+            mission_id=mission_id,
+            crop=crop,
+        )
+        return evidence
+
+    def validate_evidence(
+        self, evidence: EarthMindDroneSensorEvidence, strict: bool = False
+    ) -> EvidenceValidationResult:
+        """Validate candidate sensor evidence packet."""
+        self._diagnostics.record_metric("evidence_validations_total", 1.0)
+        if strict:
+            return self._evidence_validator.validate_or_raise(evidence)
+        return self._evidence_validator.evaluate(evidence)
+
+    def deliver_evidence_to_context(
+        self,
+        evidence: EarthMindDroneSensorEvidence,
+        context_manager: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """Deliver validated sensor evidence to B2 Context Manager."""
+        self._diagnostics.record_metric("sarvam_deliveries_total", 1.0)
+        return self._sarvam_integration.deliver_to_context_manager(
+            evidence=evidence,
+            context_manager=context_manager,
         )
 
     # ------------------------------------------------------------------------
