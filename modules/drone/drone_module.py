@@ -77,6 +77,18 @@ class DroneModule(ModuleInterface):
                     response=result.to_dict()
                 )
 
+            elif op in ("process_sensor_data", "process"):
+                if isinstance(payload, DroneSensorInputContract):
+                    input_contract = payload
+                else:
+                    input_contract = DroneSensorInputContract(**payload)
+                result = self._service.process_sensor_data(input_contract)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=result
+                )
+
             elif op in ("route_camera", "route_camera_data"):
                 if isinstance(payload, DroneCameraRoutingContract):
                     cam_contract = payload

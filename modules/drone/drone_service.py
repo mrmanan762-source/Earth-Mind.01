@@ -27,6 +27,7 @@ from modules.drone.diagnostics import DroneDiagnostics
 from modules.drone.formats import DataFormatRegistry
 from modules.drone.gateway import DroneDataGateway
 from modules.drone.lifecycle import IngestionLifecycleTracker
+from modules.drone.processing import DroneProcessingEngine
 from modules.drone.registry import SensorRegistry
 from modules.drone.storage import InMemoryDroneStorageAdapter
 
@@ -34,13 +35,14 @@ logger = get_logger("modules.drone.service")
 
 
 class DroneService:
-    """Core Drone Service coordinating foundational drone components."""
+    """Core Drone Service coordinating foundational and processing drone components."""
 
     def __init__(
         self,
         config: Optional[DroneConfig] = None,
         storage_adapter: Optional[IDroneStorageAdapter] = None,
         vision_service: Optional[Any] = None,
+        processing_engine: Optional[DroneProcessingEngine] = None,
     ):
         self._config = config or getattr(settings, "drone", DroneConfig())
         self._storage_adapter = storage_adapter or InMemoryDroneStorageAdapter()
@@ -50,6 +52,7 @@ class DroneService:
         self._adapter_registry = SensorAdapterRegistry()
         self._diagnostics = DroneDiagnostics()
         self._camera_router = CameraDataRouter(vision_service=vision_service)
+        self._processing_engine = processing_engine or DroneProcessingEngine()
 
         self._gateway = DroneDataGateway(
             sensor_registry=self._sensor_registry,
@@ -95,8 +98,38 @@ class DroneService:
     def camera_router(self) -> CameraDataRouter:
         return self._camera_router
 
+    @property
+    def processing_engine(self) -> DroneProcessingEngine:
+        return self._processing_engine
+
     # ------------------------------------------------------------------------
     # Core Operations
+    # ------------------------------------------------------------------------
+    def process_sensor_data(
+        self, input_data: DroneSensorInputContract
+    ) -> Dict[str, Any]:
+        """Process raw drone sensor package into normalized ProcessedSensorMeasurementContracts."""
+        self._diagnostics.record_metric("processings_total", 1.0)
+        sensor_profile = self._sensor_registry.get_sensor(input_data.sensor_id)
+        measurements, quality_report, cal_assessment = self._processing_engine.process_sensor_input(
+            input_contract=input_data,
+            sensor_profile=sensor_profile,
+        )
+        self._diagnostics.record_metric("measurements_processed", float(len(measurements)))
+
+        return {
+            "sensor_id": input_data.sensor_id,
+            "drone_id": input_data.drone_id,
+            "measurements_count": len(measurements),
+            "quality_status": quality_report.overall_status.value,
+            "calibration_status": cal_assessment.status.value,
+            "measurements": [m.model_dump() for m in measurements],
+            "quality_report": quality_report.model_dump(),
+            "calibration_assessment": cal_assessment.model_dump(),
+        }
+
+    # ------------------------------------------------------------------------
+    # Ingestion Operations
     # ------------------------------------------------------------------------
     def ingest_sensor_data(self, input_data: DroneSensorInputContract) -> DroneIngestionResult:
         """Ingest incoming raw drone sensor package."""
