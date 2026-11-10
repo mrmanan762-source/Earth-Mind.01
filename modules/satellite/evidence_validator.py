@@ -1,8 +1,8 @@
-"""Satellite Evidence Validation and Governance Gate for EarthMind Satellite Module (Stage D6).
+"""Satellite Evidence Validation and Governance Gate for EarthMind Satellite Module (Stages D6 & D7).
 
 Implements Component 18 (ISatelliteEvidenceValidator) and Component 20 (ISatelliteGovernanceGate).
 Validates schema compliance, required fields, reference integrity, unit consistency,
-physical plausibility, and uncertainty consistency of EarthMindSatelliteEvidence artifacts.
+physical plausibility, provenance, and uncertainty consistency of EarthMindSatelliteEvidence artifacts.
 
 Enforces strict rules:
 - Contract name must be 'EarthMindSatelliteEvidence' and schema version '1.0'.
@@ -11,8 +11,10 @@ Enforces strict rules:
 - Indicator statistics must be within valid physical intervals (e.g. NDVI in [-1.0, 1.0]).
 - Uncertainty metrics must not contradict underlying data quality (no high confidence on INVALID data).
 - Enforces tenant isolation and prevents unauthorized automatic promotion into User Memory, General Memory, or C.2 Knowledge Base.
+- Output validation statuses conform to clear outcomes: VALID, VALID_WITH_WARNINGS, INSUFFICIENT_EVIDENCE, INVALID, REJECTED.
 """
 
+from enum import Enum
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
@@ -28,10 +30,20 @@ from core.schemas.satellite import (
 logger = get_logger("modules.satellite.evidence_validator")
 
 
+class ValidationOutcome(str, Enum):
+    """Machine-readable outcomes for satellite evidence validation."""
+    VALID = "VALID"
+    VALID_WITH_WARNINGS = "VALID_WITH_WARNINGS"
+    INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+    INVALID = "INVALID"
+    REJECTED = "REJECTED"
+
+
 class SatelliteEvidenceValidationResult(BaseModel):
     """Structured report returned by SatelliteEvidenceValidator."""
     is_valid: bool = Field(..., description="True if evidence passes all validation rules")
     evidence_id: str = Field(..., description="Validated evidence identifier")
+    outcome: ValidationOutcome = Field(ValidationOutcome.VALID, description="Explicit machine-readable validation outcome")
     errors: List[str] = Field(default_factory=list, description="Validation failure reasons")
     warnings: List[str] = Field(default_factory=list, description="Non-fatal validation warnings")
     checks_evaluated: int = Field(0, description="Total number of verification checks executed")
@@ -41,10 +53,12 @@ class SatelliteEvidenceValidationResult(BaseModel):
 class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
     """
     Component 18: Evidence validation gate ensuring compliance with Contract 8 schema v1.0.
+    Hardened for Stage D7 with multi-dimensional scientific, provenance, and uncertainty validation.
     """
 
-    def __init__(self, reject_cloud_obscured: bool = False) -> None:
+    def __init__(self, reject_cloud_obscured: bool = False, require_provenance_hash: bool = False) -> None:
         self._reject_cloud_obscured = reject_cloud_obscured
+        self._require_provenance_hash = require_provenance_hash
 
     def validate_evidence(self, evidence: EarthMindSatelliteEvidence) -> bool:
         """Protocol method conforming to ISatelliteEvidenceValidator."""
@@ -90,7 +104,7 @@ class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
         if not evidence.evidence_id or not evidence.evidence_id.strip():
             errors.append("evidence_id cannot be empty")
 
-        # Check 2: Source Information
+        # Check 2: Source Information & Provenance
         checks += 1
         if not evidence.source or not evidence.source.dataset_id or not evidence.source.dataset_id.strip():
             errors.append("Source dataset_id is missing or empty")
@@ -100,6 +114,14 @@ class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
         checks += 1
         if not evidence.source or not evidence.source.constellation or not evidence.source.constellation.strip():
             errors.append("Source constellation is missing or empty")
+
+        # Provenance hash check
+        checks += 1
+        has_hash = bool(evidence.provenance.get("evidence_hash"))
+        if self._require_provenance_hash and not has_hash:
+            errors.append("Required cryptographic SHA-256 evidence_hash missing from provenance")
+        elif not has_hash:
+            warnings.append("Cryptographic evidence_hash missing from provenance")
 
         # Check 3: Spatiotemporal Plausibility
         checks += 1
@@ -124,6 +146,8 @@ class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
                 errors.append(f"Cloud cover percentage out of range [0, 100]: {evidence.quality.cloud_cover_percentage}")
             if self._reject_cloud_obscured and evidence.quality.overall_quality == SatelliteDataQuality.CLOUD_OBSCURED:
                 errors.append("Cloud-obscured evidence rejected by strict configuration policy")
+            elif evidence.quality.overall_quality == SatelliteDataQuality.CLOUD_OBSCURED:
+                warnings.append(f"Evidence has substantial cloud cover ({evidence.quality.cloud_cover_percentage}%)")
 
         # Check 5: Band Summaries Physical Sanity
         checks += 1
@@ -138,6 +162,9 @@ class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
 
         # Check 6: Indicator Statistics & Bounds
         checks += 1
+        if not evidence.indicators and evidence.status != SatelliteEvidenceStatus.PARTIAL:
+            warnings.append("Evidence contains zero agricultural indicators")
+
         for ind in evidence.indicators:
             checks += 1
             if not ind.indicator_name or not ind.indicator_name.strip():
@@ -181,11 +208,27 @@ class SatelliteEvidenceValidator(ISatelliteEvidenceValidator):
             errors.append("Evidence is marked with status FAILED")
 
         is_valid = len(errors) == 0
-        has_hash = bool(evidence.provenance.get("evidence_hash"))
+
+        # Determine explicit validation outcome
+        if not is_valid:
+            if evidence.status == SatelliteEvidenceStatus.REJECTED:
+                outcome = ValidationOutcome.REJECTED
+            elif not evidence.indicators and not evidence.band_summaries:
+                outcome = ValidationOutcome.INSUFFICIENT_EVIDENCE
+            else:
+                outcome = ValidationOutcome.INVALID
+        else:
+            if warnings or evidence.status in (SatelliteEvidenceStatus.DEGRADED, SatelliteEvidenceStatus.PARTIAL):
+                outcome = ValidationOutcome.VALID_WITH_WARNINGS
+            elif not evidence.indicators:
+                outcome = ValidationOutcome.INSUFFICIENT_EVIDENCE
+            else:
+                outcome = ValidationOutcome.VALID
 
         return SatelliteEvidenceValidationResult(
             is_valid=is_valid,
             evidence_id=evidence.evidence_id,
+            outcome=outcome,
             errors=errors,
             warnings=warnings,
             checks_evaluated=checks,

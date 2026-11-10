@@ -100,6 +100,8 @@ def create_app():
 
     # Create ContextModule connected to memory_module's MemoryContextProvider
     context_module = ContextModule(memory_provider=memory_module.context_provider)
+    if hasattr(satellite_module, "context_provider"):
+        context_module.manager.register_provider(satellite_module.context_provider)
 
     # Attach modules to lifecycle
     lifecycle.register_module("database", db_module)
