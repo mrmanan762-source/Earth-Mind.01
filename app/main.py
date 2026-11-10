@@ -16,6 +16,7 @@ from modules.inspector.inspector_module import InspectorModule
 from modules.ulpu.ulpu_module import ULPUModule
 from modules.vision.vision_module import VisionModule
 from modules.drone.drone_module import DroneModule
+from modules.satellite.satellite_module import SatelliteModule
 from modules.data_training.data_training_module import DataTrainingModule
 from modules.external_services.external_services_module import ExternalServicesModule
 from modules.context.context_module import ContextModule
@@ -93,6 +94,7 @@ def create_app():
     ulpu_module = ULPUModule()
     vision_module = VisionModule()
     drone_module = DroneModule()
+    satellite_module = SatelliteModule()
     data_training_module = DataTrainingModule()
     external_services_module = ExternalServicesModule()
 
@@ -107,6 +109,7 @@ def create_app():
     lifecycle.register_module("ulpu", ulpu_module)
     lifecycle.register_module("vision", vision_module)
     lifecycle.register_module("drone", drone_module)
+    lifecycle.register_module("satellite", satellite_module)
     lifecycle.register_module("data_training", data_training_module)
     lifecycle.register_module("external_services", external_services_module)
     lifecycle.register_module("context", context_module)
