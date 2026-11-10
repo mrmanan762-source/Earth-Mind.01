@@ -77,6 +77,17 @@ from modules.satellite.storage import (
 )
 from modules.satellite.temporal_analysis import SatelliteTemporalAnalyzer
 from modules.satellite.temporal_numerical import SatelliteTemporalProcessor
+from modules.satellite.evidence_builder import SatelliteEvidenceBuilder
+from modules.satellite.evidence_validator import (
+    SatelliteEvidenceValidationResult,
+    SatelliteEvidenceValidator,
+    SatelliteGovernanceGate,
+)
+from modules.satellite.intelligence import SatelliteAgriculturalIntelligenceEngine
+from modules.satellite.uncertainty import (
+    SatelliteConfidenceLevel,
+    SatelliteUncertaintyAssessor,
+)
 from modules.satellite.vegetation_water import VegetationWaterAnalyzer
 
 __all__ = [
@@ -152,6 +163,14 @@ __all__ = [
     "SatelliteChangeDetector",
     "SatelliteIndicatorGenerator",
     "SatelliteMultiSourceFusionEngine",
+    # D6 Intelligence, Uncertainty & Evidence Engines
+    "SatelliteConfidenceLevel",
+    "SatelliteUncertaintyAssessor",
+    "SatelliteAgriculturalIntelligenceEngine",
+    "SatelliteEvidenceBuilder",
+    "SatelliteEvidenceValidationResult",
+    "SatelliteEvidenceValidator",
+    "SatelliteGovernanceGate",
     # Core Service and Module
     "SatelliteService",
     "SatelliteModule",
