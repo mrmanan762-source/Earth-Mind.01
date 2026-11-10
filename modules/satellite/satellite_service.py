@@ -1,4 +1,4 @@
-"""SatelliteService for EarthMind Satellite Module (Stage D3: Discovery, Acquisition & Ingestion).
+"""SatelliteService for EarthMind Satellite Module (Stages D1 to D5).
 
 Central coordinator binding:
 - Configuration (`SatelliteConfig`)
@@ -18,9 +18,12 @@ Central coordinator binding:
 - Catalog Discovery (`SatelliteDiscoveryEngine`)
 - Request Lifecycle Management (`SatelliteRequestManager`)
 - Data Acquisition (`SatelliteDataAcquisitionEngine`)
+- D4 Data Processing (`SatelliteProcessingPipeline`)
+- D5 Analytical Intelligence (`SatelliteSpectralIndexEngine`, `VegetationWaterAnalyzer`, etc.)
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
+import numpy as np
 
 from core.config.settings import SatelliteConfig, settings
 from core.interfaces.satellite import ISatelliteCacheStorageAdapter
@@ -32,6 +35,8 @@ from core.schemas.satellite import (
     SatelliteDataQuality,
     SatelliteDataRequest,
     SatelliteDatasetMetadata,
+    SatelliteIndicator,
+    SatelliteProcessedData,
     SatelliteProvider,
     SatelliteProviderStatus,
     SatelliteRawDataReference,
@@ -48,6 +53,7 @@ from modules.satellite.adapters import (
 from modules.satellite.cache import SatelliteHybridCache
 from modules.satellite.capabilities import ProviderCapabilityManager
 from modules.satellite.catalog import SatelliteDataCatalog
+from modules.satellite.change_detection import SatelliteChangeDetector
 from modules.satellite.diagnostics import SatelliteDiagnostics
 from modules.satellite.discovery import SatelliteDiscoveryEngine
 from modules.satellite.errors import (
@@ -57,6 +63,11 @@ from modules.satellite.errors import (
     SatelliteProviderUnavailableError,
 )
 from modules.satellite.formats import SatelliteFormatDetector
+from modules.satellite.fusion import SatelliteMultiSourceFusionEngine
+from modules.satellite.geospatial import SatelliteGeospatialProcessor
+from modules.satellite.image_processing import SatelliteImageProcessor
+from modules.satellite.indices import SatelliteSpectralIndexEngine
+from modules.satellite.indicators import SatelliteIndicatorGenerator
 from modules.satellite.ingestion import SatelliteIngestionEngine
 from modules.satellite.lifecycle import (
     SatelliteLifecycleManager,
@@ -65,16 +76,27 @@ from modules.satellite.lifecycle import (
 )
 from modules.satellite.metadata_extractor import SatelliteMetadataExtractor
 from modules.satellite.pre_validator import SatellitePreValidator
+from modules.satellite.processing_pipeline import SatelliteProcessingPipeline
+from modules.satellite.quality import SatelliteQualityValidator
+from modules.satellite.radar_thermal import (
+    SatelliteSARProcessor,
+    SatelliteThermalProcessor,
+)
 from modules.satellite.registry import SatelliteProviderRegistry
 from modules.satellite.request_manager import SatelliteRequestManager
 from modules.satellite.request_validator import SatelliteRequestValidator
+from modules.satellite.spatial_analysis import SatelliteSpatialAnalyzer
+from modules.satellite.spectral import SatelliteSpectralProcessor
 from modules.satellite.storage import resolve_satellite_storage_adapter
+from modules.satellite.temporal_analysis import SatelliteTemporalAnalyzer
+from modules.satellite.temporal_numerical import SatelliteTemporalProcessor
+from modules.satellite.vegetation_water import VegetationWaterAnalyzer
 
 logger = get_logger("modules.satellite.service")
 
 
 class SatelliteService:
-    """Satellite service orchestrating discovery, acquisition, ingestion, and hybrid caching."""
+    """Satellite service orchestrating discovery, acquisition, ingestion, processing, and analysis."""
 
     def __init__(
         self,
@@ -142,6 +164,31 @@ class SatelliteService:
             cache=self._cache,
             request_manager=self._request_manager,
         )
+
+        # D4 Processing Components
+        self._image_processor = SatelliteImageProcessor()
+        self._spectral_processor = SatelliteSpectralProcessor()
+        self._geospatial_processor = SatelliteGeospatialProcessor()
+        self._temporal_processor = SatelliteTemporalProcessor()
+        self._quality_validator = SatelliteQualityValidator()
+        self._sar_processor = SatelliteSARProcessor()
+        self._thermal_processor = SatelliteThermalProcessor()
+        self._processing_pipeline = SatelliteProcessingPipeline(
+            image_processor=self._image_processor,
+            spectral_processor=self._spectral_processor,
+            geospatial_processor=self._geospatial_processor,
+            temporal_processor=self._temporal_processor,
+            quality_validator=self._quality_validator,
+        )
+
+        # D5 Analytical Engines
+        self._index_engine = SatelliteSpectralIndexEngine()
+        self._veg_water_analyzer = VegetationWaterAnalyzer()
+        self._spatial_analyzer = SatelliteSpatialAnalyzer()
+        self._temporal_analyzer = SatelliteTemporalAnalyzer()
+        self._change_detector = SatelliteChangeDetector()
+        self._indicator_generator = SatelliteIndicatorGenerator()
+        self._fusion_engine = SatelliteMultiSourceFusionEngine()
 
         # Connect lifecycle hooks to sync diagnostics state
         self._lifecycle.add_startup_hook(self._on_startup)
@@ -218,21 +265,67 @@ class SatelliteService:
     def acquisition_engine(self) -> SatelliteDataAcquisitionEngine:
         return self._acquisition_engine
 
+    @property
+    def image_processor(self) -> SatelliteImageProcessor:
+        return self._image_processor
+
+    @property
+    def spectral_processor(self) -> SatelliteSpectralProcessor:
+        return self._spectral_processor
+
+    @property
+    def geospatial_processor(self) -> SatelliteGeospatialProcessor:
+        return self._geospatial_processor
+
+    @property
+    def temporal_processor(self) -> SatelliteTemporalProcessor:
+        return self._temporal_processor
+
+    @property
+    def quality_validator(self) -> SatelliteQualityValidator:
+        return self._quality_validator
+
+    @property
+    def processing_pipeline(self) -> SatelliteProcessingPipeline:
+        return self._processing_pipeline
+
+    @property
+    def index_engine(self) -> SatelliteSpectralIndexEngine:
+        return self._index_engine
+
+    @property
+    def veg_water_analyzer(self) -> VegetationWaterAnalyzer:
+        return self._veg_water_analyzer
+
+    @property
+    def spatial_analyzer(self) -> SatelliteSpatialAnalyzer:
+        return self._spatial_analyzer
+
+    @property
+    def temporal_analyzer(self) -> SatelliteTemporalAnalyzer:
+        return self._temporal_analyzer
+
+    @property
+    def change_detector(self) -> SatelliteChangeDetector:
+        return self._change_detector
+
+    @property
+    def indicator_generator(self) -> SatelliteIndicatorGenerator:
+        return self._indicator_generator
+
+    @property
+    def fusion_engine(self) -> SatelliteMultiSourceFusionEngine:
+        return self._fusion_engine
+
     def _on_startup(self) -> None:
-        """Invoked when module starts."""
         self._diagnostics.set_lifecycle_state("RUNNING")
         for prov in self._provider_registry.list_providers():
-            self._diagnostics.update_provider_status(
-                prov.provider_id,
-                prov.status.value,
-            )
+            self._diagnostics.update_provider_status(prov.provider_id, prov.status.value)
 
     def _on_shutdown(self) -> None:
-        """Invoked when module stops."""
         self._diagnostics.set_lifecycle_state("STOPPED")
 
     def _register_configured_adapters(self) -> None:
-        """Register adapters according to SatelliteConfig settings."""
         nasa = NasaEarthdataAdapter(
             api_key=self._config.nasa_api_key,
             timeout=self._config.default_timeout,
@@ -270,15 +363,9 @@ class SatelliteService:
             self._provider_registry.register_provider(mock.get_provider_manifest(), allow_overwrite=True)
             self._diagnostics.update_provider_status(mock.provider_id, "INITIALIZED")
 
-    def search_catalog(
-        self,
-        request: SatelliteDataRequest,
-        provider_id: Optional[str] = None,
-    ) -> List[SatelliteDatasetMetadata]:
-        """Validate request and search provider catalog across discovery engine."""
+    def search_catalog(self, request: SatelliteDataRequest, provider_id: Optional[str] = None) -> List[SatelliteDatasetMetadata]:
         self._diagnostics.record_metric("requests_total", 1)
         self._diagnostics.record_metric("catalog_searches_total", 1)
-
         try:
             self._validator.validate_request(request)
         except SatelliteInvalidArgumentError as exc:
@@ -290,14 +377,10 @@ class SatelliteService:
             if provider_id:
                 adapter = self._adapter_registry.get_adapter(provider_id)
                 if not adapter:
-                    raise SatelliteProviderUnavailableError(
-                        provider_id=provider_id,
-                        details=f"No adapter registered for provider '{provider_id}'.",
-                    )
+                    raise SatelliteProviderUnavailableError(provider_id=provider_id, details=f"No adapter registered for '{provider_id}'.")
                 results = adapter.search_catalog(request)
             else:
                 results = self._discovery_engine.discover_datasets(request)
-
             self._diagnostics.record_metric("requests_success", 1)
             return results
         except Exception as exc:
@@ -305,16 +388,9 @@ class SatelliteService:
             self._diagnostics.record_error("search_catalog", "SEARCH_FAILED", str(exc), provider_id=provider_id)
             raise
 
-    def acquire_dataset(
-        self,
-        dataset_id: str,
-        request: SatelliteDataRequest,
-        provider_id: str,
-    ) -> SatelliteAcquisitionResult:
-        """Validate request and execute dataset acquisition via adapter or engine."""
+    def acquire_dataset(self, dataset_id: str, request: SatelliteDataRequest, provider_id: str) -> SatelliteAcquisitionResult:
         self._diagnostics.record_metric("requests_total", 1)
         self._diagnostics.record_metric("acquisitions_total", 1)
-
         try:
             self._validator.validate_request(request)
         except SatelliteInvalidArgumentError as exc:
@@ -324,10 +400,7 @@ class SatelliteService:
 
         adapter = self._adapter_registry.get_adapter(provider_id)
         if not adapter:
-            err = SatelliteProviderUnavailableError(
-                provider_id=provider_id,
-                details=f"No adapter registered for provider '{provider_id}'.",
-            )
+            err = SatelliteProviderUnavailableError(provider_id=provider_id, details=f"No adapter registered for '{provider_id}'.")
             self._diagnostics.record_metric("acquisitions_failed", 1)
             self._diagnostics.record_error("acquire_dataset", "PROVIDER_UNAVAILABLE", str(err), provider_id=provider_id)
             raise err
@@ -338,7 +411,6 @@ class SatelliteService:
                 self._diagnostics.record_metric("acquisitions_failed", 1)
             else:
                 self._diagnostics.record_metric("requests_success", 1)
-                # Cache acquired result
                 if result.dataset_metadata:
                     self._cache.put(result.dataset_metadata)
             return result
@@ -348,10 +420,8 @@ class SatelliteService:
             raise
 
     def acquire(self, request: SatelliteDataRequest) -> SatelliteAcquisitionResult:
-        """Execute full acquisition workflow via SatelliteDataAcquisitionEngine."""
         self._diagnostics.record_metric("requests_total", 1)
         self._diagnostics.record_metric("acquisitions_total", 1)
-
         try:
             self._validator.validate_request(request)
         except SatelliteInvalidArgumentError as exc:
@@ -371,17 +441,7 @@ class SatelliteService:
             self._diagnostics.record_error("acquire", "ACQUISITION_FAILED", str(exc))
             raise
 
-    def ingest_raw_data(
-        self,
-        dataset_id: str,
-        provider_id: str,
-        data_bytes: bytes,
-        data_format: SatelliteDataFormat,
-        file_name: Optional[str] = None,
-        expected_sha256: Optional[str] = None,
-        manifest_payload: Optional[Dict[str, Any]] = None,
-    ) -> SatelliteRawDataReference:
-        """Ingest raw data bytes, verify integrity, and store reference."""
+    def ingest_raw_data(self, dataset_id: str, provider_id: str, data_bytes: bytes, data_format: SatelliteDataFormat, file_name: Optional[str] = None, expected_sha256: Optional[str] = None, manifest_payload: Optional[Dict[str, Any]] = None) -> SatelliteRawDataReference:
         return self._ingestion_engine.ingest_raw_data(
             dataset_id=dataset_id,
             provider_id=provider_id,
@@ -392,8 +452,88 @@ class SatelliteService:
             manifest_payload=manifest_payload,
         )
 
+    def process_dataset(
+        self,
+        metadata: SatelliteDatasetMetadata,
+        raw_band_matrices: Dict[str, Any],
+        raw_ref: Optional[SatelliteRawDataReference] = None,
+        target_bands: Optional[List[str]] = None,
+        field_id: Optional[str] = None,
+        field_boundary: Optional[List[List[float]]] = None,
+        target_crs: str = "EPSG:4326",
+    ) -> Tuple[SatelliteProcessedData, Dict[str, np.ndarray]]:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("processing_runs_total", 1)
+        try:
+            proc_data, proc_matrices = self._processing_pipeline.process(
+                raw_ref=raw_ref,
+                metadata=metadata,
+                raw_band_matrices=raw_band_matrices,
+                target_bands=target_bands,
+                field_id=field_id,
+                field_boundary=field_boundary,
+                target_crs=target_crs,
+            )
+            self._storage.store_processed_data(proc_data)
+            self._diagnostics.record_metric("requests_success", 1)
+            return proc_data, proc_matrices
+        except Exception as exc:
+            self._diagnostics.record_metric("processing_runs_failed", 1)
+            self._diagnostics.record_error("process_dataset", "PROCESSING_FAILED", str(exc))
+            raise
+
+    def extract_indicators(
+        self,
+        processed_data: SatelliteProcessedData,
+        band_matrices: Dict[str, Any],
+        requested_indicators: Optional[List[str]] = None,
+    ) -> List[SatelliteIndicator]:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("indicator_extractions_total", 1)
+        try:
+            if requested_indicators:
+                results = []
+                for ind_name in requested_indicators:
+                    ind = self._index_engine.extract_indicator(
+                        indicator_name=ind_name,
+                        processed_bands=processed_data.processed_bands,
+                        source_dataset_id=processed_data.dataset_id,
+                        band_matrices=band_matrices,
+                    )
+                    results.append(ind)
+            else:
+                results = self._index_engine.extract_available_indicators(
+                    processed_bands=processed_data.processed_bands,
+                    source_dataset_id=processed_data.dataset_id,
+                    band_matrices=band_matrices,
+                )
+            self._diagnostics.record_metric("requests_success", 1)
+            return results
+        except Exception as exc:
+            self._diagnostics.record_metric("indicator_extractions_failed", 1)
+            self._diagnostics.record_error("extract_indicators", "INDICATOR_EXTRACTION_FAILED", str(exc))
+            raise
+
+    def detect_changes(
+        self,
+        matrix_t1: np.ndarray,
+        matrix_t2: np.ndarray,
+        date_t1: str,
+        date_t2: str,
+        threshold: float = 0.05,
+    ) -> Dict[str, Any]:
+        return self._change_detector.compute_pixel_difference(
+            matrix_t1=matrix_t1,
+            matrix_t2=matrix_t2,
+            date_t1=date_t1,
+            date_t2=date_t2,
+            threshold_change=threshold,
+        )
+
+    def fuse_observations(self, observations: List[SatelliteProcessedData]) -> Dict[str, Any]:
+        return self._fusion_engine.fuse_constellations(observations)
+
     def check_health(self) -> Dict[str, Any]:
-        """Aggregate health status from diagnostics, catalog, and storage."""
         health = self._diagnostics.get_health_status()
         health.update({
             "catalog_entries": self._catalog.count(),
