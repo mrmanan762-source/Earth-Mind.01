@@ -380,6 +380,35 @@ class DroneConfig(BaseModel):
     api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_DRONE_API_KEY"), description="Optional drone telemetry gateway API key")
 
 
+class SatelliteConfig(BaseModel):
+    """Configuration settings for EarthMind Satellite Intelligence Module (Stage D2: Core Foundation)."""
+    enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_ENABLED", "true").lower() == "true", description="Enable or disable Satellite module")
+    default_timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_SATELLITE_DEFAULT_TIMEOUT", "30.0")), description="Default request timeout in seconds")
+    max_retries: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_SATELLITE_MAX_RETRIES", "3")), description="Maximum retry attempts for transient provider failures")
+    initial_retry_backoff: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_SATELLITE_INITIAL_BACKOFF", "0.5")), description="Initial retry backoff in seconds")
+    max_retry_backoff: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_SATELLITE_MAX_BACKOFF", "5.0")), description="Maximum retry backoff in seconds")
+    max_concurrent_requests: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_SATELLITE_MAX_CONCURRENCY", "5")), description="Maximum concurrent provider requests")
+    max_cloud_cover_percentage: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_SATELLITE_MAX_CLOUD_COVER", "20.0")), description="Default maximum cloud cover threshold")
+    strict_validation: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_STRICT_VALIDATION", "true").lower() == "true", description="Enforce strict contract and boundary validation")
+
+    # Provider specific enablement
+    nasa_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_NASA_ENABLED", "true").lower() == "true", description="Enable NASA Earthdata provider")
+    isro_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_ISRO_ENABLED", "true").lower() == "true", description="Enable ISRO Bhuvan provider")
+    copernicus_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_COPERNICUS_ENABLED", "true").lower() == "true", description="Enable Copernicus CDSE provider")
+    mock_provider_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_MOCK_ENABLED", "false").lower() == "true", description="Enable deterministic mock provider for tests/dev")
+
+    # Provider credential reference / keys
+    nasa_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_NASA_API_KEY"), description="NASA Earthdata Bearer / API token")
+    isro_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_ISRO_API_KEY"), description="ISRO Bhuvan / Bhoonidhi API token")
+    copernicus_client_id: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_COPERNICUS_CLIENT_ID"), description="Copernicus CDSE Client ID")
+    copernicus_client_secret: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_COPERNICUS_CLIENT_SECRET"), description="Copernicus CDSE Client Secret")
+
+    # D3 Cache & Storage placeholders
+    cache_enabled: bool = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_CACHE_ENABLED", "true").lower() == "true", description="Enable metadata and scene reference caching")
+    cache_ttl_seconds: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_SATELLITE_CACHE_TTL_SECONDS", "86400")), description="Cache TTL in seconds (24h default)")
+    storage_adapter: str = Field(default_factory=lambda: os.getenv("EARTHMIND_SATELLITE_STORAGE_ADAPTER", "in_memory"), description="Satellite storage adapter selection ('in_memory', 'database')")
+
+
 class EvaluationConfig(BaseModel):
     """Configuration settings for Stage R15 Quality & Performance Evaluation."""
     k_values: List[int] = Field(default_factory=lambda: [1, 3, 5, 10], description="K values for evaluation metrics")
@@ -461,6 +490,7 @@ class Settings(BaseModel):
     rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
     evaluation: EvaluationConfig = Field(default_factory=EvaluationConfig)
     drone: DroneConfig = Field(default_factory=DroneConfig)
+    satellite: SatelliteConfig = Field(default_factory=SatelliteConfig)
     context: ContextConfig = Field(default_factory=ContextConfig)
     ulpu: Dict[str, Any] = Field(
         default_factory=lambda: {
@@ -497,11 +527,32 @@ class Settings(BaseModel):
             "rag_integration.timeout": self.rag_integration.timeout,
             "context.default_timeout": self.context.default_timeout,
             "drone.default_timeout": self.drone.default_timeout,
+            "satellite.default_timeout": self.satellite.default_timeout,
         }
         if self.drone.max_payload_size_bytes <= 0:
             raise ConfigurationError(
                 f"Invalid configuration for 'drone.max_payload_size_bytes': must be greater than 0. Got {self.drone.max_payload_size_bytes}.",
                 details={"setting": "drone.max_payload_size_bytes", "value": self.drone.max_payload_size_bytes}
+            )
+        if self.satellite.max_retries < 0:
+            raise ConfigurationError(
+                f"Invalid configuration for 'satellite.max_retries': must be non-negative. Got {self.satellite.max_retries}.",
+                details={"setting": "satellite.max_retries", "value": self.satellite.max_retries}
+            )
+        if self.satellite.initial_retry_backoff <= 0:
+            raise ConfigurationError(
+                f"Invalid configuration for 'satellite.initial_retry_backoff': must be greater than 0. Got {self.satellite.initial_retry_backoff}.",
+                details={"setting": "satellite.initial_retry_backoff", "value": self.satellite.initial_retry_backoff}
+            )
+        if self.satellite.max_retry_backoff < self.satellite.initial_retry_backoff:
+            raise ConfigurationError(
+                f"Invalid configuration for 'satellite.max_retry_backoff': must be >= initial_retry_backoff. Got {self.satellite.max_retry_backoff} < {self.satellite.initial_retry_backoff}.",
+                details={"setting": "satellite.max_retry_backoff", "value": self.satellite.max_retry_backoff}
+            )
+        if not (0.0 <= self.satellite.max_cloud_cover_percentage <= 100.0):
+            raise ConfigurationError(
+                f"Invalid configuration for 'satellite.max_cloud_cover_percentage': must be between 0.0 and 100.0. Got {self.satellite.max_cloud_cover_percentage}.",
+                details={"setting": "satellite.max_cloud_cover_percentage", "value": self.satellite.max_cloud_cover_percentage}
             )
         for name, t_val in timeouts.items():
             if t_val <= 0:
@@ -590,6 +641,14 @@ class Settings(BaseModel):
                     details={"setting": "rerank.provider", "value": self.rerank.provider}
                 )
 
+            # Prohibit mock satellite provider in production
+            if self.satellite.mock_provider_enabled:
+                raise ConfigurationError(
+                    "Production mode violation: Mock satellite provider is prohibited in production mode. "
+                    "Set EARTHMIND_SATELLITE_MOCK_ENABLED to 'false'.",
+                    details={"setting": "satellite.mock_provider_enabled", "value": self.satellite.mock_provider_enabled}
+                )
+
             # Prohibit in-memory Qdrant storage in production
             if q_mode == "memory":
                 raise ConfigurationError(
@@ -671,6 +730,14 @@ class Settings(BaseModel):
         if raw.get("drone") and raw["drone"].get("api_key"):
             val = raw["drone"]["api_key"]
             raw["drone"]["api_key"] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
+
+        # Mask Satellite credentials
+        if raw.get("satellite"):
+            sat = raw["satellite"]
+            for key_field in ("nasa_api_key", "isro_api_key", "copernicus_client_id", "copernicus_client_secret"):
+                if sat.get(key_field):
+                    val = sat[key_field]
+                    sat[key_field] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
 
         # Mask Postgres credentials
         if raw.get("postgres"):
