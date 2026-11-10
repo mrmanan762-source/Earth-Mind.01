@@ -63,12 +63,19 @@ from modules.satellite.errors import (
     SatelliteProviderUnavailableError,
 )
 from modules.satellite.formats import SatelliteFormatDetector
+from modules.satellite.evidence_builder import SatelliteEvidenceBuilder
+from modules.satellite.evidence_validator import (
+    SatelliteEvidenceValidationResult,
+    SatelliteEvidenceValidator,
+    SatelliteGovernanceGate,
+)
 from modules.satellite.fusion import SatelliteMultiSourceFusionEngine
 from modules.satellite.geospatial import SatelliteGeospatialProcessor
 from modules.satellite.image_processing import SatelliteImageProcessor
 from modules.satellite.indices import SatelliteSpectralIndexEngine
 from modules.satellite.indicators import SatelliteIndicatorGenerator
 from modules.satellite.ingestion import SatelliteIngestionEngine
+from modules.satellite.intelligence import SatelliteAgriculturalIntelligenceEngine
 from modules.satellite.lifecycle import (
     SatelliteLifecycleManager,
     SatelliteLifecycleState,
@@ -90,6 +97,10 @@ from modules.satellite.spectral import SatelliteSpectralProcessor
 from modules.satellite.storage import resolve_satellite_storage_adapter
 from modules.satellite.temporal_analysis import SatelliteTemporalAnalyzer
 from modules.satellite.temporal_numerical import SatelliteTemporalProcessor
+from modules.satellite.uncertainty import (
+    SatelliteConfidenceLevel,
+    SatelliteUncertaintyAssessor,
+)
 from modules.satellite.vegetation_water import VegetationWaterAnalyzer
 
 logger = get_logger("modules.satellite.service")
@@ -189,6 +200,13 @@ class SatelliteService:
         self._change_detector = SatelliteChangeDetector()
         self._indicator_generator = SatelliteIndicatorGenerator()
         self._fusion_engine = SatelliteMultiSourceFusionEngine()
+
+        # D6 Intelligence, Uncertainty & Evidence Engines
+        self._uncertainty_assessor = SatelliteUncertaintyAssessor()
+        self._intelligence_engine = SatelliteAgriculturalIntelligenceEngine()
+        self._evidence_builder = SatelliteEvidenceBuilder(uncertainty_assessor=self._uncertainty_assessor)
+        self._evidence_validator = SatelliteEvidenceValidator()
+        self._governance_gate = SatelliteGovernanceGate()
 
         # Connect lifecycle hooks to sync diagnostics state
         self._lifecycle.add_startup_hook(self._on_startup)
@@ -316,6 +334,26 @@ class SatelliteService:
     @property
     def fusion_engine(self) -> SatelliteMultiSourceFusionEngine:
         return self._fusion_engine
+
+    @property
+    def uncertainty_assessor(self) -> SatelliteUncertaintyAssessor:
+        return self._uncertainty_assessor
+
+    @property
+    def intelligence_engine(self) -> SatelliteAgriculturalIntelligenceEngine:
+        return self._intelligence_engine
+
+    @property
+    def evidence_builder(self) -> SatelliteEvidenceBuilder:
+        return self._evidence_builder
+
+    @property
+    def evidence_validator(self) -> SatelliteEvidenceValidator:
+        return self._evidence_validator
+
+    @property
+    def governance_gate(self) -> SatelliteGovernanceGate:
+        return self._governance_gate
 
     def _on_startup(self) -> None:
         self._diagnostics.set_lifecycle_state("RUNNING")
@@ -532,6 +570,55 @@ class SatelliteService:
 
     def fuse_observations(self, observations: List[SatelliteProcessedData]) -> Dict[str, Any]:
         return self._fusion_engine.fuse_constellations(observations)
+
+    def assess_uncertainty(
+        self,
+        quality_status: SatelliteDataQuality,
+        cloud_cover_target: float,
+        is_calibrated: bool,
+        revisit_age_days: float,
+    ) -> Dict[str, Any]:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("uncertainty_assessments_total", 1)
+        return self._uncertainty_assessor.assess_uncertainty(
+            quality_status=quality_status,
+            cloud_cover_target=cloud_cover_target,
+            is_calibrated=is_calibrated,
+            revisit_age_days=revisit_age_days,
+        )
+
+    def extract_agronomic_features(
+        self,
+        indicators: List[SatelliteIndicator],
+        temporal_history: Optional[List[SatelliteIndicator]] = None,
+    ) -> Dict[str, Any]:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("intelligence_extractions_total", 1)
+        return self._intelligence_engine.extract_agronomic_features(
+            indicators=indicators,
+            temporal_history=temporal_history,
+        )
+
+    def build_evidence(
+        self,
+        request: SatelliteDataRequest,
+        processed_data: SatelliteProcessedData,
+        indicators: List[SatelliteIndicator],
+        **kwargs: Any,
+    ) -> Any:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("evidence_builds_total", 1)
+        return self._evidence_builder.build_evidence(
+            request=request,
+            processed_data=processed_data,
+            indicators=indicators,
+            **kwargs,
+        )
+
+    def validate_evidence(self, evidence: Any) -> SatelliteEvidenceValidationResult:
+        self._diagnostics.record_metric("requests_total", 1)
+        self._diagnostics.record_metric("evidence_validations_total", 1)
+        return self._evidence_validator.evaluate(evidence)
 
     def check_health(self) -> Dict[str, Any]:
         health = self._diagnostics.get_health_status()

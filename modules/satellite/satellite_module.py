@@ -10,8 +10,11 @@ from core.interfaces.module import ModuleInterface
 from core.logging.logger import get_logger
 from core.schemas.application import ApplicationRequest, ApplicationResponse
 from core.schemas.satellite import (
+    EarthMindSatelliteEvidence,
+    SatelliteDataQuality,
     SatelliteDataRequest,
     SatelliteDatasetMetadata,
+    SatelliteIndicator,
     SatelliteProcessedData,
     SatelliteProvider,
 )
@@ -145,6 +148,64 @@ class SatelliteModule(ModuleInterface):
                     request_id=request.request_id,
                     status="SUCCESS",
                     response=[ind.model_dump() for ind in indicators],
+                )
+
+            elif op in ("assess_uncertainty", "uncertainty"):
+                q_status = payload.get("quality_status", SatelliteDataQuality.GOOD)
+                if isinstance(q_status, str):
+                    q_status = SatelliteDataQuality(q_status)
+                cloud = float(payload.get("cloud_cover_target", 0.0))
+                calibrated = bool(payload.get("is_calibrated", True))
+                revisit = float(payload.get("revisit_age_days", 0.0))
+                res = self._service.assess_uncertainty(
+                    quality_status=q_status,
+                    cloud_cover_target=cloud,
+                    is_calibrated=calibrated,
+                    revisit_age_days=revisit,
+                )
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=res,
+                )
+
+            elif op in ("generate_intelligence", "extract_agronomic_features"):
+                raw_inds = payload.get("indicators", [])
+                inds = [i if isinstance(i, SatelliteIndicator) else SatelliteIndicator(**i) for i in raw_inds]
+                res = self._service.extract_agronomic_features(indicators=inds)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=res,
+                )
+
+            elif op in ("build_evidence", "synthesize_evidence"):
+                req_d = payload.get("request", {})
+                req_obj = req_d if isinstance(req_d, SatelliteDataRequest) else SatelliteDataRequest(**req_d)
+                proc_d = payload.get("processed_data", {})
+                proc_obj = proc_d if isinstance(proc_d, SatelliteProcessedData) else SatelliteProcessedData(**proc_d)
+                raw_inds = payload.get("indicators", [])
+                inds = [i if isinstance(i, SatelliteIndicator) else SatelliteIndicator(**i) for i in raw_inds]
+                evidence = self._service.build_evidence(
+                    request=req_obj,
+                    processed_data=proc_obj,
+                    indicators=inds,
+                    **payload.get("kwargs", {}),
+                )
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=evidence.model_dump(),
+                )
+
+            elif op in ("validate_evidence", "validate"):
+                ev_d = payload.get("evidence", {})
+                ev_obj = ev_d if isinstance(ev_d, EarthMindSatelliteEvidence) else EarthMindSatelliteEvidence(**ev_d)
+                val_result = self._service.validate_evidence(ev_obj)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS" if val_result.is_valid else "FAILED",
+                    response=val_result.model_dump(),
                 )
 
             return ApplicationResponse(
