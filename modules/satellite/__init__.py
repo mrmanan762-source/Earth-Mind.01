@@ -82,6 +82,7 @@ from modules.satellite.evidence_validator import (
     SatelliteEvidenceValidationResult,
     SatelliteEvidenceValidator,
     SatelliteGovernanceGate,
+    ValidationOutcome,
 )
 from modules.satellite.intelligence import SatelliteAgriculturalIntelligenceEngine
 from modules.satellite.uncertainty import (
@@ -89,6 +90,16 @@ from modules.satellite.uncertainty import (
     SatelliteUncertaintyAssessor,
 )
 from modules.satellite.vegetation_water import VegetationWaterAnalyzer
+from modules.satellite.normalization import (
+    SatelliteEvidenceNormalizer,
+    SatelliteSarvamContextFormatter,
+)
+from modules.satellite.sarvam_integration import (
+    SarvamSatelliteIntegration,
+    SatelliteB2ContextAdapter,
+    SatelliteContextProvider,
+    SatelliteCrossModuleDataSharing,
+)
 
 __all__ = [
     # Errors
@@ -171,6 +182,14 @@ __all__ = [
     "SatelliteEvidenceValidationResult",
     "SatelliteEvidenceValidator",
     "SatelliteGovernanceGate",
+    "ValidationOutcome",
+    # D7 Normalization, B2 Context & Sarvam Integration
+    "SatelliteEvidenceNormalizer",
+    "SatelliteSarvamContextFormatter",
+    "SarvamSatelliteIntegration",
+    "SatelliteB2ContextAdapter",
+    "SatelliteContextProvider",
+    "SatelliteCrossModuleDataSharing",
     # Core Service and Module
     "SatelliteService",
     "SatelliteModule",

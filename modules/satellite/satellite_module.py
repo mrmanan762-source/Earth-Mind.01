@@ -34,6 +34,10 @@ class SatelliteModule(ModuleInterface):
     def service(self) -> SatelliteService:
         return self._service
 
+    @property
+    def context_provider(self):
+        return self._service.create_context_provider()
+
     def initialize(self) -> None:
         logger.info("Initializing Satellite Module (Stage D2 to D5)...")
         if not self._service.config.enabled:
@@ -206,6 +210,38 @@ class SatelliteModule(ModuleInterface):
                     request_id=request.request_id,
                     status="SUCCESS" if val_result.is_valid else "FAILED",
                     response=val_result.model_dump(),
+                )
+
+            elif op in ("format_for_sarvam", "format_sarvam_summary"):
+                ev_d = payload.get("evidence", {})
+                ev_obj = ev_d if isinstance(ev_d, EarthMindSatelliteEvidence) else EarthMindSatelliteEvidence(**ev_d)
+                summary_text = self._service.format_for_sarvam(ev_obj)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response={"summary": summary_text},
+                )
+
+            elif op in ("share_with_drone", "share_macro_indicators"):
+                ev_d = payload.get("evidence", {})
+                ev_obj = ev_d if isinstance(ev_d, EarthMindSatelliteEvidence) else EarthMindSatelliteEvidence(**ev_d)
+                f_id = payload.get("field_id", ev_obj.scope.field_id or "field_default")
+                res = self._service.cross_module_sharing.share_with_drone_module(ev_obj, field_id=f_id)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=res,
+                )
+
+            elif op in ("share_with_vision", "share_multispectral_overview"):
+                ev_d = payload.get("evidence", {})
+                ev_obj = ev_d if isinstance(ev_d, EarthMindSatelliteEvidence) else EarthMindSatelliteEvidence(**ev_d)
+                f_id = payload.get("field_id", ev_obj.scope.field_id or "field_default")
+                res = self._service.cross_module_sharing.share_with_vision_module(ev_obj, field_id=f_id)
+                return ApplicationResponse(
+                    request_id=request.request_id,
+                    status="SUCCESS",
+                    response=res,
                 )
 
             return ApplicationResponse(

@@ -69,6 +69,16 @@ from modules.satellite.evidence_validator import (
     SatelliteEvidenceValidator,
     SatelliteGovernanceGate,
 )
+from modules.satellite.normalization import (
+    SatelliteEvidenceNormalizer,
+    SatelliteSarvamContextFormatter,
+)
+from modules.satellite.sarvam_integration import (
+    SarvamSatelliteIntegration,
+    SatelliteB2ContextAdapter,
+    SatelliteContextProvider,
+    SatelliteCrossModuleDataSharing,
+)
 from modules.satellite.fusion import SatelliteMultiSourceFusionEngine
 from modules.satellite.geospatial import SatelliteGeospatialProcessor
 from modules.satellite.image_processing import SatelliteImageProcessor
@@ -207,6 +217,19 @@ class SatelliteService:
         self._evidence_builder = SatelliteEvidenceBuilder(uncertainty_assessor=self._uncertainty_assessor)
         self._evidence_validator = SatelliteEvidenceValidator()
         self._governance_gate = SatelliteGovernanceGate()
+
+        # D7 Normalization, B2 Integration & Sarvam Formatting
+        self._evidence_normalizer = SatelliteEvidenceNormalizer()
+        self._sarvam_formatter = SatelliteSarvamContextFormatter()
+        self._b2_adapter = SatelliteB2ContextAdapter()
+        self._cross_module_sharing = SatelliteCrossModuleDataSharing()
+        self._sarvam_integration = SarvamSatelliteIntegration(
+            validator=self._evidence_validator,
+            governance_gate=self._governance_gate,
+            normalizer=self._evidence_normalizer,
+            context_formatter=self._sarvam_formatter,
+            b2_adapter=self._b2_adapter,
+        )
 
         # Connect lifecycle hooks to sync diagnostics state
         self._lifecycle.add_startup_hook(self._on_startup)
@@ -619,6 +642,28 @@ class SatelliteService:
         self._diagnostics.record_metric("requests_total", 1)
         self._diagnostics.record_metric("evidence_validations_total", 1)
         return self._evidence_validator.evaluate(evidence)
+
+    @property
+    def sarvam_integration(self) -> SarvamSatelliteIntegration:
+        return self._sarvam_integration
+
+    @property
+    def cross_module_sharing(self) -> SatelliteCrossModuleDataSharing:
+        return self._cross_module_sharing
+
+    @property
+    def evidence_normalizer(self) -> SatelliteEvidenceNormalizer:
+        return self._evidence_normalizer
+
+    @property
+    def sarvam_formatter(self) -> SatelliteSarvamContextFormatter:
+        return self._sarvam_formatter
+
+    def create_context_provider(self) -> SatelliteContextProvider:
+        return self._sarvam_integration.create_context_provider()
+
+    def format_for_sarvam(self, evidence: Any) -> str:
+        return self._sarvam_formatter.format_observation_summary(evidence)
 
     def check_health(self) -> Dict[str, Any]:
         health = self._diagnostics.get_health_status()
