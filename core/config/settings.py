@@ -459,6 +459,21 @@ class PostgresConfig(BaseModel):
             return "***masked_url***"
 
 
+class WeatherConfig(BaseModel):
+    """Configuration for Phase 3 weather retrieval (replaceable provider adapters)."""
+    provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEATHER_PROVIDER", "open_meteo"), description="Weather provider ('open_meteo' free/keyless, 'openweather' keyed, 'fake')")
+    api_key: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEATHER_API_KEY"), description="Weather provider API key (backend only)")
+    endpoint: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_WEATHER_ENDPOINT"), description="Weather provider endpoint URL override")
+    timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_WEATHER_TIMEOUT", "10.0")), description="Weather request timeout in seconds")
+    forecast_days: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEATHER_FORECAST_DAYS", "3")), description="Default number of forecast days")
+    max_forecast_days: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEATHER_MAX_FORECAST_DAYS", "16")), description="Maximum forecast days allowed")
+    stale_after_minutes: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEATHER_STALE_AFTER_MINUTES", "180")), description="Observation freshness window in minutes")
+    units: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEATHER_UNITS", "metric"), description="Preferred unit system ('metric' or 'imperial')")
+    max_concurrent_requests: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEATHER_MAX_CONCURRENCY", "5")), description="Maximum concurrent weather requests")
+    rate_limit_per_minute: int = Field(default_factory=lambda: int(os.getenv("EARTHMIND_WEATHER_RPM", "60")), description="Maximum weather requests per minute")
+    user_agent: str = Field(default_factory=lambda: os.getenv("EARTHMIND_WEATHER_USER_AGENT", "EarthMind/1.0 (+https://github.com/earthmind)"), description="User-Agent header for weather HTTP requests")
+
+
 class Settings(BaseModel):
     app_name: str = "EarthMind"
     environment: str = Field(default_factory=lambda: os.getenv("EARTHMIND_ENV", "development"), description="Application execution environment ('development', 'production', 'test', 'staging')")
@@ -485,6 +500,7 @@ class Settings(BaseModel):
     rerank: RerankConfig = Field(default_factory=RerankConfig)
     query_processing: QueryProcessingConfig = Field(default_factory=QueryProcessingConfig)
     web_search: WebSearchConfig = Field(default_factory=WebSearchConfig)
+    weather: WeatherConfig = Field(default_factory=WeatherConfig)
     evidence_builder: EvidenceBuilderConfig = Field(default_factory=EvidenceBuilderConfig)
     evidence_validator: EvidenceValidatorConfig = Field(default_factory=EvidenceValidatorConfig)
     rag_integration: RAGIntegrationConfig = Field(default_factory=RAGIntegrationConfig)
@@ -524,6 +540,7 @@ class Settings(BaseModel):
             "rerank.timeout": self.rerank.timeout,
             "query_processing.timeout": self.query_processing.timeout,
             "web_search.timeout": self.web_search.timeout,
+            "weather.timeout": self.weather.timeout,
             "rag_integration.timeout": self.rag_integration.timeout,
             "context.default_timeout": self.context.default_timeout,
             "drone.default_timeout": self.drone.default_timeout,
@@ -719,6 +736,11 @@ class Settings(BaseModel):
                 if raw["web_search"].get(key_field):
                     val = raw["web_search"][key_field]
                     raw["web_search"][key_field] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
+
+        # Mask Weather API key
+        if raw.get("weather") and raw["weather"].get("api_key"):
+            val = raw["weather"]["api_key"]
+            raw["weather"]["api_key"] = f"{val[:3]}***{val[-3:]}" if len(val) > 6 else "***"
 
         # Mask Embedding credential reference if contains secret
         if raw.get("embedding", {}).get("credential_reference"):

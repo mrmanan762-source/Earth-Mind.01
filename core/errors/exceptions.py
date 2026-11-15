@@ -2332,3 +2332,241 @@ class QueryConfigurationError(QueryProcessingError):
             operation="validate_config",
             metadata={"details": details}
         )
+
+
+# ============================================================================
+# Phase 3: Backend Tool Infrastructure Exception Hierarchy
+# ============================================================================
+
+class ToolError(EarthMindException):
+    """Base exception for all EarthMind backend tool infrastructure errors."""
+
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "TOOL_ERROR",
+        operation: str = "tool_operation",
+        retryable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            module="tools",
+            operation=operation,
+            retryable=retryable,
+            metadata=metadata or {},
+        )
+
+
+class ToolNotFoundError(ToolError):
+    """Raised when a requested tool ID is not registered."""
+
+    def __init__(self, tool_id: str):
+        super().__init__(
+            message=f"Tool '{tool_id}' is not registered in the tool registry.",
+            error_code="TOOL_NOT_FOUND",
+            operation="resolve_tool",
+            metadata={"tool_id": tool_id},
+        )
+
+
+class ToolAlreadyRegisteredError(ToolError):
+    """Raised when attempting to register a duplicate tool ID."""
+
+    def __init__(self, tool_id: str):
+        super().__init__(
+            message=f"Tool '{tool_id}' is already registered.",
+            error_code="TOOL_ALREADY_REGISTERED",
+            operation="register_tool",
+            metadata={"tool_id": tool_id},
+        )
+
+
+class InvalidToolSchemaError(ToolError):
+    """Raised when a tool schema definition is malformed or incomplete."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None):
+        super().__init__(
+            message=f"Invalid tool schema: {details}",
+            error_code="INVALID_TOOL_SCHEMA",
+            operation="validate_schema",
+            metadata={"details": details, "tool_id": tool_id},
+        )
+
+
+class InvalidToolRequestError(ToolError):
+    """Raised when an incoming tool request is malformed or fails validation."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None, request_id: Optional[str] = None):
+        super().__init__(
+            message=f"Invalid tool request: {details}",
+            error_code="INVALID_TOOL_REQUEST",
+            operation="validate_request",
+            metadata={"details": details, "tool_id": tool_id, "request_id": request_id},
+        )
+
+
+class ToolValidationError(ToolError):
+    """Raised when tool input or output payload fails schema validation."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None):
+        super().__init__(
+            message=f"Tool payload validation failed: {details}",
+            error_code="TOOL_VALIDATION_ERROR",
+            operation="validate_payload",
+            metadata={"details": details, "tool_id": tool_id},
+        )
+
+
+class ToolPermissionError(ToolError):
+    """Raised when the caller is not authorized to invoke a tool."""
+
+    def __init__(self, tool_id: str, required_permissions: Optional[list] = None, details: str = ""):
+        super().__init__(
+            message=f"Unauthorized invocation of tool '{tool_id}'. {details}".strip(),
+            error_code="TOOL_PERMISSION_DENIED",
+            operation="authorize",
+            metadata={"tool_id": tool_id, "required_permissions": required_permissions or []},
+        )
+
+
+class ToolExecutionError(ToolError):
+    """Raised when a tool fails during execution."""
+
+    def __init__(self, tool_id: str, details: str, retryable: bool = False):
+        super().__init__(
+            message=f"Tool '{tool_id}' execution failed: {details}",
+            error_code="TOOL_EXECUTION_ERROR",
+            operation="execute",
+            retryable=retryable,
+            metadata={"tool_id": tool_id, "details": details},
+        )
+
+
+class ToolTimeoutError(ToolError):
+    """Raised when a tool execution exceeds its configured timeout."""
+
+    def __init__(self, tool_id: str, timeout: float, request_id: Optional[str] = None):
+        super().__init__(
+            message=f"Tool '{tool_id}' timed out after {timeout} seconds.",
+            error_code="TOOL_TIMEOUT",
+            operation="execute",
+            retryable=True,
+            metadata={"tool_id": tool_id, "timeout": timeout, "request_id": request_id},
+        )
+
+
+class ToolCancelledError(ToolError):
+    """Raised when a tool execution is cancelled."""
+
+    def __init__(self, tool_id: str, request_id: Optional[str] = None):
+        super().__init__(
+            message=f"Tool '{tool_id}' execution was cancelled.",
+            error_code="TOOL_CANCELLED",
+            operation="execute",
+            metadata={"tool_id": tool_id, "request_id": request_id},
+        )
+
+
+class ToolRateLimitError(ToolError):
+    """Raised when a tool or its provider is rate limited."""
+
+    def __init__(self, tool_id: str, details: str = "Rate limit exceeded."):
+        super().__init__(
+            message=f"Tool '{tool_id}' rate limited: {details}",
+            error_code="TOOL_RATE_LIMITED",
+            operation="execute",
+            retryable=True,
+            metadata={"tool_id": tool_id, "details": details},
+        )
+
+
+class ToolConcurrencyLimitError(ToolError):
+    """Raised when the tool concurrency limit has been reached."""
+
+    def __init__(self, tool_id: str, limit: int):
+        super().__init__(
+            message=f"Tool '{tool_id}' concurrency limit reached ({limit} concurrent executions).",
+            error_code="TOOL_CONCURRENCY_LIMIT",
+            operation="execute",
+            retryable=True,
+            metadata={"tool_id": tool_id, "concurrency_limit": limit},
+        )
+
+
+class ToolUnavailableError(ToolError):
+    """Raised when a tool is registered but currently unavailable (e.g. missing credentials)."""
+
+    def __init__(self, tool_id: str, details: str = ""):
+        super().__init__(
+            message=f"Tool '{tool_id}' is currently unavailable. {details}".strip(),
+            error_code="TOOL_UNAVAILABLE",
+            operation="check_availability",
+            retryable=False,
+            metadata={"tool_id": tool_id, "details": details},
+        )
+
+
+class ToolConfigurationError(ToolError):
+    """Raised when tool infrastructure configuration is invalid."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None):
+        super().__init__(
+            message=f"Tool configuration error: {details}",
+            error_code="TOOL_CONFIGURATION_ERROR",
+            operation="validate_config",
+            metadata={"details": details, "tool_id": tool_id},
+        )
+
+
+class UnsafeToolExpressionError(ToolError):
+    """Raised when a tool input contains an unsafe or prohibited expression (e.g. code injection)."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None):
+        super().__init__(
+            message=f"Unsafe tool expression rejected: {details}",
+            error_code="UNSAFE_TOOL_EXPRESSION",
+            operation="validate_safety",
+            metadata={"details": details, "tool_id": tool_id},
+        )
+
+
+class ToolPayloadLimitExceededError(ToolError):
+    """Raised when a tool request or result exceeds configured size limits."""
+
+    def __init__(self, details: str, tool_id: Optional[str] = None):
+        super().__init__(
+            message=f"Tool payload limit exceeded: {details}",
+            error_code="TOOL_PAYLOAD_LIMIT_EXCEEDED",
+            operation="validate_limits",
+            metadata={"details": details, "tool_id": tool_id},
+        )
+
+
+class WeatherProviderError(ToolError):
+    """Base error for weather provider adapter failures."""
+
+    def __init__(self, provider_name: str, details: str, operation: str = "weather_fetch", retryable: bool = False):
+        super().__init__(
+            message=f"Weather provider '{provider_name}' error: {details}",
+            error_code="WEATHER_PROVIDER_ERROR",
+            operation=operation,
+            retryable=retryable,
+            metadata={"provider_name": provider_name, "details": details},
+        )
+
+
+class WeatherProviderUnavailableError(WeatherProviderError):
+    def __init__(self, provider_name: str, details: str = "Weather provider is unavailable."):
+        super().__init__(provider_name, details, operation="check_availability", retryable=True)
+
+
+class WeatherAuthenticationError(WeatherProviderError):
+    def __init__(self, provider_name: str, details: str = "Weather provider credentials are missing or invalid."):
+        super().__init__(provider_name, details, operation="authenticate", retryable=False)
+
+
+class WeatherDataUnavailableError(WeatherProviderError):
+    def __init__(self, provider_name: str, details: str = "Requested weather data is unavailable."):
+        super().__init__(provider_name, details, operation="fetch", retryable=False)

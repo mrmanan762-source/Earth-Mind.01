@@ -4,6 +4,7 @@ from core.interfaces.initializer import IModelInitializer, InitializationState
 from core.interfaces.embedding import IEmbeddingProvider
 from core.interfaces.reranker import IRerankerProvider
 from core.interfaces.web_search import IWebSearchProvider
+from core.interfaces.weather import IWeatherProvider
 from core.interfaces.evidence import IEvidenceBuilderEngine
 from core.interfaces.query_processor import (
     IQueryValidator,
@@ -23,6 +24,7 @@ __all__ = [
     "IEmbeddingProvider",
     "IRerankerProvider",
     "IWebSearchProvider",
+    "IWeatherProvider",
     "IEvidenceBuilderEngine",
     "IQueryValidator",
     "IQueryNormalizer",

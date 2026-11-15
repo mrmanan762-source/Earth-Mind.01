@@ -11,6 +11,13 @@ from core.schemas.embedding import (
     EmbeddingRequest,
     EmbeddingResponse,
 )
+from core.schemas.weather import (
+    WeatherStatus,
+    WeatherObservation,
+    WeatherForecastEntry,
+    WeatherRequest,
+    WeatherResponse,
+)
 from core.schemas.web_search import (
     WebSearchStatus,
     WebSearchResult,

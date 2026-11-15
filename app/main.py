@@ -20,6 +20,8 @@ from modules.satellite.satellite_module import SatelliteModule
 from modules.data_training.data_training_module import DataTrainingModule
 from modules.external_services.external_services_module import ExternalServicesModule
 from modules.context.context_module import ContextModule
+from modules.tools.tool_service import ToolService
+from modules.tools.tool_module import ToolModule
 from core.errors.exceptions import ConfigurationError
 
 logger = get_logger("app.main")
@@ -103,6 +105,11 @@ def create_app():
     if hasattr(satellite_module, "context_provider"):
         context_module.manager.register_provider(satellite_module.context_provider)
 
+    # Phase 3: Backend Tool Infrastructure. Reuse the already-constructed
+    # satellite module so the tool adapter shares a single satellite service.
+    tool_service = ToolService(satellite_module=satellite_module)
+    tool_module = ToolModule(service=tool_service)
+
     # Attach modules to lifecycle
     lifecycle.register_module("database", db_module)
     lifecycle.register_module("ai", ai_module)
@@ -115,6 +122,7 @@ def create_app():
     lifecycle.register_module("data_training", data_training_module)
     lifecycle.register_module("external_services", external_services_module)
     lifecycle.register_module("context", context_module)
+    lifecycle.register_module("tools", tool_module)
 
     workflow = WorkflowEngine(lifecycle)
     return lifecycle, workflow
