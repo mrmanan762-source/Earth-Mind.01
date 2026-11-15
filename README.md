@@ -36,6 +36,9 @@ EarthMind is an AI-driven agricultural architecture system.
 │   ├── data_training/          # Data ingestion, dataset building & model training
 │   ├── database/               # SQLite prototype database implementation
 │   ├── external_services/      # External API integrations
+│   ├── tools/                  # Phase 3 backend tool infrastructure (registry,
+│   │                           #   dispatcher, execution manager, calculator,
+│   │                           #   web search, weather, satellite adapters)
 │   └── inspector/              # Compliance, rule checking & system inspector
 ├── models/                     # Model artifacts directory
 ├── data/                       # Data storage directory
