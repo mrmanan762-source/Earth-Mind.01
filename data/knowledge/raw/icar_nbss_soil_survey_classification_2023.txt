@@ -1,0 +1,68 @@
+================================================================================
+TITLE: Soil Classification, Texture and Structure: Reference Notes
+ORGANIZATION: ICAR-National Bureau of Soil Survey and Land Use Planning (NBSS&LUP)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Soil Intelligence
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-NBSS&LUP Reference Note No. SOIL-2023-05, Nagpur
+PUBLICATION DATE: 2023-06-20
+================================================================================
+
+1. SOIL CLASSIFICATION (major orders, indicative)
+Soils are classified into orders including Entisols (recent, weakly developed),
+Inceptisols (young soils with weak horizon development), Alfisols (moderately leached
+with clay accumulation), Vertisols (swelling black soils), Aridisols (dry soils),
+Ultisols and Mollisols. Indian soils are commonly described as alluvial, black (regur),
+red, laterite, desert, mountain and saline-alkaline soils.
+
+2. SOIL TEXTURE
+Texture is the relative proportion of sand, silt and clay. The textural triangle defines
+classes: sand, loamy sand, sandy loam, loam, silt loam, clay loam and clay. Texture
+governs water holding capacity, drainage, aeration and nutrient retention. Sandy soils
+drain fast and hold few nutrients; clay soils hold water and nutrients but drain slowly.
+
+3. SOIL STRUCTURE
+Structure is the arrangement of soil particles into aggregates (granular, blocky,
+prismatic, platy, single grain, massive). Good granular structure improves porosity,
+infiltration and root growth. Organic matter and calcium promote stable aggregates.
+
+4. SOIL pH
+Soil pH measures acidity/alkalinity on a 0-14 scale. Most crops grow best at pH 6.0-7.5.
+Acidic soils (pH < 6.0) may need liming; alkaline soils (pH > 8.5) may need gypsum and
+organic matter. pH affects nutrient availability: nitrogen, phosphorus and micronutrients
+are most available in near-neutral soils.
+
+5. SALINITY AND SODICITY
+Saline soils have high soluble salts (measured by electrical conductivity, EC) and
+appear white with crusts; they reduce water uptake. Sodic soils have high exchangeable
+sodium (measured by exchangeable sodium percentage, ESP) and poor structure. Reclamation
+uses gypsum, drainage and salt-tolerant crops.
+
+6. ORGANIC CARBON AND SOIL FERTILITY
+Soil organic carbon (SOC) is central to soil fertility, structure and microbial activity.
+Low SOC (< 0.5 percent) indicates poor fertility. Practices that build SOC include adding
+FYM/compost, green manuring, crop residue retention and reduced tillage.
+
+7. MACRONUTRIENTS AND MICRONUTRIENTS
+Primary macronutrients: nitrogen (N), phosphorus (P), potassium (K). Secondary:
+calcium, magnesium, sulphur. Micronutrients: zinc, iron, manganese, copper, boron,
+molybdenum, chlorine. Deficiencies cause characteristic symptoms (for example, zinc
+deficiency causes khaira in rice; iron chlorosis in high-pH soils).
+
+8. SOIL TESTING AND REPORT INTERPRETATION
+Soil testing measures pH, EC, organic carbon, available N, P, K and micronutrients.
+Ratings are commonly low, medium or high. Interpretation converts test values into
+fertilizer recommendations using soil test crop response (STCR) equations where available.
+Always pair a soil-test report with the crop, target yield and local recommendations.
+
+9. SOIL-CROP RELATIONSHIPS
+Crop choice should match soil texture, depth, drainage and pH. Rice suits clayey soils
+with water retention; groundnut and potato prefer well-drained sandy loams; cotton
+performs well on black soils; tea and some horticultural crops prefer acidic soils.
+
+10. SOIL MANAGEMENT PRINCIPLES
+Maintain organic matter; balance nutrients using soil tests; avoid excessive tillage;
+prevent erosion with contour bunding, cover crops and mulching; manage salinity with
+drainage and gypsum; and rotate crops to break pest cycles and improve soil health.

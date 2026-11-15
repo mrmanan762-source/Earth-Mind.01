@@ -1,0 +1,55 @@
+================================================================================
+TITLE: Package of Practices for Soybean Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Soybean Research (IISR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IISR Extension Bulletin No. SOYBEAN-2023-02, Indore
+PUBLICATION DATE: 2023-04-30
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Soybean (Glycine max L.) is a warm-season kharif oilseed-cum-pulse; optimum temperature
+25-30 degrees C. It requires 450-700 mm rainfall. Well-drained loam to clay loam with
+pH 6.0-7.5 is ideal; it is sensitive to waterlogging and salinity.
+
+2. GROWTH STAGES
+Germination, vegetative growth, flowering, pod formation and pod filling. Flowering and
+pod filling are the most moisture-sensitive stages.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 60-75 kg/ha; spacing 45 cm x 5 cm (broadcast) or 30-45 cm x 10 cm (line
+sowing). Sow with onset of monsoon in June-July. Inoculate seed with Rhizobium and
+Bradyrhizobium japonicum; treat with Trichoderma against soil-borne diseases.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 5-10 t/ha. General recommendation 30:60:40 kg N:P2O5:K2O per ha. Apply
+20-30 kg sulphur per ha, important for oil and protein. Rhizobium inoculation improves
+nitrogen fixation.
+
+5. WATER REQUIREMENT
+Requires 450-700 mm water. Largely rainfed; provide protective irrigation at flowering
+and pod filling where available. Avoid waterlogging.
+
+6. COMMON PESTS
+Girdle beetle (Obereopsis brevis), stem fly, tobacco caterpillar (Spodoptera litura),
+semilooper, green semilooper, whitefly, aphids.
+
+7. COMMON DISEASES AND SYMPTOMS
+Yellow mosaic virus (whitefly-borne): yellow mottling. Rhizoctonia aerial blight: web-like
+mycelium on leaves. Charcoal rot: grey-black discolouration of stems. Bacterial pustule
+and soybean mosaic virus.
+
+8. INTEGRATED PEST MANAGEMENT
+Use resistant varieties and treated seed; rotate with cereals; manage whitefly to reduce
+yellow mosaic virus; use pheromone traps and light traps for tobacco caterpillar; follow
+economic threshold levels; remove and destroy infected plants.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when pods turn yellow-brown and seeds rattle; avoid shattering. Thresh and
+store seed at 10-12 percent moisture.
+
+10. CROP CALENDAR (indicative)
+Kharif: sow June-July, harvest September-October.

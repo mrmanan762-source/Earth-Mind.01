@@ -64,6 +64,11 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
         """Initialize QdrantClient based on mode and configuration."""
         try:
             mode = cfg.get_mode()
+            location = (cfg.location or "").strip()
+            if mode == "local_persistent" and location:
+                # Filesystem-backed local storage uses the ``path`` argument; the
+                # ``location`` argument is reserved for ``:memory:``/remote URLs.
+                return qdrant_client.QdrantClient(path=location)
             if mode in ("memory", "local_persistent") and cfg.location:
                 return qdrant_client.QdrantClient(location=cfg.location)
             elif mode == "remote" and cfg.url:
@@ -570,3 +575,22 @@ class QdrantIndexAdapter(IKnowledgeIndexAdapter):
             }
         except Exception as e:
             raise QdrantAdapterError(f"Failed to get collection status for '{name}': {str(e)}")
+
+    def close(self) -> None:
+        """Release the underlying client so local storage locks are freed on shutdown.
+
+        Local filesystem-backed Qdrant holds an exclusive lock on its storage folder.
+        Without an explicit close, a subsequent process (or restart) cannot open the
+        same store, which breaks persistence across application restarts.
+        """
+        client = getattr(self, "client", None)
+        if client is None:
+            return
+        try:
+            close_fn = getattr(client, "close", None)
+            if callable(close_fn):
+                close_fn()
+        except Exception as e:  # pragma: no cover - defensive
+            logger.warning(f"Failed to close Qdrant client cleanly: {e}")
+        finally:
+            self.client = None

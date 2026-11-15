@@ -125,8 +125,8 @@ def test_4_embedding_result_validation(sample_canonical_hierarchy):
     rec = engine.embed_chunk(chk)
     assert isinstance(rec, EmbeddingRecord)
     assert rec.status == "ACTIVE"
-    assert rec.dimension == 384
-    assert len(rec.dense_vector) == 384
+    assert rec.dimension == 1024
+    assert len(rec.dense_vector) == 1024
 
 
 def test_5_provider_model_version_traceability(sample_canonical_hierarchy):
@@ -367,7 +367,7 @@ def test_20_provenance_preservation(sample_canonical_hierarchy):
     rec = engine.embed_chunk(chk)
     assert rec.provenance is not None
     assert rec.provenance.processing_stage == "EMBEDDING"
-    assert rec.provenance.representation_provider["provider_name"] == "fake"
+    assert rec.provenance.representation_provider["provider_name"] == "self_hosted"
     assert len(rec.provenance.processing_steps) >= 1
 
 

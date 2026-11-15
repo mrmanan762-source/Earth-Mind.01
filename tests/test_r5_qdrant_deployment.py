@@ -251,18 +251,23 @@ def test_qdrant_sdk_non_leakage():
 def test_r5_qdrant_indexing_execution():
     """Verify full R5 BGE-M3 1024D Qdrant indexing pipeline and retrieval smoke test."""
     from modules.knowledge_base.integration.r5_execution import R5QdrantIndexingEngine
+    from modules.knowledge_base.ingestion import CorpusIngestionEngine
+
+    corpus_engine = CorpusIngestionEngine()
+    corpus_engine.ingest_corpus()
+    expected_chunks = len(corpus_engine.get_ingested_chunks())
 
     indexing_engine = R5QdrantIndexingEngine(qdrant_location=":memory:")
     result = indexing_engine.execute_pipeline()
 
     assert result.status == "COMPLETED"
-    assert result.total_canonical_chunks == 53
-    assert result.total_canonical_units == 53
-    assert result.total_embedding_records == 106
+    assert result.total_canonical_chunks == expected_chunks
+    assert result.total_canonical_units == expected_chunks
+    assert result.total_embedding_records == expected_chunks * 2
     assert result.embedding_dimension == 1024
     assert result.is_fallback_vector is False
     assert result.model_name == "BAAI/bge-m3"
-    assert result.total_indexed_chunks == 53
+    assert result.total_indexed_chunks == expected_chunks
     assert result.failed_records == 0
     assert result.collection_name == "earthmind_knowledge"
     assert result.distance_metric == "COSINE"

@@ -1,0 +1,55 @@
+================================================================================
+TITLE: Package of Practices for Field Pea Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Extension Bulletin No. PEA-2023-01, Kanpur
+PUBLICATION DATE: 2023-02-25
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Field pea (Pisum sativum L.) is a cool-season rabi pulse; optimum temperature 10-25
+degrees C. Frost at flowering damages the crop. Well-drained loam to clay loam with
+pH 6.0-7.5 is ideal; it is sensitive to waterlogging and salinity.
+
+2. GROWTH STAGES
+Germination, vegetative growth, branching, flowering, pod formation and pod filling.
+Flowering and pod filling are the most moisture-sensitive stages.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 75-100 kg/ha depending on seed size; spacing 30 cm x 10 cm. Sow in October-
+November. Inoculate seed with Rhizobium and treat with Trichoderma against soil-borne
+diseases.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Being a legume, pea fixes atmospheric nitrogen; apply a starter dose of 20-25 kg N/ha.
+General recommendation 20:50:20 kg N:P2O5:K2O per ha. Apply 10-15 kg sulphur per ha
+where deficient. Rhizobium inoculation improves nitrogen fixation.
+
+5. WATER REQUIREMENT
+Requires 300-400 mm water. Provide light irrigation at branching, flowering and pod
+filling. Avoid excess irrigation which promotes vegetative growth and lodging.
+
+6. COMMON PESTS
+Pea aphid (Acyrthosiphon pisum), pod borer (Helicoverpa armigera), leaf miner, pea
+weevil, thrips.
+
+7. COMMON DISEASES AND SYMPTOMS
+Powdery mildew (Erysiphe pisi): white powdery growth on leaves and stems. Wilt (Fusarium
+oxysporum f. sp. pisi): yellowing and wilting. Rust (Uromyces pisi): reddish-brown
+pustules. Downy mildew: pale patches with fungal growth.
+
+8. INTEGRATED PEST MANAGEMENT
+Use wilt-resistant varieties; rotate with cereals; treat seed with fungicide against wilt
+and root rot; manage aphids and pod borer at threshold; encourage natural enemies; destroy
+crop residues.
+
+9. HARVESTING AND POST-HARVEST
+Harvest pods at green immature stage for vegetables, or at maturity (pods turn yellow-brown)
+for dry seed. Thresh and dry seed to 12 percent moisture for storage.
+
+10. CROP CALENDAR (indicative)
+Rabi: sow October-November, harvest February-March (green) or March-April (dry seed).

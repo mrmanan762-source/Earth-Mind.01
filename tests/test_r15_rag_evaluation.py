@@ -454,3 +454,58 @@ def test_30_full_repository_regression(sample_dataset):
     assert run.status == "COMPLETED"
     assert len(run.measurements) == 1
     assert run.measurements[0].status == ReliabilityStatus.SUCCESS
+
+
+# 31. Regression: retrieved chunk IDs must match ground-truth document IDs
+#     (chunk IDs embed the source id, e.g. chk_ku_ver_src_x_001_...; ground truth
+#     uses doc_src_x_001. Prior to the fix, substring matching always missed.)
+def test_31_document_id_matching_across_id_schemes():
+    case = EvaluationCase(
+        case_id="c_docmatch",
+        query_text="wheat yellow rust",
+        expected_relevant_doc_ids=["doc_src_wheat_001"],
+    )
+    meas = EvaluationMeasurement(
+        case_id="c_docmatch",
+        request_id="req1",
+        trace_id="trc1",
+        status=ReliabilityStatus.SUCCESS,
+        retrieved_chunk_ids=["chk_ku_ver_src_wheat_001_1_0_003_001"],
+        reranked_chunk_ids=["chk_ku_ver_src_wheat_001_1_0_003_001"],
+    )
+    evaluator = QualityEvaluator(default_k_values=[1])
+    q_res = evaluator.evaluate_quality([case], [meas])
+    assert q_res.hit_rate_at_k[1] == 1.0
+    assert q_res.mrr == 1.0
+
+
+# 32. Regression: recall and nDCG must stay bounded by 1.0 even when several
+#     retrieved chunks belong to the same ground-truth document.
+def test_32_metrics_bounded_with_duplicate_document_hits():
+    case = EvaluationCase(
+        case_id="c_dupes",
+        query_text="potato late blight",
+        expected_relevant_doc_ids=["doc_src_potato_001"],
+    )
+    meas = EvaluationMeasurement(
+        case_id="c_dupes",
+        request_id="req1",
+        trace_id="trc1",
+        status=ReliabilityStatus.SUCCESS,
+        retrieved_chunk_ids=[
+            "chk_ku_ver_src_potato_001_1_0_001_001",
+            "chk_ku_ver_src_potato_001_1_0_002_001",
+            "chk_ku_ver_src_potato_001_1_0_003_001",
+        ],
+        reranked_chunk_ids=[
+            "chk_ku_ver_src_potato_001_1_0_001_001",
+            "chk_ku_ver_src_potato_001_1_0_002_001",
+            "chk_ku_ver_src_potato_001_1_0_003_001",
+        ],
+    )
+    evaluator = QualityEvaluator(default_k_values=[1, 3])
+    q_res = evaluator.evaluate_quality([case], [meas])
+    assert q_res.recall_at_k[3] <= 1.0
+    assert q_res.ndcg_at_k[3] <= 1.0
+    assert q_res.recall_at_k[3] == 1.0
+    assert q_res.ndcg_at_k[3] == 1.0

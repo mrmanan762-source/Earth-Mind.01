@@ -1,0 +1,26 @@
+# EarthMind runtime dependencies
+# Python 3.13
+
+# Core contracts / configuration
+pydantic>=2.9,<3
+
+# Knowledge Base (RAG) — embeddings, vector store, sparse representation
+numpy>=2.0
+qdrant-client>=1.12
+sentence-transformers>=3.0
+torch>=2.4
+
+# Document processing (HTML extraction)
+beautifulsoup4>=4.12
+
+# Memory module persistent storage (PostgreSQL / Supabase)
+psycopg2-binary>=2.9
+
+# Satellite Intelligence (geospatial processing)
+pyproj>=3.6
+shapely>=2.0
+tifffile>=2024.1
+
+# Testing
+pytest>=8.0
+pytest-mock>=3.14

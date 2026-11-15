@@ -1,0 +1,56 @@
+================================================================================
+TITLE: Package of Practices for Pigeonpea (Tur/Arhar) Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Extension Bulletin No. PIGEONPEA-2023-01, Kanpur
+PUBLICATION DATE: 2023-04-18
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Pigeonpea (Cajanus cajan L.) is a warm-season kharif pulse; optimum temperature 20-30
+degrees C. It is drought tolerant and deep-rooted. Well-drained sandy loam to clay loam
+with pH 6.0-7.5 is ideal; it is sensitive to waterlogging.
+
+2. GROWTH STAGES
+Germination, vegetative growth, branching, flowering, pod formation and pod filling.
+Pigeonpea is a long-duration crop (150-270 days) with indeterminate growth habit.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 12-15 kg/ha for long-duration and 20-25 kg/ha for short-duration types. Spacing
+90-150 cm x 20 cm for long-duration; 45-60 cm x 15-20 cm for short-duration. Sow with
+onset of monsoon in June-July. Pigeonpea is often intercropped with sorghum, soybean or
+groundnut.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply a starter dose of 25 kg N/ha; general recommendation 25:50:25 kg N:P2O5:K2O per
+ha. Apply 20-30 kg sulphur per ha where deficient. Rhizobium inoculation improves
+nitrogen fixation.
+
+5. WATER REQUIREMENT
+Requires 400-650 mm water. Largely rainfed; provide protective irrigation at flowering and
+pod filling where available. Avoid waterlogging.
+
+6. COMMON PESTS
+Pod borer complex (Helicoverpa armigera, Maruca vitrata, Melanagromyza obtusa),
+pod fly, pod bug, pod wasp, termites.
+
+7. COMMON DISEASES AND SYMPTOMS
+Wilt (Fusarium udum): gradual yellowing and wilting. Sterility mosaic disease (mite-borne):
+yellowing and sterility. Phytophthora blight in waterlogged conditions. Alternaria blight.
+
+8. INTEGRATED PEST MANAGEMENT
+Use wilt-resistant and sterility-mosaic-resistant varieties; intercropping reduces pod borer
+incidence; install pheromone traps and bird perches; use HaNPV and recommended
+insecticides at threshold; rotate and remove infected plants.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when 75-80 percent pods mature; avoid over-maturity to prevent shattering. Dry,
+thresh and store at 9-12 percent moisture.
+
+10. CROP CALENDAR (indicative)
+Kharif: sow June-July, harvest December-January (short-duration) to February-March
+(long-duration).

@@ -1,0 +1,58 @@
+================================================================================
+TITLE: Package of Practices for Sugarcane Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Sugarcane Research (IISR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IISR Extension Bulletin No. SUGARCANE-2023-01, Lucknow
+PUBLICATION DATE: 2023-02-14
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Sugarcane (Saccharum officinarum L.) is a long-duration tropical/subtropical crop;
+optimum temperature 26-32 degrees C. It requires 1000-1500 mm water. Deep, well-drained
+loam to clay loam with pH 6.5-7.5 and good organic matter is ideal.
+
+2. GROWTH STAGES
+Germination, tillering, grand growth, maturity and ripening. Tillering and grand growth
+are the most nutrient- and water-demanding stages.
+
+3. PLANTING MATERIAL, SPACING AND PLANTING
+Use healthy, disease-free two-to-three budded setts from 8-10 month old cane. Seed rate
+about 30,000-40,000 two-budded setts/ha. Spacing 75-90 cm in furrows (or paired-row
+planting). Autumn planting (September-October) and spring planting (February-March).
+Treat setts with fungicide against red rot and smut.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 10-20 t/ha. General recommendation 150-250:60-100:60-120 kg N:P2O5:K2O
+per ha depending on soil and duration; apply N in splits (basal, tillering, grand growth).
+Include micronutrients (zinc, iron, manganese) where deficient.
+
+5. WATER REQUIREMENT
+Requires 1200-1800 mm water. Irrigate at 7-12 day intervals; critical stages are
+germination, tillering and grand growth. Avoid moisture stress during grand growth.
+
+6. COMMON PESTS
+Early shoot borer (Chilo infuscatellus), top borer (Scirpophaga excerptalis), internode
+borer, stalk borer, pyrilla, woolly aphid, white grub, termites.
+
+7. COMMON DISEASES AND SYMPTOMS
+Red rot (Colletotrichum falcatum): reddish discolouration with cross bands and sour smell.
+Smut (Sporisorium scitamineum): black whip-like structure. Wilt: drying of canes. Grassy
+shoot disease (phytoplasma). Ratoon stunting.
+
+8. INTEGRATED PEST MANAGEMENT
+Use disease-free setts and resistant varieties; hot-water/fungicide sett treatment; trash
+mulching and earthing up; release Trichogramma and natural enemies for borers; rotate
+and remove infected clumps; avoid excessive nitrogen.
+
+9. HARVESTING AND POST-HARVEST
+Harvest at maturity (10-12 months, or 12-18 months for some tropical varieties) when
+brix and sucrose peak. Harvest close to ground level; crush within 24-48 hours to avoid
+sucrose loss; retain healthy stubble for ratoon.
+
+10. CROP CALENDAR (indicative)
+Autumn planting: September-October; Spring planting: February-March. Harvest begins
+October-November through the crushing season (October-April).

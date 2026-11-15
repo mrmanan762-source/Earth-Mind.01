@@ -1,0 +1,57 @@
+================================================================================
+TITLE: Package of Practices for Groundnut Cultivation in India
+ORGANIZATION: ICAR-Directorate of Groundnut Research (DGR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-DGR Extension Bulletin No. GROUNDNUT-2023-01, Junagadh
+PUBLICATION DATE: 2023-03-28
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Groundnut (Arachis hypogaea L.) is a warm-season oilseed; optimum temperature 25-30
+degrees C. It requires 500-700 mm rainfall. Well-drained sandy loam and loamy sand with
+pH 6.0-7.5 and adequate calcium are ideal; heavy soils hinder pegging and pod
+development.
+
+2. GROWTH STAGES
+Germination, vegetative growth, flowering, pegging, pod development and maturity.
+Pegging and pod development are the most critical and moisture-sensitive stages.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 100-120 kg/ha (kernel basis); spacing 30 cm x 10 cm. Sow with onset of
+monsoon in June-July (kharif) or January-February (summer). Treat seed with
+Trichoderma and Rhizobium; treat with fungicide against collar rot.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 5-10 t/ha. General recommendation 25:50:50 kg N:P2O5:K2O per ha. Apply
+gypsum 250-400 kg/ha at flowering to supply calcium and sulphur. Apply 20-25 kg
+sulphur per ha where deficient; groundnut benefits from calcium for pod filling.
+
+5. WATER REQUIREMENT
+Requires 500-700 mm water. Critical stages: flowering and pegging (avoid moisture stress)
+and pod development. Provide protective irrigation at 10-12 day intervals where irrigated.
+
+6. COMMON PESTS
+Leaf miner (Aproaerema modicella), white grub, termites, thrips, aphids, jassids.
+
+7. COMMON DISEASES AND SYMPTOMS
+Tikka (early and late leaf spot, Cercospora spp.): dark brown to black leaf spots.
+Rust (Puccinia arachidis): reddish-brown pustules. Collar rot (Aspergillus niger):
+seedling collar rotting. Stem rot (Sclerotium rolfsii): white mycelium at base. Bud
+necrosis virus (aphid-borne).
+
+8. INTEGRATED PEST MANAGEMENT
+Use disease-resistant varieties and treated seed; rotate with cereals; deep summer
+ploughing; manage leaf miner and thrips at threshold; use pheromone traps for white grub;
+remove and destroy infected crop debris; manage aphids to reduce virus spread.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when inner shell shows dark veins and kernels are mature. Dry pods to 8-9
+percent moisture before storage to prevent aflatoxin development.
+
+10. CROP CALENDAR (indicative)
+Kharif: sow June-July, harvest October-November. Summer: sow January-February,
+harvest May-June.

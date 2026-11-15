@@ -1,0 +1,56 @@
+================================================================================
+TITLE: Package of Practices for Maize Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Maize Research (IIMR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIMR Extension Bulletin No. MAIZE-2023-02, Ludhiana
+PUBLICATION DATE: 2023-04-12
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Maize (Zea mays L.) is a warm-season (kharif and rabi) cereal adapted to temperatures of
+21-27 degrees C. It is sensitive to frost and waterlogging. Deep, well-drained loams with
+pH 6.0-7.5 and good organic matter are ideal. Maize responds strongly to nitrogen.
+
+2. GROWTH STAGES
+Germination (0-7 d), seedling (7-20 d), vegetative/tasselling (20-55 d), silking and
+pollination (55-65 d), grain filling (65-95 d), physiological maturity (95-110 d).
+Critical moisture stages: tasselling, silking and grain filling.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 20-25 kg/ha; spacing 60 cm x 20 cm for grain hybrids (75,000-83,000 plants/ha).
+Sow kharif with onset of monsoon (June-July) and rabi in October-November. Treat seed with
+Trichoderma viride (5 g/kg) or recommended fungicide against seed-borne pathogens.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply farmyard manure 10 t/ha. General recommendation for irrigated maize is 120:60:40
+kg N:P2O5:K2O per ha, with half N and full P and K as basal and remaining N in two splits
+at knee-high and pre-tasselling. Zinc sulphate 25 kg/ha where deficiency is known.
+
+5. WATER REQUIREMENT
+Irrigated maize requires 500-600 mm water. Irrigate at critical stages (tasselling, silking,
+grain filling). Avoid waterlogging; ensure drainage.
+
+6. COMMON PESTS
+Fall armyworm (Spodoptera frugiperda), stem borer (Chilo partellus), shoot fly, aphids,
+termites. Scout whorls for fall armyworm larvae and fresh frass.
+
+7. COMMON DISEASES AND SYMPTOMS
+Turcicum leaf blight (elongated grey-green lesions), maydis leaf blight (diamond-shaped
+lesions), downy mildew (chlorotic streaks), banded leaf and sheath blight, smut (galls).
+
+8. INTEGRATED PEST MANAGEMENT
+Rotate with legumes; destroy crop residues; use pheromone traps for stem borer; encourage
+natural enemies; use recommended bio-pesticides (Bacillus thuringiensis, NPV for armyworm)
+before chemical control; follow economic threshold levels.
+
+9. HARVESTING AND POST-HARVEST
+Harvest at physiological maturity (black layer at kernel base), around 20-25 percent grain
+moisture. Dry to 12-14 percent before storage. Store in clean, dry, aerated structures.
+
+10. CROP CALENDAR (indicative)
+Kharif: sow June-July, harvest September-October. Rabi: sow October-November, harvest
+March-April. Timelines vary by region and variety duration.

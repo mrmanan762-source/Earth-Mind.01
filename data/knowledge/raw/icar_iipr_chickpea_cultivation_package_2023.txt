@@ -1,0 +1,54 @@
+================================================================================
+TITLE: Package of Practices for Chickpea (Gram) Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Pulses Research (IIPR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIPR Extension Bulletin No. CHICKPEA-2023-02, Kanpur
+PUBLICATION DATE: 2023-03-05
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Chickpea (Cicer arietinum L.) is a cool-season rabi pulse; optimum temperature 20-25
+degrees C. It tolerates drought but is sensitive to waterlogging and high temperature at
+podding. Well-drained sandy loam to clay loam with pH 6.0-8.0 is suitable.
+
+2. GROWTH STAGES
+Germination, vegetative growth, branching, flowering, pod formation and pod filling.
+Flowering and pod filling require adequate soil moisture; heat stress at podding reduces
+yield.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 60-80 kg/ha (desi) and 80-100 kg/ha (kabuli); spacing 30 cm x 10 cm. Sow with
+the retreat of monsoon in October-November. Treat seed with Rhizobium and Trichoderma.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply a starter dose of 20-25 kg N/ha; general recommendation 20:50:30 kg N:P2O5:K2O
+per ha. Apply 10-20 kg sulphur per ha where deficient. Rhizobium inoculation improves
+nitrogen fixation.
+
+5. WATER REQUIREMENT
+Requires 250-350 mm water. Chickpea is largely rainfed; provide protective irrigation at
+branching and pod filling where irrigation is available. Avoid excess irrigation.
+
+6. COMMON PESTS
+Pod borer (Helicoverpa armigera), the most destructive pest; termites; cutworms; aphids.
+
+7. COMMON DISEASES AND SYMPTOMS
+Wilt (Fusarium oxysporum f. sp. ciceris): yellowing and wilting. Ascochyta blight:
+grey-brown lesions with pycnidia. Dry root rot (Rhizoctonia bataticola): sudden drying.
+Botrytis grey mould in cool humid weather.
+
+8. INTEGRATED PEST MANAGEMENT
+Use wilt-resistant varieties; rotate with cereals; deep summer ploughing against termites;
+install pheromone traps and bird perches for pod borer; use HaNPV and recommended
+insecticides at economic threshold; remove and destroy infected plants.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when plants turn yellow-brown and pods mature. Thresh and dry seed to 9-12
+percent moisture. Store in clean, dry structures; follow fumigation where needed.
+
+10. CROP CALENDAR (indicative)
+Rabi: sow October-November, harvest February-March.

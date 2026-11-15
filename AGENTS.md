@@ -62,3 +62,27 @@ baseline — do not treat these as new breakage.
 - Permissions for tool calls come only from trusted `request.metadata`
   (`granted_permissions`), never from model output or `payload`.
 - Sarvam-105B integration is deferred to Phase 5 (use `parse_model_tool_call`).
+
+## Phase 2 (RAG completion — knowledge_base)
+- `modules/knowledge_base/kb_module.py` — `KnowledgeBaseModule` owns the RAG stack
+  (embedding, sparse, dense/sparse adapters, hybrid retriever, reranker,
+  evidence builder/validator, `RAGContextProvider`) and is registered in
+  `app/main.py` as module `"knowledge_base"`. It registers the RAG provider with
+  B2 (`ContextModule.register_rag_provider`) during `initialize()`.
+- Operational-by-default: in non-production, an empty index is auto-ingested from
+  the canonical corpus; production never auto-ingests. Durable store defaults to
+  `data/rag_store/` (gitignored). `EARTHMIND_KB_PERSIST_DIR`,
+  `EARTHMIND_KB_INGEST_ON_STARTUP` control this.
+- Embedding is canonical **BAAI/bge-m3, 1024-dim** everywhere (ingestion, index,
+  query, retrieval, evaluation). MiniLM/384 is only honoured when a caller
+  explicitly requests a `minilm` model.
+- Sparse index persists to `data/rag_store/sparse_index.json`
+  (`EARTHMIND_SPARSE_INDEX_PATH`). Qdrant local persistent mode uses `path=`;
+  `QdrantIndexAdapter.close()` releases the storage lock so restarts reopen it.
+- Evaluation: `QualityEvaluator` normalizes chunk IDs (`chk_ku_ver_src_x_...`)
+  against ground-truth doc IDs (`doc_src_x_...`) and de-duplicates per-document
+  hits so recall/nDCG stay ≤ 1.0.
+- Corpus: 25 verified sources / 213 chunks in `data/knowledge/manifest/corpus_manifest.json`.
+  Coverage report: `python3 scripts/corpus_coverage_report.py` →
+  `docs/phase2_corpus_coverage.{md,json}`.
+- Phase 2 completion report: `docs/phase2_completion_report.md`.

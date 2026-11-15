@@ -48,12 +48,16 @@ except ImportError:  # pragma: no cover
 class SelfHostedEmbeddingProvider(IEmbeddingProvider):
     """Self-hosted open-source embedding provider using sentence-transformers."""
 
-    DEFAULT_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    # Canonical EarthMind embedding model. BGE-M3 is multilingual (100+ languages,
+    # including the eight EarthMind target languages) and emits 1024-dimensional vectors.
+    DEFAULT_MODEL_NAME = "BAAI/bge-m3"
     DEFAULT_MODEL_VERSION = "1.0.0"
-    DEFAULT_DIMENSION = 384
-    DEFAULT_LICENSE = "Apache-2.0"
-    DEFAULT_PROVENANCE = "https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    DEFAULT_DIMENSION = 1024
+    DEFAULT_MAX_LENGTH = 8192
+    DEFAULT_LICENSE = "MIT"
+    DEFAULT_PROVENANCE = "https://huggingface.co/BAAI/bge-m3"
 
+    # Retained aliases for callers that reference the BGE-M3 profile explicitly.
     BGE_M3_MODEL_NAME = "BAAI/bge-m3"
     BGE_M3_DIMENSION = 1024
     BGE_M3_MAX_LENGTH = 8192
@@ -68,7 +72,7 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
         provenance: str = DEFAULT_PROVENANCE,
         device: str = "cpu",
         batch_size: int = 32,
-        max_length: int = 512,
+        max_length: int = DEFAULT_MAX_LENGTH,
         normalize_embeddings: bool = True,
         execution_mode: str = "self_hosted",
         allow_download: bool = False,
@@ -80,12 +84,13 @@ class SelfHostedEmbeddingProvider(IEmbeddingProvider):
         self.license = license
         self.provenance = provenance
 
-        # Auto-resolve BGE-M3 model specs if default parameter values were passed
-        if "bge-m3" in model_name_or_path.lower():
+        # Honour an explicit MiniLM request with its native 384 dimensions rather than
+        # the BGE-M3 default, so legacy callers keep working without reconfiguration.
+        if "minilm" in model_name_or_path.lower():
             if dimension == self.DEFAULT_DIMENSION:
-                dimension = self.BGE_M3_DIMENSION
-            if max_length == 512:
-                max_length = self.BGE_M3_MAX_LENGTH
+                dimension = 384
+            if max_length == self.DEFAULT_MAX_LENGTH:
+                max_length = 512
 
         self.dimension = dimension
         self.device = self._resolve_safe_device(device)
