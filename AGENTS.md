@@ -86,3 +86,32 @@ baseline — do not treat these as new breakage.
   Coverage report: `python3 scripts/corpus_coverage_report.py` →
   `docs/phase2_corpus_coverage.{md,json}`.
 - Phase 2 completion report: `docs/phase2_completion_report.md`.
+
+## Phase 4 (integration — B2–B5 in one workflow)
+- `app/integration/` composes the completed modules into one application flow and
+  is registered in `app/main.py` as module `"application"` (`IntegratedApplicationModule`).
+  - `capabilities.py` — typed B5 `ICapability` adapters (B2/B3/B4/Inspector/Memory/
+    ULPU/Satellite/Tools). They only marshal data; no module logic is duplicated.
+  - `tool_selection.py` — deterministic, request-dependent tool selection. Never
+    calls every tool for every request.
+  - `tool_evidence_provider.py` — B2 `ContextProvider` surfacing request-scoped
+    tool results (registered on `context_module.manager`).
+  - `workflow.py` — `IntegratedWorkflow` (normalise → tool selection → B5
+    orchestration → ULPU localisation → structured response) + duplicate
+    protection + controlled/partial failure handling.
+- B5 remains the sole coordinator; the tools step calls the existing `ToolService`
+  (no duplicate dispatcher). Tool results reach B2 through a provider, not via B5.
+- Tool permissions come only from trusted `request.metadata`
+  (`granted_permissions`); payload/model output can never self-grant.
+- Memory PII is excluded from B2 unless the caller passes `policy.allow_pii=True`
+  (privacy boundary); verified in `tests/test_phase4_integration.py`.
+- Sarvam runs in stub mode (`Sarvam105BAdapter.load()`), shared by the AI module
+  and B3's `ModelLayerReasoningCapability`. Real Sarvam-105B inference is Phase 5.
+- RAG→B2 provenance: `EvidenceItem.from_rerank_candidate` now reconstructs the
+  provenance dict from the ingestion-persisted index payload when upstream lineage
+  objects are absent. Without this, B2's boundary validator rejected every real
+  RAG contract ("Missing or empty mandatory field: provenance") — a pre-existing
+  gap (R13 tests only passed because their mocks supplied provenance).
+- Phase 4 tests: `tests/test_phase4_integration.py` (26 tests). Full-suite
+  baseline with `qdrant_client`/`psycopg2` installed: 3 failed / 1270 passed /
+  1 skipped / 35 errors, all environmental (Postgres, model weights, network).
