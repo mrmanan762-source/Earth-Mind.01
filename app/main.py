@@ -20,6 +20,7 @@ from modules.satellite.satellite_module import SatelliteModule
 from modules.data_training.data_training_module import DataTrainingModule
 from modules.external_services.external_services_module import ExternalServicesModule
 from modules.context.context_module import ContextModule
+from modules.knowledge_base.kb_module import KnowledgeBaseModule
 from modules.tools.tool_service import ToolService
 from modules.tools.tool_module import ToolModule
 from core.errors.exceptions import ConfigurationError
@@ -105,6 +106,10 @@ def create_app():
     if hasattr(satellite_module, "context_provider"):
         context_module.manager.register_provider(satellite_module.context_provider)
 
+    # Phase 2: RAG Knowledge Base. Owns the retrieval stack and registers the
+    # approved RAG provider with B2 via the ContextModule boundary during startup.
+    knowledge_base_module = KnowledgeBaseModule(context_module=context_module)
+
     # Phase 3: Backend Tool Infrastructure. Reuse the already-constructed
     # satellite module so the tool adapter shares a single satellite service.
     tool_service = ToolService(satellite_module=satellite_module)
@@ -122,6 +127,7 @@ def create_app():
     lifecycle.register_module("data_training", data_training_module)
     lifecycle.register_module("external_services", external_services_module)
     lifecycle.register_module("context", context_module)
+    lifecycle.register_module("knowledge_base", knowledge_base_module)
     lifecycle.register_module("tools", tool_module)
 
     workflow = WorkflowEngine(lifecycle)

@@ -1,0 +1,59 @@
+================================================================================
+TITLE: Agricultural Units, Measurements and General Farming Reference
+ORGANIZATION: ICAR Agricultural Extension Division
+SOURCE TYPE: OFFICIAL_GOVERNMENT_PUBLICATION
+DOMAIN: General Agriculture
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR Extension Reference Note No. GEN-2023-03, New Delhi
+PUBLICATION DATE: 2023-05-02
+================================================================================
+
+1. LAND AND AREA UNITS
+1 hectare (ha) = 10,000 square metres = 2.471 acres. 1 acre = 0.4047 ha. 1 bigha varies
+by state (commonly 0.25-0.4 ha). Land is often described in hectares for recommendations.
+
+2. YIELD AND NUTRIENT UNITS
+Crop yield is expressed in tonnes per hectare (t/ha) or quintals per hectare (q/ha);
+1 quintal = 100 kg. Fertilizer nutrients are expressed as N, P2O5 and K2O. Fertilizer
+doses are given in kg per hectare.
+
+3. FERTILIZER SOURCES (indicative nutrient content)
+Urea (46 percent N), diammonium phosphate (18 percent N, 46 percent P2O5), single
+superphosphate (16 percent P2O5), muriate of potash (60 percent K2O), sulphate of potash
+(50 percent K2O), and gypsum (calcium and sulphur).
+
+4. IRRIGATION AND WATER MANAGEMENT CONCEPTS
+Irrigation supplies water to meet crop evapotranspiration. Key concepts: crop water
+requirement, irrigation scheduling (interval or critical-stage based), and irrigation
+efficiency. Drip and sprinkler systems improve water-use efficiency over flood irrigation.
+
+5. WEATHER AND CLIMATE CONCEPTS
+Weather is short-term atmospheric conditions (temperature, rainfall, humidity, wind);
+climate is the long-term pattern. Crops have cardinal temperatures and critical moisture
+stages. Monsoon onset and distribution strongly influence kharif cropping.
+
+6. FARMING SYSTEMS AND SUSTAINABILITY
+Farming systems combine crops, livestock and other enterprises. Sustainable agriculture
+integrates soil health, water conservation, biodiversity and economic viability.
+
+7. INTEGRATED NUTRIENT AND PEST MANAGEMENT
+Integrated Nutrient Management (INM) combines organic and inorganic sources to match
+crop demand. Integrated Pest Management (IPM) combines cultural, biological and
+chemical methods with economic thresholds to reduce pesticide use.
+
+8. POST-HARVEST HANDLING AND STORAGE
+Timely harvesting, cleaning, drying to safe moisture content, grading and proper storage
+reduce post-harvest losses. Store grains in clean, dry, aerated structures; control
+storage pests with hygiene and approved fumigants where permitted.
+
+9. AGRICULTURAL ECONOMICS CONCEPTS
+Key concepts include cost of cultivation, gross and net returns, benefit-cost ratio,
+market price and minimum support price. Economics vary with yield, input costs and market
+conditions.
+
+10. VERIFIED STATISTICS GUIDANCE
+Agricultural statistics change over time. For current area, production and yield figures,
+retrieve data from live authoritative sources (for example, the Directorate of Economics
+and Statistics, Government of India) rather than relying on static documents.

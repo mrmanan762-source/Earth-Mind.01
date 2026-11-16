@@ -16,6 +16,38 @@ class QualityEvaluator:
     def __init__(self, default_k_values: Optional[List[int]] = None):
         self.default_k_values = default_k_values or [1, 3, 5, 10]
 
+    @staticmethod
+    def _normalize_id(value: str) -> str:
+        """Strip known ID prefixes so chunk IDs and document IDs are comparable.
+
+        Retrieved chunk IDs embed the source identifier (e.g.
+        ``chk_ku_ver_src_wheat_001_...``) while ground-truth document IDs use the
+        ``doc_`` prefix (``doc_src_wheat_001``). Normalizing both sides lets a
+        retrieved chunk be attributed to its document without fabricating links.
+        """
+        return value.replace("doc_", "").replace("chk_ku_ver_", "").replace("chk_", "")
+
+    @classmethod
+    def _is_relevant(cls, item: str, rel_chunks: Set[str], rel_docs: Set[str]) -> bool:
+        return cls._relevance_key(item, rel_chunks, rel_docs) is not None
+
+    @classmethod
+    def _relevance_key(cls, item: str, rel_chunks: Set[str], rel_docs: Set[str]) -> Optional[str]:
+        """Return the ground-truth identifier an item satisfies, or None if irrelevant.
+
+        Several retrieved chunks can belong to the same ground-truth document. Using
+        the matched ground-truth id as a dedupe key prevents one document from being
+        counted multiple times, which would otherwise push recall and nDCG above 1.0.
+        """
+        if item in rel_chunks:
+            return item
+        normalized_item = cls._normalize_id(item)
+        for doc_id in rel_docs:
+            normalized_doc = cls._normalize_id(doc_id)
+            if normalized_doc and normalized_doc in normalized_item:
+                return doc_id
+        return None
+
     def evaluate_quality(
         self,
         cases: List[EvaluationCase],
@@ -73,30 +105,37 @@ class QualityEvaluator:
 
             retrieved = meas.reranked_chunk_ids or meas.retrieved_chunk_ids
 
-            # Calculate MRR
+            # Total distinct relevant items for this case (chunks take precedence over docs).
+            total_rel = len(rel_chunks) if rel_chunks else len(rel_docs)
+
+            # Calculate MRR using the first retrieved item that satisfies any ground-truth id.
             first_hit_rank: Optional[int] = None
             for idx, item in enumerate(retrieved):
-                if item in rel_chunks or any(doc_id in item for doc_id in rel_docs):
+                if self._is_relevant(item, rel_chunks, rel_docs):
                     first_hit_rank = idx + 1
                     break
             if first_hit_rank is not None:
                 mrr_sum += 1.0 / first_hit_rank
 
-            # Per K metrics
+            # Per K metrics (dedupe matched ground-truth ids so recall/nDCG stay bounded by 1).
             for k in k_list:
                 top_k = retrieved[:k]
-                hits = sum(1 for item in top_k if item in rel_chunks or any(doc_id in item for doc_id in rel_docs))
+                matched_keys: Set[str] = set()
+                dcg = 0.0
+                for i, item in enumerate(top_k):
+                    key = self._relevance_key(item, rel_chunks, rel_docs)
+                    if key is not None and key not in matched_keys:
+                        matched_keys.add(key)
+                        dcg += 1.0 / math.log2(i + 2)
+                hits = len(matched_keys)
 
                 prec_sums[k] += hits / float(k)
 
-                total_rel = len(rel_chunks) if rel_chunks else len(rel_docs)
                 if total_rel > 0:
                     rec_sums[k] += hits / float(total_rel)
 
                 hit_sums[k] += 1.0 if hits > 0 else 0.0
 
-                # nDCG calculation
-                dcg = sum((1.0 if (item in rel_chunks or any(doc_id in item for doc_id in rel_docs)) else 0.0) / math.log2(i + 2) for i, item in enumerate(top_k))
                 idcg = sum(1.0 / math.log2(i + 2) for i in range(min(k, max(total_rel, 1))))
                 ndcg_sums[k] += (dcg / idcg) if idcg > 0 else 0.0
 
@@ -111,11 +150,11 @@ class QualityEvaluator:
                 pre_rank = None
                 post_rank = None
                 for idx, item in enumerate(meas.retrieved_chunk_ids):
-                    if item in rel_chunks or any(doc_id in item for doc_id in rel_docs):
+                    if self._is_relevant(item, rel_chunks, rel_docs):
                         pre_rank = idx + 1
                         break
                 for idx, item in enumerate(meas.reranked_chunk_ids):
-                    if item in rel_chunks or any(doc_id in item for doc_id in rel_docs):
+                    if self._is_relevant(item, rel_chunks, rel_docs):
                         post_rank = idx + 1
                         break
 

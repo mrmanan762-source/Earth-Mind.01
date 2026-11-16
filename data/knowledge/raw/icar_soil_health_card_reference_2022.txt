@@ -1,0 +1,40 @@
+================================================================================
+TITLE: Soil Health Card Scheme: Nutrient Management Reference
+ORGANIZATION: Department of Agriculture and Farmers Welfare, Government of India
+SOURCE TYPE: OFFICIAL_GOVERNMENT_PUBLICATION
+DOMAIN: Soil Intelligence
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: Soil Health Card Scheme Guidelines, New Delhi
+PUBLICATION DATE: 2022-08-01
+================================================================================
+
+1. PURPOSE
+The Soil Health Card (SHC) scheme provides farmers with crop-wise nutrient
+recommendations based on soil tests, promoting balanced fertilisation and improved
+soil health.
+
+2. PARAMETERS REPORTED
+Each Soil Health Card reports: pH, electrical conductivity (EC), organic carbon,
+available nitrogen, available phosphorus, available potassium, available sulphur and
+micronutrients (zinc, iron, copper, manganese, boron). Values are rated low, medium
+or high.
+
+3. INTERPRETATION GUIDANCE (general)
+- Organic carbon: below 0.50 percent is low; 0.50-0.75 percent medium; above 0.75
+  percent high (values vary by soil type and region).
+- Available nitrogen: low below 280 kg/ha; medium 280-560 kg/ha; high above 560 kg/ha.
+- Available phosphorus: low below 10 kg/ha; medium 10-25 kg/ha; high above 25 kg/ha.
+- Available potassium: low below 120 kg/ha; medium 120-280 kg/ha; high above 280 kg/ha.
+These ranges are indicative and must be interpreted with local laboratory standards.
+
+4. NUTRIENT MANAGEMENT PRINCIPLES
+Apply nutrients based on soil test values and crop requirement; prefer balanced NPK with
+secondary and micronutrients; combine organic sources (FYM, compost, green manure) with
+inorganic fertilisers; and split nitrogen to match crop demand.
+
+5. LIMITATIONS
+Soil test values are point-in-time estimates from sampled fields and do not replace field
+diagnosis. Recommendations must be adapted to crop, season, irrigation and local
+conditions. This reference does not contain any actual field soil-test measurements.

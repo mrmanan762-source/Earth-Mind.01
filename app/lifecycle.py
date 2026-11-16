@@ -59,16 +59,24 @@ class LifecycleManager:
         reranker_provider = None
         reasoning_model = None
 
-        if "context" in self._modules and hasattr(self._modules["context"], "rag_provider"):
+        if "knowledge_base" in self._modules:
+            kb = self._modules["knowledge_base"]
+            emb_provider = getattr(kb, "embedding_provider", None)
+            sparse_provider = getattr(kb, "sparse_provider", None)
+            reranker_provider = getattr(kb, "reranker", None)
+            qdrant_adapter = getattr(kb, "dense_adapter", None)
+
+        if qdrant_adapter is None and "context" in self._modules and hasattr(self._modules["context"], "rag_provider"):
             rag_p = getattr(self._modules["context"], "rag_provider")
-            if hasattr(rag_p, "embedding_provider"):
-                emb_provider = rag_p.embedding_provider
-            if hasattr(rag_p, "sparse_provider"):
-                sparse_provider = rag_p.sparse_provider
-            if hasattr(rag_p, "reranker"):
-                reranker_provider = rag_p.reranker
-            if hasattr(rag_p, "hybrid_retriever") and hasattr(rag_p.hybrid_retriever, "dense_adapter"):
-                qdrant_adapter = rag_p.hybrid_retriever.dense_adapter
+            if rag_p is not None:
+                if hasattr(rag_p, "embedding_provider"):
+                    emb_provider = rag_p.embedding_provider
+                if hasattr(rag_p, "sparse_provider"):
+                    sparse_provider = rag_p.sparse_provider
+                if hasattr(rag_p, "reranker"):
+                    reranker_provider = rag_p.reranker
+                if hasattr(rag_p, "hybrid_retriever") and hasattr(rag_p.hybrid_retriever, "dense_adapter"):
+                    qdrant_adapter = rag_p.hybrid_retriever.dense_adapter
 
         if "ai" in self._modules and hasattr(self._modules["ai"], "sarvam_adapter"):
             reasoning_model = self._modules["ai"].sarvam_adapter

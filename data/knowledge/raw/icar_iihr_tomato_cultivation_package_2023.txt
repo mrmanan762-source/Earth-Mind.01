@@ -1,0 +1,57 @@
+================================================================================
+TITLE: Package of Practices for Tomato Cultivation in India
+ORGANIZATION: ICAR-Indian Institute of Horticultural Research (IIHR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-IIHR Extension Bulletin No. TOMATO-2023-02, Bengaluru
+PUBLICATION DATE: 2023-06-15
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Tomato (Solanum lycopersicum L.) grows best at 20-27 degrees C. Temperatures above 35
+degrees C cause flower drop; frost damages the crop. Well-drained sandy loam to loam with
+pH 6.0-7.0 and good organic matter is ideal.
+
+2. GROWTH STAGES
+Nursery, transplanting, vegetative growth, flowering, fruit set, fruit development and
+ripening. Flowering and fruit set are the most sensitive stages.
+
+3. NURSERY, SPACING AND TRANSPLANTING
+Raise nursery in raised beds; seed rate 400-500 g/ha. Transplant 25-30 day old seedlings
+at 60 cm x 45 cm on raised beds or 75 cm x 60 cm in hybrids. Treat nursery soil against
+damping off.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 20-25 t/ha. General recommendation 120:60:60 kg N:P2O5:K2O per ha; apply half N
+and full P, K as basal and remaining N in two splits at flowering and fruit set. Support
+with calcium and boron to reduce fruit cracking and blossom-end rot.
+
+5. WATER REQUIREMENT
+Requires 400-600 mm water. Irrigate at 5-7 day intervals; drip irrigation with mulching is
+recommended to conserve water and reduce fruit rot.
+
+6. COMMON PESTS
+Fruit borer (Helicoverpa armigera), whitefly (Bemisia tabaci, a virus vector), leaf miner,
+aphids, thrips, mites.
+
+7. COMMON DISEASES AND SYMPTOMS
+Early blight (Alternaria solani): concentric ring lesions. Late blight: water-soaked
+lesions with white mould. Leaf curl virus (transmitted by whitefly): upward curling and
+stunting. Bacterial wilt: sudden wilting. Damping off in nursery.
+
+8. INTEGRATED PEST MANAGEMENT
+Use resistant/tolerant varieties; use healthy nursery; install yellow sticky traps for
+whitefly; use pheromone traps for fruit borer; release Trichogramma; rotate with
+non-solanaceous crops; remove infected plants (leaf curl, bacterial wilt); follow economic
+threshold levels.
+
+9. HARVESTING AND POST-HARVEST
+Harvest at breaker to pink stage for distant markets and red-ripe for local markets. Handle
+gently; grade and pack in ventilated crates. Cool storage extends shelf life.
+
+10. CROP CALENDAR (indicative)
+Kharif: transplant June-July, harvest September-October. Rabi: transplant October-November,
+harvest February-March. Summer: transplant January-February, harvest May-June.

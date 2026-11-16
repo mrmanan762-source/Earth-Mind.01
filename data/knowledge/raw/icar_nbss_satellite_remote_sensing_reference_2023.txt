@@ -1,0 +1,64 @@
+================================================================================
+TITLE: Remote Sensing for Agriculture: Reference Notes
+ORGANIZATION: ICAR-NBSS&LUP and ISRO-NRSC collaborative reference
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Satellite / Remote Sensing
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: Remote Sensing Applications in Agriculture Reference Note No. RS-2023-02
+PUBLICATION DATE: 2023-07-10
+================================================================================
+
+1. REMOTE SENSING FUNDAMENTALS
+Remote sensing acquires information about the Earth's surface without direct contact,
+using sensors on satellites or aircraft that record reflected or emitted electromagnetic
+radiation. Passive sensors rely on sunlight; active sensors (for example radar) emit their
+own energy.
+
+2. SATELLITE IMAGERY AND SPECTRAL BANDS
+Multispectral sensors record reflectance in bands including blue (450-520 nm), green
+(520-600 nm), red (630-690 nm), near-infrared (NIR, 750-900 nm) and shortwave infrared
+(SWIR). Vegetation strongly reflects NIR and absorbs red light.
+
+3. SPATIAL, TEMPORAL AND SPECTRAL RESOLUTION
+- Spatial resolution: ground area represented by one pixel (for example 10 m, 30 m, 250 m).
+- Temporal resolution: revisit frequency (for example daily, 5-day, 16-day).
+- Spectral resolution: number and width of recorded bands.
+Trade-offs exist: finer spatial detail often means lower revisit frequency.
+
+4. VEGETATION INDICES
+NDVI (Normalized Difference Vegetation Index) = (NIR - Red) / (NIR + Red); values range
+from -1 to +1, with healthy vegetation typically 0.3-0.9. EVI (Enhanced Vegetation
+Index) reduces atmospheric and soil background effects and is useful in dense canopies.
+
+5. CROP MONITORING AND VEGETATION HEALTH
+Time-series vegetation indices support crop area estimation, growth monitoring, stress
+detection and yield forecasting. Declining NDVI during a season can indicate drought
+stress, pest damage or disease; rising NDVI indicates active growth.
+
+6. LAND COVER AND CHANGE
+Multispectral imagery supports land-use/land-cover classification and change detection,
+helping monitor cropping patterns, fallows and deforestation.
+
+7. CLOUD COVER AND IMAGE QUALITY
+Clouds and shadows obscure the surface and reduce usable observations, particularly in
+monsoon seasons. Compositing (for example maximum NDVI composites) reduces cloud
+contamination. Image quality depends on sensor calibration, sun angle and atmospheric
+conditions.
+
+8. SEASONAL COMPARISON
+Comparing vegetation indices across seasons or years (same crop and phenological stage)
+helps detect anomalies. Comparisons must control for differences in acquisition date,
+sensor and atmospheric conditions.
+
+9. AGRICULTURAL APPLICATIONS
+Applications include crop inventory, irrigation scheduling support, drought assessment,
+pest and disease scouting, and precision agriculture (variable-rate inputs).
+
+10. LIMITATIONS AND UNCERTAINTY
+Vegetation indices are indirect and can saturate in dense canopies; mixed pixels,
+atmospheric effects, clouds and geometric errors introduce uncertainty. Interpretation
+must combine remote sensing with ground observations. Note: this reference describes
+static remote-sensing concepts only. Actual observations, acquisition dates and current
+field conditions must come from the live Satellite Intelligence system, not this document.

@@ -8,6 +8,8 @@ Defines:
 
 import math
 import uuid
+import json
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Protocol, Tuple, Union, runtime_checkable
 
 from pydantic import BaseModel, Field
@@ -101,15 +103,80 @@ class ISparseIndexAdapter(Protocol):
         ...
 
 
-class InvertedSparseIndexAdapter(ISparseIndexAdapter):
-    """Pure Python Inverted Index Adapter for fast, in-memory sparse retrieval."""
+class _DeferredPersist:
+    """Context manager that suppresses per-record persistence and flushes once on exit."""
 
-    def __init__(self, is_available: bool = True):
+    def __init__(self, adapter: "InvertedSparseIndexAdapter"):
+        self._adapter = adapter
+
+    def __enter__(self):
+        self._adapter._persist_suspended += 1
+        return self._adapter
+
+    def __exit__(self, exc_type, exc, tb):
+        self._adapter._persist_suspended -= 1
+        self._adapter._persist()
+        return False
+
+
+class InvertedSparseIndexAdapter(ISparseIndexAdapter):
+    """Pure Python Inverted Index Adapter for fast sparse retrieval.
+
+    Backed by in-memory dictionaries. When ``persist_path`` is supplied, the
+    record map and inverted index are written to disk on every mutation and
+    reloaded on construction, so the sparse index survives application restarts.
+    """
+
+    def __init__(self, is_available: bool = True, persist_path: Optional[Union[str, Path]] = None):
         self._is_available = is_available
         # Storage: collection_name -> (record_id -> IndexRecord)
         self.records: Dict[str, Dict[str, IndexRecord]] = {}
         # Inverted Index: collection_name -> (term_index -> List[(record_id, term_weight)])
         self.inverted_index: Dict[str, Dict[int, List[Tuple[str, float]]]] = {}
+        self.persist_path = Path(persist_path) if persist_path else None
+        self._persist_suspended = 0
+        if self.persist_path and self.persist_path.exists():
+            self._load_from_disk()
+
+    # ------------------------------------------------------------------
+    # Persistence helpers
+    # ------------------------------------------------------------------
+    def _persist(self) -> None:
+        """Atomically write the index to disk when a persist path is configured."""
+        if not self.persist_path or self._persist_suspended > 0:
+            return
+        self.persist_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "version": 1,
+            "collections": {
+                coll: {rid: rec.model_dump(mode="json") for rid, rec in recs.items()}
+                for coll, recs in self.records.items()
+            },
+            "inverted_index": {
+                coll: {str(term): [list(entry) for entry in entries] for term, entries in terms.items()}
+                for coll, terms in self.inverted_index.items()
+            },
+        }
+        tmp_path = self.persist_path.with_suffix(self.persist_path.suffix + ".tmp")
+        with open(tmp_path, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh)
+        tmp_path.replace(self.persist_path)
+
+    def _load_from_disk(self) -> None:
+        """Restore the index from a previously persisted snapshot."""
+        with open(self.persist_path, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+        for coll, recs in payload.get("collections", {}).items():
+            self.records[coll] = {rid: IndexRecord.model_validate(rec) for rid, rec in recs.items()}
+        for coll, terms in payload.get("inverted_index", {}).items():
+            self.inverted_index[coll] = {
+                int(term): [(entry[0], float(entry[1])) for entry in entries]
+                for term, entries in terms.items()
+            }
+
+    def _persist_deferred(self):
+        """Context manager that batches disk writes for the enclosed block."""
+        return _DeferredPersist(self)
 
     def is_available(self) -> bool:
         return self._is_available
@@ -126,6 +193,7 @@ class InvertedSparseIndexAdapter(ISparseIndexAdapter):
         if c_name not in self.records:
             self.records[c_name] = {}
             self.inverted_index[c_name] = {}
+            self._persist()
         return True
 
     def index_record(self, collection_name: str, record: IndexRecord) -> IndexRecord:
@@ -161,6 +229,7 @@ class InvertedSparseIndexAdapter(ISparseIndexAdapter):
                 inv[term_idx] = []
             inv[term_idx].append((record.index_record_id, term_val))
 
+        self._persist()
         return indexed_rec
 
     def index_batch(self, collection_name: str, records: List[IndexRecord]) -> IndexBatchResult:
@@ -174,15 +243,20 @@ class InvertedSparseIndexAdapter(ISparseIndexAdapter):
         if c_name not in self.records:
             self.create_collection(c_name)
 
-        for rec in records:
-            try:
-                indexed = self.index_record(c_name, rec)
-                successful.append(indexed)
-            except Exception as e:
-                failed.append({
-                    "index_record_id": getattr(rec, "index_record_id", "unknown"),
-                    "error": str(e),
-                })
+        self._persist_suspended += 1
+        try:
+            for rec in records:
+                try:
+                    indexed = self.index_record(c_name, rec)
+                    successful.append(indexed)
+                except Exception as e:
+                    failed.append({
+                        "index_record_id": getattr(rec, "index_record_id", "unknown"),
+                        "error": str(e),
+                    })
+        finally:
+            self._persist_suspended -= 1
+        self._persist()
 
         batch_status = IndexStatus.INDEXED
         if failed and successful:
@@ -217,6 +291,7 @@ class InvertedSparseIndexAdapter(ISparseIndexAdapter):
             if not inv[term_idx]:
                 del inv[term_idx]
 
+        self._persist()
         return True
 
     def get_record(self, collection_name: str, record_id: str) -> Optional[IndexRecord]:

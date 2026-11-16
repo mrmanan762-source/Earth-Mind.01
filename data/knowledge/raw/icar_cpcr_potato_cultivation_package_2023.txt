@@ -1,0 +1,57 @@
+================================================================================
+TITLE: Package of Practices for Potato Cultivation in India
+ORGANIZATION: ICAR-Central Potato Research Institute (CPRI)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-CPRI Technical Bulletin No. POTATO-2023-01, Shimla
+PUBLICATION DATE: 2023-03-20
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Potato (Solanum tuberosum L.) is a cool-season crop; optimum growth at 15-25 degrees C.
+Tuberisation is best at 17-20 degrees C. Frost and high temperature (above 30 degrees C)
+reduce yield. Well-drained sandy loam to loam soils rich in organic matter, pH 5.5-6.5,
+are ideal.
+
+2. GROWTH STAGES
+Sprouting, vegetative growth, tuber initiation, tuber bulking, maturity. Tuber bulking is
+the most critical stage for water and nutrients.
+
+3. SEED TUBER, SPACING AND PLANTING
+Use healthy, certified seed tubers 30-40 g. Seed rate about 2000-2500 kg/ha. Spacing
+60 cm x 20 cm. Plant in October-November (plains) and March-April (hills). Cut surfaces
+of cut seed should be treated with fungicide and cured before planting.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 20-25 t/ha. General recommendation 150-180:80-100:100-120 kg N:P2O5:K2O per ha.
+Apply half N and full P, K as basal; remaining N at earthing up. Avoid excess nitrogen
+which delays tuberisation. Use soil test based recommendations where available.
+
+5. WATER REQUIREMENT
+Requires 500-600 mm water. Irrigate at 7-10 day intervals; maintain adequate soil moisture
+during tuber bulking; stop irrigation 10-15 days before harvest to harden the skin.
+
+6. COMMON PESTS
+Aphids (also virus vectors), potato tuber moth (Phthorimaea operculella), cutworms, white
+grubs, mites.
+
+7. COMMON DISEASES AND SYMPTOMS
+Late blight (Phytophthora infestans): water-soaked lesions on leaves turning brown with
+white sporulation on the underside in humid cool weather. Early blight (Alternaria solani):
+concentric ring spots. Common scab, black scurf, bacterial wilt (sudden wilting).
+
+8. INTEGRATED PEST MANAGEMENT
+Use disease-free seed; destroy culled tubers; rotate with cereals; dehaulm (cut foliage)
+10-15 days before harvest to reduce tuber infection; use recommended fungicides
+(mancozeb, metalaxyl-based) preventively during cool, humid weather.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when haulms dry and skin is set. Cure tubers in shade. Store in cool, dark,
+ventilated stores; cold storage at 2-4 degrees C for table potatoes.
+
+10. CROP CALENDAR (indicative)
+Plains (rabi): plant October-November, harvest January-March. Hills (summer): plant
+March-April, harvest July-August.

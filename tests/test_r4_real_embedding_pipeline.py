@@ -125,7 +125,7 @@ def sample_canonical_chunks(sample_canonical_doc_ver):
 def test_1_embedding_contract():
     provider = SelfHostedEmbeddingProvider()
     assert isinstance(provider, IEmbeddingProvider)
-    assert provider.get_dimension() == 384
+    assert provider.get_dimension() == 1024
     assert provider.is_available() is True
     assert provider.validate_config() is True
 
@@ -168,9 +168,9 @@ def test_4_model_metadata_and_license():
     provider = SelfHostedEmbeddingProvider()
     model_meta = provider.get_model_metadata()
     assert isinstance(model_meta, ModelMetadata)
-    assert model_meta.license == "Apache-2.0"
+    assert model_meta.license == "MIT"
     assert model_meta.commercial_use_allowed is True
-    assert model_meta.dimension == 384
+    assert model_meta.dimension == 1024
     assert "languages" in model_meta.extra
 
 
@@ -182,8 +182,8 @@ def test_5_embedding_generation_single(sample_canonical_chunks):
 
     assert isinstance(record, EmbeddingRecord)
     assert record.chunk_id == chk.chunk_id
-    assert record.dimension == 384
-    assert len(record.dense_vector) == 384
+    assert record.dimension == 1024
+    assert len(record.dense_vector) == 1024
     assert record.provider == "self_hosted"
     assert record.status == "ACTIVE"
 
@@ -198,7 +198,7 @@ def test_6_batch_embedding_generation(sample_canonical_chunks):
     assert batch_res.failed_count == 0
     assert len(batch_res.records) == 2
     for rec in batch_res.records:
-        assert len(rec.dense_vector) == 384
+        assert len(rec.dense_vector) == 1024
 
 
 # 7. Dimension Validation
@@ -312,7 +312,7 @@ def test_16_idempotency(sample_canonical_chunks):
     rec2 = engine.embed_chunk(sample_canonical_chunks[0], custom_embedding_id="emb_fixed_01")
 
     assert rec1.embedding_id == rec2.embedding_id == "emb_fixed_01"
-    assert len(rec1.dense_vector) == len(rec2.dense_vector) == 384
+    assert len(rec1.dense_vector) == len(rec2.dense_vector) == 1024
 
 
 # 17. Duplicate Record Handling
@@ -422,7 +422,7 @@ def test_24_r3_r4_pipeline_integration():
     assert summary.status == "COMPLETED"
     assert summary.total_chunks_submitted > 0
     assert summary.successful_chunk_embeddings > 0
-    assert summary.dimension == 384
+    assert summary.dimension == 1024
 
 
 # 25. R4 Readiness-For-Indexing Contract Verification

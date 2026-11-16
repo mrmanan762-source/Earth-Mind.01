@@ -77,6 +77,7 @@ class SparseConfig(BaseModel):
     provider: str = Field(default_factory=lambda: os.getenv("EARTHMIND_SPARSE_PROVIDER", "bm25"), description="Sparse provider identifier ('bm25', 'fake')")
     model: str = Field(default_factory=lambda: os.getenv("EARTHMIND_SPARSE_MODEL", "earthmind-bm25-v1"), description="Sparse model identifier")
     timeout: float = Field(default_factory=lambda: float(os.getenv("EARTHMIND_SPARSE_TIMEOUT", "10.0")), description="Sparse retrieval timeout in seconds")
+    index_path: Optional[str] = Field(default_factory=lambda: os.getenv("EARTHMIND_SPARSE_INDEX_PATH"), description="Persistent on-disk path for the inverted sparse index (None = in-memory only)")
 
 
 class FusionConfig(BaseModel):

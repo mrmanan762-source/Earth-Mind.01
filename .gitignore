@@ -21,3 +21,6 @@ dist/
 *.log
 model_cache/
 qdrant_storage/
+
+# Phase 2 RAG persistent store (local dev)
+data/rag_store/

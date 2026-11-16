@@ -1,0 +1,490 @@
+{
+  "generated_at": "2026-11-15T18:13:14.343155+00:00",
+  "corpus_version": "1.0.0",
+  "total_sources": 25,
+  "ingestion": {
+    "sources_registered": 25,
+    "documents_created": 25,
+    "chunks_created": 213,
+    "failed_count": 0
+  },
+  "domains": {
+    "Crop Diseases / Pests": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 4,
+      "unique_publishers": 1,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2023-02"
+      ]
+    },
+    "Crop Knowledge": {
+      "approved_sources": 14,
+      "indexed_documents": 14,
+      "chunks": 140,
+      "unique_publishers": 12,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 14
+      },
+      "verification_status": {
+        "APPROVED": 14
+      },
+      "publication_date_coverage": [
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06"
+      ]
+    },
+    "Fertilizer / Nutrient Management": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 5,
+      "unique_publishers": 1,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2023-01"
+      ]
+    },
+    "General Agriculture": {
+      "approved_sources": 2,
+      "indexed_documents": 2,
+      "chunks": 17,
+      "unique_publishers": 2,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 2
+      },
+      "verification_status": {
+        "APPROVED": 2
+      },
+      "publication_date_coverage": [
+        "2023-01",
+        "2023-05"
+      ]
+    },
+    "Government / Agricultural Guidelines": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 4,
+      "unique_publishers": 1,
+      "license_status": {
+        "Government Open Data License - India (GODL-India)": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2023-05"
+      ]
+    },
+    "Irrigation / Water Management": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 5,
+      "unique_publishers": 1,
+      "license_status": {
+        "Government Open Data License - India (GODL-India)": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2022-23"
+      ]
+    },
+    "Regional / Indian Agricultural Practices": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 5,
+      "unique_publishers": 1,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2022-09"
+      ]
+    },
+    "Satellite / Remote Sensing": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 11,
+      "unique_publishers": 1,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2023-07"
+      ]
+    },
+    "Soil / Soil Health": {
+      "approved_sources": 1,
+      "indexed_documents": 1,
+      "chunks": 5,
+      "unique_publishers": 1,
+      "license_status": {
+        "Government Open Data License - India (GODL-India)": 1
+      },
+      "verification_status": {
+        "APPROVED": 1
+      },
+      "publication_date_coverage": [
+        "2022-08"
+      ]
+    },
+    "Soil Intelligence": {
+      "approved_sources": 2,
+      "indexed_documents": 2,
+      "chunks": 17,
+      "unique_publishers": 2,
+      "license_status": {
+        "Public Sector Information / Open Government Knowledge": 2
+      },
+      "verification_status": {
+        "APPROVED": 2
+      },
+      "publication_date_coverage": [
+        "2022-08",
+        "2023-06"
+      ]
+    }
+  },
+  "crops": {
+    "Rice": {
+      "source_documents": 6,
+      "chunks": 30,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": [
+        "symptoms"
+      ]
+    },
+    "Wheat": {
+      "source_documents": 6,
+      "chunks": 29,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": [
+        "crop_identification"
+      ]
+    },
+    "Maize": {
+      "source_documents": 7,
+      "chunks": 41,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Potato": {
+      "source_documents": 6,
+      "chunks": 36,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Onion": {
+      "source_documents": 5,
+      "chunks": 31,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Tomato": {
+      "source_documents": 5,
+      "chunks": 31,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Pea": {
+      "source_documents": 7,
+      "chunks": 53,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Chickpea": {
+      "source_documents": 7,
+      "chunks": 41,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Pigeon Pea": {
+      "source_documents": 6,
+      "chunks": 36,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Mustard": {
+      "source_documents": 7,
+      "chunks": 41,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Groundnut": {
+      "source_documents": 6,
+      "chunks": 36,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Soybean": {
+      "source_documents": 7,
+      "chunks": 41,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": [
+        "symptoms"
+      ]
+    },
+    "Sugarcane": {
+      "source_documents": 6,
+      "chunks": 36,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": [
+        "symptoms"
+      ]
+    },
+    "Cotton": {
+      "source_documents": 7,
+      "chunks": 37,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    },
+    "Lentil": {
+      "source_documents": 6,
+      "chunks": 32,
+      "knowledge_categories_present": [
+        "climate",
+        "crop_calendar",
+        "crop_identification",
+        "diseases",
+        "growth_stages",
+        "harvest_post_harvest",
+        "ipm",
+        "nutrients",
+        "pests",
+        "preventive_practices",
+        "research_advisories",
+        "soil",
+        "symptoms",
+        "water_irrigation"
+      ],
+      "missing_knowledge_categories": []
+    }
+  }
+}

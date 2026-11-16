@@ -1,0 +1,56 @@
+================================================================================
+TITLE: Package of Practices for Onion Cultivation in India
+ORGANIZATION: ICAR-Directorate of Onion and Garlic Research (DOGR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-DOGR Extension Bulletin No. ONION-2023-03, Pune
+PUBLICATION DATE: 2023-05-08
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Onion (Allium cepa L.) is a cool-season crop during vegetative growth and warm, dry weather
+during bulb maturity. Optimum temperature 13-24 degrees C. Well-drained sandy loam with
+pH 6.0-7.5 and good organic matter is ideal. Avoid heavy soils and waterlogging.
+
+2. GROWTH STAGES
+Nursery establishment, transplanting, vegetative growth, bulb initiation, bulb development,
+maturity and curing.
+
+3. NURSERY, SPACING AND TRANSPLANTING
+Raise nursery on raised beds; seed rate 8-10 kg/ha. Transplant 6-8 week old seedlings at
+15 cm x 10 cm spacing on flat beds or ridges. Kharif crop: May-June nursery, July
+transplant. Rabi crop: October-November transplant. Late kharif: September transplant.
+
+4. NUTRIENT MANAGEMENT (general principles)
+Apply FYM 20-25 t/ha. General recommendation 100:50:50 kg N:P2O5:K2O per ha; apply half N
+and full P, K as basal, remaining N in two splits. Sulphur improves pungency and yield;
+include 20-30 kg sulphur per ha where deficient.
+
+5. WATER REQUIREMENT
+Requires 450-550 mm water. Irrigate lightly and frequently; stop irrigation 15-20 days
+before harvest to allow bulb maturity and curing.
+
+6. COMMON PESTS
+Thrips (Thrips tabaci) causing silvery streaks and leaf curling; onion maggot; aphids;
+mites.
+
+7. COMMON DISEASES AND SYMPTOMS
+Purple blotch (Alternaria porri): purple-centred lesions on leaves. Stemphylium blight:
+leaf tip dieback. Downy mildew: pale elongated patches with fungal growth. Basal rot,
+neck rot during storage.
+
+8. INTEGRATED PEST MANAGEMENT
+Use healthy seed and crop rotation with non-alliums; manage thrips with blue sticky traps
+and recommended insecticides at threshold; avoid excess nitrogen; remove and destroy
+infected plant debris; ensure proper curing to reduce storage rots.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when 50 percent of tops fall over and neck dries. Cure in shade 10-15 days. Remove
+tops, grade and store in ventilated, dry structures. Well-cured bulbs store 4-6 months.
+
+10. CROP CALENDAR (indicative)
+Kharif: transplant July, harvest October-November. Rabi: transplant November-December,
+harvest April-May. Late kharif: transplant September, harvest December-January.

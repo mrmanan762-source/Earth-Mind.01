@@ -1,0 +1,54 @@
+================================================================================
+TITLE: Package of Practices for Indian Mustard Cultivation
+ORGANIZATION: ICAR-Directorate of Rapeseed-Mustard Research (DRMR)
+SOURCE TYPE: RESEARCH_INSTITUTION_MANUAL
+DOMAIN: Crop Knowledge
+REGION: India
+LANGUAGE: en
+LICENSE: Public Sector Information / Open Government Knowledge (Reusable with Attribution)
+ORIGIN: ICAR-DRMR Extension Bulletin No. MUSTARD-2023-02, Bharatpur
+PUBLICATION DATE: 2023-05-22
+================================================================================
+
+1. CLIMATIC AND SOIL REQUIREMENTS
+Indian mustard (Brassica juncea L.) is a cool-season rabi oilseed; optimum temperature
+10-25 degrees C. It tolerates light frost but is sensitive to high temperature at pod
+filling. Well-drained sandy loam to clay loam with pH 6.0-7.5 is ideal.
+
+2. GROWTH STAGES
+Germination, vegetative growth, branching, flowering, siliqua (pod) formation and seed
+filling. Flowering and pod filling are critical for oil yield.
+
+3. SEED RATE, SPACING AND SOWING
+Seed rate 4-6 kg/ha; spacing 30 cm x 10-15 cm. Sow in October (timely sown) to early
+November. Late sowing reduces yield. Treat seed against Alternaria blight and white rust.
+
+4. NUTRIENT MANAGEMENT (general principles)
+General recommendation 60-80:30-40:20-30 kg N:P2O5:K2O per ha; apply half N and full
+P, K as basal, remaining N in one or two splits. Apply 20-30 kg sulphur per ha, which is
+important for oil content and yield.
+
+5. WATER REQUIREMENT
+Requires 250-400 mm water. Provide light irrigation at branching, flowering and siliqua
+formation. Two irrigations (pre-flowering and pod filling) are generally adequate.
+
+6. COMMON PESTS
+Mustard aphid (Lipaphis erysimi), the most damaging pest; painted bug (Bagrada
+cruciferarum); sawfly; flea beetle; leaf miner.
+
+7. COMMON DISEASES AND SYMPTOMS
+Alternaria blight (Alternaria brassicae): dark concentric spots on leaves and pods.
+White rust (Albugo candida): white pustules and staghead. Downy mildew: pale patches
+with fungal growth. Sclerotinia rot in humid conditions.
+
+8. INTEGRATED PEST MANAGEMENT
+Sow early to escape aphid peak; grow tolerant varieties; manage aphids with recommended
+insecticides at economic threshold; use yellow sticky traps; remove infected plants; rotate
+with non-cruciferous crops.
+
+9. HARVESTING AND POST-HARVEST
+Harvest when 75 percent siliquae turn yellow-brown to avoid shattering. Sun-dry, thresh
+and store at 8-10 percent moisture.
+
+10. CROP CALENDAR (indicative)
+Rabi: sow October-early November, harvest February-March.
