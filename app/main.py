@@ -23,6 +23,24 @@ from modules.context.context_module import ContextModule
 from modules.knowledge_base.kb_module import KnowledgeBaseModule
 from modules.tools.tool_service import ToolService
 from modules.tools.tool_module import ToolModule
+from modules.reasoning.reasoning_module import ReasoningModule
+from modules.reasoning.capability import ModelLayerReasoningCapability
+from modules.planning.planning_module import PlanningModule
+from modules.orchestrator.orchestrator_module import OrchestratorModule
+from modules.ai.sarvam_adapter import Sarvam105BAdapter
+from app.integration.capabilities import (
+    B2ContextCapability,
+    B3ReasoningCapability,
+    B4PlanningCapability,
+    InspectorCapability,
+    MemoryCapability,
+    SatelliteCapability,
+    ToolEvidenceBuffer,
+    ToolExecutionCapability,
+    ULPUCapability,
+)
+from app.integration.tool_evidence_provider import ToolEvidenceProvider
+from app.integration.workflow import IntegratedApplicationModule, IntegratedWorkflow
 from core.errors.exceptions import ConfigurationError
 
 logger = get_logger("app.main")
@@ -115,6 +133,46 @@ def create_app():
     tool_service = ToolService(satellite_module=satellite_module)
     tool_module = ToolModule(service=tool_service)
 
+    # Phase 4: Integration layer. B5 orchestrates the completed modules through
+    # typed capability adapters; the integrated workflow exposes one application
+    # entry point. No module logic is duplicated here.
+    tool_buffer = ToolEvidenceBuffer()
+    context_module.manager.register_provider(ToolEvidenceProvider(buffer=tool_buffer))
+
+    # Single model instance shared by the AI module and B3. It is loaded in stub
+    # mode (no heavy weights); real Sarvam-105B inference is a Phase 5 concern.
+    model_adapter = Sarvam105BAdapter()
+    model_adapter.load()
+    ai_module.sarvam_adapter = model_adapter
+
+    reasoning_capability = ModelLayerReasoningCapability(model=model_adapter)
+    reasoning_module = ReasoningModule(capability=reasoning_capability, inspector=inspector_module)
+    planning_module = PlanningModule(inspector_service=inspector_module)
+    orchestrator_module = OrchestratorModule(inspector_service=inspector_module)
+    orchestrator_module.capability_manager.register_capability(B2ContextCapability(context_module.manager))
+    orchestrator_module.capability_manager.register_capability(B3ReasoningCapability(reasoning_module))
+    orchestrator_module.capability_manager.register_capability(B4PlanningCapability(planning_module))
+    orchestrator_module.capability_manager.register_capability(InspectorCapability(inspector_module))
+    orchestrator_module.capability_manager.register_capability(
+        MemoryCapability(memory_module.context_provider)
+    )
+    orchestrator_module.capability_manager.register_capability(
+        ULPUCapability(ulpu_module.service)
+    )
+    orchestrator_module.capability_manager.register_capability(
+        SatelliteCapability(satellite_module)
+    )
+    orchestrator_module.capability_manager.register_capability(
+        ToolExecutionCapability(tool_service, tool_buffer)
+    )
+
+    integrated_workflow = IntegratedWorkflow(
+        orchestrator=orchestrator_module,
+        tool_buffer=tool_buffer,
+        ulpu_service=ulpu_module.service,
+    )
+    application_module = IntegratedApplicationModule(integrated_workflow)
+
     # Attach modules to lifecycle
     lifecycle.register_module("database", db_module)
     lifecycle.register_module("ai", ai_module)
@@ -129,6 +187,10 @@ def create_app():
     lifecycle.register_module("context", context_module)
     lifecycle.register_module("knowledge_base", knowledge_base_module)
     lifecycle.register_module("tools", tool_module)
+    lifecycle.register_module("reasoning", reasoning_module)
+    lifecycle.register_module("planning", planning_module)
+    lifecycle.register_module("orchestrator", orchestrator_module)
+    lifecycle.register_module("application", application_module)
 
     workflow = WorkflowEngine(lifecycle)
     return lifecycle, workflow

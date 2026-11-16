@@ -22,6 +22,26 @@ if TYPE_CHECKING:
     from modules.context.boundary.models import RAGContextContract
 
 
+# Provenance fields persisted into the index payload by the canonical ingestion
+# pipeline. Used to reconstruct the provenance chain when upstream lineage
+# objects are not attached to a retrieval candidate.
+_PROVENANCE_PAYLOAD_KEYS = (
+    "provenance_id",
+    "source_id",
+    "artifact_id",
+    "document_id",
+    "version_id",
+    "section_id",
+    "knowledge_unit_id",
+    "chunk_id",
+    "processing_stage",
+    "processing_operation",
+    "operation_id",
+    "is_complete",
+    "timestamp",
+)
+
+
 class EvidenceSourceType(str, Enum):
     """Source origin categories for R11 evidence items."""
     KNOWLEDGE_BASE = "KNOWLEDGE_BASE"
@@ -135,6 +155,16 @@ class EvidenceItem(BaseModel):
             prov_dict = candidate.provenance.model_dump()
         elif candidate.record and getattr(candidate.record, "provenance", None):
             prov_dict = dict(candidate.record.provenance)
+
+        # Canonical ingestion persists the provenance chain into the index payload.
+        # Surface it here when the upstream lineage objects are absent so B2's
+        # boundary contract receives the required provenance instead of an empty dict.
+        if not prov_dict and candidate.payload_metadata:
+            prov_dict = {
+                key: candidate.payload_metadata[key]
+                for key in _PROVENANCE_PAYLOAD_KEYS
+                if candidate.payload_metadata.get(key) is not None
+            }
 
         return cls(
             evidence_id=f"ev_kb_{candidate.candidate_id}",
